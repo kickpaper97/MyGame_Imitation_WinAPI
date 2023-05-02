@@ -1,6 +1,6 @@
 #pragma once
 #include <Windows.h>
-#include <iostream>
+#include <string>
 
 
 
@@ -21,6 +21,10 @@ public:
 
 	static void MessageLoop(HINSTANCE _Inst, void(*_Start)(HINSTANCE), void(*_Update)(), void(*_End)());
 
+	HDC GetHDC()
+	{
+		return Hdc;
+	}
 
 protected:
 
@@ -28,6 +32,7 @@ private:
 	static HINSTANCE Instance;
 	std::string Title = "";
 	HWND hWnd = nullptr;
+	HDC Hdc = nullptr;
 
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

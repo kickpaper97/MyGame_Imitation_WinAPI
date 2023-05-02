@@ -1,20 +1,6 @@
-#include <GameEnginePlatform/GameEngineWindow.h>
 #include <iostream>
-
-void TestStart(HINSTANCE _Inst)
-{
-    GameEngineWindow::MainWindow.Open("MainWindow", _Inst);
-}
-
-void TestEnd()
-{
-
-}
-
-void TestUpdate()
-{
-
-}
+#include<GameEngineCore/GameEngineCore.h>
+#include<CaveStory_Contents/ContentsCore.h>
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -24,7 +10,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 
     // CallBack 방식이라고 합니다.
-    GameEngineWindow::MessageLoop(hInstance, TestStart, TestUpdate, TestEnd);
+    GameEngineCore::EngineStart<ContentsCore>("MyWindow", hInstance);
     return 0;
 
 }
