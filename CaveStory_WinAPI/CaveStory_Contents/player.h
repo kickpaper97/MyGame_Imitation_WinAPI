@@ -1,21 +1,27 @@
 
 #pragma once
+#include <GameEngineCore/GameEngineActor.h>
 
-class player
-{
+class Player : public GameEngineActor
+{ 
 public:
-	player();
-	~player();
+	Player();
+	~Player();
 
-	player(const player& _Other) = delete;
-	player(player&& _Other) noexcept = delete;
-	player& operator=(const player& _Other) = delete;
-	player& operator=(const player&& _Other) noexcept = delete;
+	Player(const Player& _Other) = delete;
+	Player(Player&& _Other) noexcept = delete;
+	Player& operator=(const Player& _Other) = delete;
+	Player& operator=(const Player&& _Other) noexcept = delete;
 
 
 protected:
 
 private:
+	void Start() override;
+	void Update(float _Delta) override;
+	void Render() override;
+	void Release() override;
+		
 
 };
 

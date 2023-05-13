@@ -80,11 +80,14 @@ private:
 	static CoreProcess* Process;
 
 
-	static void LevelInit(GameEngineLevel* _Level);
+
 
 	static void CoreStart(HINSTANCE _Inst);
 	static void CoreUpdate();
 	static void CoreEnd();
+
+	static void LevelInit(GameEngineLevel* _Level);
+
 	static void EngineStart(const std::string& _Title, HINSTANCE _Inst, CoreProcess* _Ptr);
 
 	static GameEngineLevel* CurLevel;
