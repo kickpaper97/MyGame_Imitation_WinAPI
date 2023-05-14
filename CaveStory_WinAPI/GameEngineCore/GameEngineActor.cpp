@@ -49,7 +49,6 @@ void GameEngineActor::ActorRelease()
 	}
 }
 
-
 GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _ImageName, int _Order)
 {
 	GameEngineRenderer* NewRenderer = new GameEngineRenderer();

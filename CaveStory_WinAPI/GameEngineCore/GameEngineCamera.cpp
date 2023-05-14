@@ -22,31 +22,32 @@ void GameEngineCamera::PushRenderer(GameEngineRenderer* _Renderer, int _Order)
 void GameEngineCamera::Release()
 {
 
-	std::map<int, std::list<GameEngineRenderer*>>::iterator GroupStartlter = Renderers.begin();
-	std::map<int, std::list<GameEngineRenderer*>>::iterator GroupEndlter = Renderers.end();
+	std::map<int, std::list<GameEngineRenderer*>>::iterator GroupStartIter = Renderers.begin();
+	std::map<int, std::list<GameEngineRenderer*>>::iterator GroupEndIter = Renderers.end();
 
-	for (; GroupStartlter != GroupEndlter; ++GroupStartlter)
+	for (; GroupStartIter != GroupEndIter; ++GroupStartIter)
 	{
-		std::list<GameEngineRenderer*> Group = GroupStartlter->second;
+		std::list<GameEngineRenderer*>& Group = GroupStartIter->second;
 
-		std::list<GameEngineRenderer*>::iterator ActorStartlter = Group.begin();
-		std::list<GameEngineRenderer*>::iterator ActorEndlter = Group.end();
+		std::list<GameEngineRenderer*>::iterator ActorStartIter = Group.begin();
+		std::list<GameEngineRenderer*>::iterator ActorEndIter = Group.end();
 
-		for (; ActorStartlter != ActorEndlter;)
+		for (; ActorStartIter != ActorEndIter;)
 		{
-			GameEngineRenderer* Object = *ActorStartlter;
+			GameEngineRenderer* Object = *ActorStartIter;
 
-			if (false == Object->IsUpdate())
+			if (false == Object->IsDeath())
 			{
-				++ActorStartlter;
+				++ActorStartIter;
 				continue;
 			}
+
 			if (nullptr == Object)
 			{
 				MsgBoxAssert("nullptr인 랜더러가 레벨의 리스트에 들어가 있었습니다.");
 				continue;
 			}
-			ActorStartlter= Group.erase(ActorStartlter);
+			ActorStartIter = Group.erase(ActorStartIter);
 		}
 	}
 }

@@ -56,7 +56,7 @@ float4 GameEngineWindowTexture::GetScale()
 	return { static_cast<float>(Info.bmWidth), static_cast<float>(Info.bmHeight) };
 }
 
-void GameEngineWindowTexture::BitCopy(GameEngineWindowTexture* _CopyTexture, const float4& _Pos, const float4 _Scale)
+void GameEngineWindowTexture::BitCopy(GameEngineWindowTexture* _CopyTexture, const float4& _Pos, const float4& _Scale)
 {
 
 	HDC CopyImageDC = _CopyTexture->GetImageDC();
