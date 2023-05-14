@@ -15,8 +15,6 @@ class GameEngineLevel;
 class GameEngineCore
 {
 public:
-	GameEngineCore();
-	~GameEngineCore();
 
 	GameEngineCore(const GameEngineCore& _Other) = delete;
 	GameEngineCore(GameEngineCore&& _Other) noexcept = delete;
@@ -81,7 +79,6 @@ private:
 
 
 
-
 	static void CoreStart(HINSTANCE _Inst);
 	static void CoreUpdate();
 	static void CoreEnd();
@@ -94,5 +91,7 @@ private:
 	static GameEngineLevel* NextLevel;
 	static std::map < std::string, GameEngineLevel*>AllLevel;
 
+	GameEngineCore();
+	~GameEngineCore();
 };
 

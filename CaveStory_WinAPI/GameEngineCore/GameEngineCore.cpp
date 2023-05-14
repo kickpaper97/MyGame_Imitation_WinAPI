@@ -3,6 +3,7 @@
 #include<GameEngineBase/GameEngineDebug.h>
 #include <GameEngineBase/GameEngineTime.h>
 #include "GameEngineLevel.h"
+#include <GameEnginePlatform/GameEngineInput.h>
 
 std::string GameEngineCore::WindowTitle = "";
 std::map<std::string,class GameEngineLevel*>GameEngineCore::AllLevel;
@@ -21,6 +22,7 @@ GameEngineCore::~GameEngineCore()
 void GameEngineCore::CoreStart(HINSTANCE _Inst)
 {
 	GameEngineWindow::MainWindow.Open(WindowTitle, _Inst);
+	GameEngineInput::InputInit();
 
 	Process->Start();
 }
@@ -29,6 +31,14 @@ void GameEngineCore::CoreUpdate()
 {
 	if (nullptr != NextLevel)
 	{
+
+		if (nullptr != CurLevel)
+		{
+			CurLevel->LevelStart(NextLevel);
+		}
+
+		NextLevel->LevelStart(CurLevel);
+
 		CurLevel = NextLevel;
 		NextLevel = nullptr;
 		GameEngineTime::MainTimer.Reset();
@@ -37,10 +47,25 @@ void GameEngineCore::CoreUpdate()
 	GameEngineTime::MainTimer.Update();
 	float Delta = GameEngineTime::MainTimer.GetDeltaTime();
 
+
+	if (true == GameEngineWindow::IsFocus())
+	{
+		GameEngineInput::Update(Delta);
+	}
+	else
+	{
+		GameEngineInput::Reset();
+	}
+
 	CurLevel->Update(Delta);
 	CurLevel->ActorUpdate(Delta);
+
+	GameEngineWindow::MainWindow.ClearBackBuffer();
 	CurLevel->Render();
 	CurLevel->ActorRender();
+	GameEngineWindow::MainWindow.DoubleBuffering();
+
+	CurLevel->ActorRelease();
 }
 
 void GameEngineCore::CoreEnd() 

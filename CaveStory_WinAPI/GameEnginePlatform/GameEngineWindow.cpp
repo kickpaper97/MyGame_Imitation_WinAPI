@@ -5,6 +5,7 @@
 HINSTANCE GameEngineWindow::Instance = nullptr;
 GameEngineWindow GameEngineWindow::MainWindow;
 bool GameEngineWindow::IsWindowUpdate = true;
+bool GameEngineWindow::IsFocusValue = false;
 
 GameEngineWindow::GameEngineWindow()
 {
@@ -12,6 +13,17 @@ GameEngineWindow::GameEngineWindow()
 
 GameEngineWindow::~GameEngineWindow()
 {
+    if (nullptr != BackBuffer)
+    {
+        delete BackBuffer;
+        BackBuffer = nullptr;
+    }
+
+    if (nullptr != WindowBuffer)
+    {
+        delete WindowBuffer;
+        BackBuffer = nullptr;
+    }
 }
 
 void GameEngineWindow::Open(const std::string& _Title, HINSTANCE _hInstance)
@@ -44,15 +56,66 @@ void GameEngineWindow::InitInstance()
     }
 
     Hdc = ::GetDC(hWnd);
+
+    WindowBuffer = new GameEngineWindowTexture();
+    WindowBuffer->ResCreate(Hdc);
+
+    BackBuffer = new GameEngineWindowTexture();
+    BackBuffer->ResCreate(WindowBuffer->GetScale());
+
     ShowWindow(hWnd, SW_SHOW);
     UpdateWindow(hWnd);
 
 }
 
+void GameEngineWindow::SetPosAndScale(const float4& _Pos, const float4& _Scale)
+{
+    Scale = _Scale;
+
+    if (nullptr != BackBuffer)
+    {
+        delete BackBuffer;
+        BackBuffer = new GameEngineWindowTexture();
+        BackBuffer->ResCreate(Scale);
+    }
+
+    RECT Rc = { 0,0,_Scale.iX(),_Scale.iY() };
+
+    AdjustWindowRect(&Rc, WS_OVERLAPPEDWINDOW, FALSE);
+    SetWindowPos(hWnd, nullptr, _Pos.iX(), _Pos.iY(), Rc.right - Rc.left, Rc.bottom - Rc.top, SWP_NOZORDER);
+}
+
+void GameEngineWindow::ClearBackBuffer()
+{
+    Rectangle(BackBuffer->GetImageDC(), 0, 0, BackBuffer->GetScale().iX(), BackBuffer->GetScale().iY());
+}
+
+
+void GameEngineWindow::DoubleBuffering()
+{
+    WindowBuffer->BitCopy(BackBuffer, Scale.Half(), BackBuffer->GetScale());
+}
+
+
+
+
 LRESULT CALLBACK GameEngineWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+
+    case WM_SETFOCUS:
+    {
+        IsFocusValue = true;
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+
+    case WM_KILLFOCUS:
+    {
+        IsFocusValue = false;
+        return DefWindowProc(hWnd, message, wParam, lParam);
+
+    }
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
@@ -61,7 +124,8 @@ LRESULT CALLBACK GameEngineWindow::WndProc(HWND hWnd, UINT message, WPARAM wPara
     }
     break;
     case WM_DESTROY:
-        PostQuitMessage(0);
+        IsWindowUpdate = false;
+        //PostQuitMessage(0);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -122,6 +186,7 @@ void GameEngineWindow::MessageLoop(HINSTANCE _Inst, void(*_Start)(HINSTANCE), vo
 
             TranslateMessage(&msg);
             DispatchMessage(&msg);
+            continue;
         }
         
         if (nullptr != _Update)
@@ -140,4 +205,14 @@ void GameEngineWindow::MessageLoop(HINSTANCE _Inst, void(*_Start)(HINSTANCE), vo
     // (int)msg.wParam;
 
     return;
+}
+
+
+float4 GameEngineWindow::GetMousePos()
+{
+    POINT MoniterPoint;
+    GetCursorPos(&MoniterPoint);
+    ScreenToClient(hWnd, &MoniterPoint);
+
+    return float4{ static_cast<float>(MoniterPoint.x), static_cast<float>(MoniterPoint.y) };
 }

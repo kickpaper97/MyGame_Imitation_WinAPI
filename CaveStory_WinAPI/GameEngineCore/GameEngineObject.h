@@ -6,6 +6,7 @@
 
 class GameEngineObject
 {
+	friend class GameEngineLevel;
 public:
 	GameEngineObject();
 	~GameEngineObject();
@@ -41,9 +42,24 @@ public:
 		return true == IsUpdateValue && false == IsDeathValue;
 	}
 
-	bool IsDeath()
+	virtual bool IsDeath()
 	{
 		return IsDeathValue;
+	}
+
+	void SetOrder(int _Order)
+	{
+		Order = _Order;
+	}
+
+	float GetLiveTime()
+	{
+		return LiveTime;
+	}
+
+	void ResetLiveTime()
+	{
+		LiveTime = 0.0f;
 	}
 
 
@@ -53,6 +69,14 @@ private:
 
 	bool IsUpdateValue = true;
 	bool IsDeathValue = false;
+
+	int Order = 0;
+	float LiveTime = 0.0f;
+
+	void AddLiveTime(float DeltaTime)
+	{
+		LiveTime += DeltaTime;
+	}
 
 };
 

@@ -1,6 +1,5 @@
 #include "GameEnginePath.h"
-#include<GameEngineBase/GameEngineDebug.h>
-
+#include "GameEngineDebug.h"
 
 GameEnginePath::GameEnginePath()
 {
@@ -13,6 +12,11 @@ GameEnginePath::GameEnginePath(const std::string& _path)
 
 GameEnginePath::~GameEnginePath()
 {
+}
+
+std::string GameEnginePath::GetFileName()
+{
+	return Path.filename().string();
 }
 
 void GameEnginePath::GetCurrentPath()
@@ -28,10 +32,10 @@ void GameEnginePath::MoveParent()
 void GameEnginePath::MoveParentToExistsChild(const std::string& _ChildPath)
 {
 		
-	std::filesystem::path CheckPath = Path;
 	
 	while (true)
 	{
+		std::filesystem::path CheckPath = Path;
 		CheckPath.append(_ChildPath);
 
 		if (false == std::filesystem::exists(CheckPath))
@@ -62,4 +66,19 @@ void GameEnginePath::MoveChild(const std::string& _ChildPath)
 	}
 
 	Path = CheckPath;
+}
+
+
+std::string GameEnginePath::PlusFilePath(const std::string& _ChildPath)
+{
+	std::filesystem::path CheckPath = Path;
+	
+	CheckPath.append(_ChildPath);
+
+	if (false == std::filesystem::exists(CheckPath))
+	{
+		MsgBoxAssert("존재하지 않는 경로에 이동하려 시도했습니다." + CheckPath.string());
+	}
+
+	return CheckPath.string();
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include <GameEngineBase/GameEngineMath.h>
+#include"GameEngineWindowTexture.h"
 
 
 
@@ -26,15 +28,53 @@ public:
 		return Hdc;
 	}
 
+	float4 GetScale()
+	{
+		return Scale;
+	}
+
+	GameEngineWindowTexture* GetWindowBuffer()
+	{
+		return WindowBuffer;
+	}
+
+	GameEngineWindowTexture* GetBackBuffer()
+	{
+		return BackBuffer;
+	}
+
+	float4 GetMousePos();
+
+
+	void SetPosAndScale(const float4& _Pos, const float4& _Scale);
+
+	void ClearBackBuffer();
+	void DoubleBuffering();
+
+
+	static void WindowLoopOff()
+	{
+		IsWindowUpdate = false;
+	}
+
+	static bool IsFocus()
+	{
+		return IsFocusValue;
+	}
+
 protected:
 
 private:
 	static bool IsWindowUpdate;
+	static bool IsFocusValue;
 	static HINSTANCE Instance;
 	std::string Title = "";
 	HWND hWnd = nullptr;
 	HDC Hdc = nullptr;
 
+	float4 Scale;
+	GameEngineWindowTexture* WindowBuffer = nullptr;
+	GameEngineWindowTexture* BackBuffer = nullptr;
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void InitInstance();

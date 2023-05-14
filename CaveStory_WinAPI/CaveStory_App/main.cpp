@@ -10,7 +10,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 
     // CallBack 방식이라고 합니다.
-    GameEngineCore::EngineStart<ContentsCore>("MyWindow", hInstance);
+    GameEngineCore::EngineStart<ContentsCore>("WinAPI_Cave_Story", hInstance);
     return 0;
 
 }
