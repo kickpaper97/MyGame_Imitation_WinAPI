@@ -32,7 +32,7 @@ void GameEngineSprite::CreateSpriteSheet(GameEngineWindowTexture* _Texture, int 
 			AllSprite[Index].RenderScale.X = ImageSize.X;
 			AllSprite[Index].RenderScale.Y = ImageSize.Y;
 
-			StartPos += ImageSize;
+			StartPos.X += ImageSize.X;
 
 		}
 

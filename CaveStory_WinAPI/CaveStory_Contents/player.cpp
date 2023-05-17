@@ -21,7 +21,7 @@ Player::~Player()
 void Player::Start()
 {
 
-	if (false == ResourcesManager::GetInst().IsLoadTexture("Test.Bmp"))
+	if (false == ResourcesManager::GetInst().IsLoadTexture("MyChar.Bmp"))
 	{
 		GameEnginePath FilePath;
 		FilePath.SetCurrentPath();
@@ -30,29 +30,32 @@ void Player::Start()
 
 		FilePath.MoveChild("Resources\\Texture\\Player\\");
 
-		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Left_Player.bmp"), 5, 17);
-		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Right_Player.bmp"), 5, 17);
+		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("MyChar.bmp"), 11, 2);
+
+
 
 		//FolderPath.MoveChild("Resources\\Texture\\");
 
 		//ResourcesManager::GetInst().CreateSpriteFolder("FolderPlayer", FolderPath.PlusFilePath("FolderPlayer"));
 
-		ResourcesManager::GetInst().TextureLoad(FilePath.PlusFilePath("Test.bmp"));
+		//ResourcesManager::GetInst().TextureLoad(FilePath.PlusFilePath("Test.bmp"));
 		ResourcesManager::GetInst().TextureLoad(FilePath.PlusFilePath("HPBar.bmp"));
 	}
 
 	{
 		MainRenderer = CreateRenderer(RenderOrder::Play);
 
-		MainRenderer->CreateAnimation("Left_Idle", "Left_Player.bmp", 0, 2, 0.1f, true);
-		MainRenderer->CreateAnimation("Right_Idle", "Right_Player.bmp", 0, 2, 0.1f, true);
 
-		MainRenderer->CreateAnimation("Left_Run", "Left_Player.bmp", 3, 6, 0.1f, true);
-		MainRenderer->CreateAnimation("Right_Run", "Right_Player.bmp", 3, 6, 0.1f, true);
+
+		MainRenderer->CreateAnimation("Left_Idle", "MyChar.bmp", 0,0,0.2f, false);
+		MainRenderer->CreateAnimation("Right_Idle", "MyChar.bmp", 11, 11,0.1f, false);
+
+		MainRenderer->CreateAnimation("Left_Run", "MyChar.bmp", 0, 2, 0.2f, true);
+		MainRenderer->CreateAnimation("Right_Run", "MyChar.bmp", 11, 13, 0.2f, true);
 
 
 		MainRenderer->ChangeAnimation("Left_Idle");
-		MainRenderer->SetRenderScaleToTexture();
+		MainRenderer->SetScaleRatio(4.0f);
 	}
 
 	{
