@@ -14,7 +14,7 @@ public:
 	BackGround& operator=(const BackGround& _Other) = delete;
 	BackGround& operator=(const BackGround&& _Other) noexcept = delete;
 
-	void Init(const std::string& _FileName);
+	void Init(const std::string& _FileName, const float _ScaleRatio);
 
 protected:
 

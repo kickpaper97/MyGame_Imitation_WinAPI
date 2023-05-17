@@ -19,8 +19,9 @@ public:
 
 		for (size_t i = 0; i < UpperString.size(); i++)
 		{
-			UpperString = toupper(UpperString[i]);
+			UpperString[i] = toupper(UpperString[i]);
 		}
+
 		return UpperString;
 	}
 

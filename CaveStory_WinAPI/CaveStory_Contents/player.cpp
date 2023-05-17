@@ -24,19 +24,35 @@ void Player::Start()
 	if (false == ResourcesManager::GetInst().IsLoadTexture("Test.Bmp"))
 	{
 		GameEnginePath FilePath;
-		FilePath.GetCurrentPath();
+		FilePath.SetCurrentPath();
 		FilePath.MoveParentToExistsChild("Resources");
+		GameEnginePath FolderPath = FilePath;
+
 		FilePath.MoveChild("Resources\\Texture\\Player\\");
 
+		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Left_Player.bmp"), 5, 17);
+		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Right_Player.bmp"), 5, 17);
+
+		//FolderPath.MoveChild("Resources\\Texture\\");
+
+		//ResourcesManager::GetInst().CreateSpriteFolder("FolderPlayer", FolderPath.PlusFilePath("FolderPlayer"));
 
 		ResourcesManager::GetInst().TextureLoad(FilePath.PlusFilePath("Test.bmp"));
 		ResourcesManager::GetInst().TextureLoad(FilePath.PlusFilePath("HPBar.bmp"));
 	}
 
 	{
-		GameEngineRenderer* Ptr = CreateRenderer("Test.Bmp", RenderOrder::Play);
-		Ptr->SetRenderScale({ 200, 200 });
-		Ptr->SetTexture("Test.Bmp");
+		MainRenderer = CreateRenderer(RenderOrder::Play);
+
+		MainRenderer->CreateAnimation("Left_Idle", "Left_Player.bmp", 0, 2, 0.1f, true);
+		MainRenderer->CreateAnimation("Right_Idle", "Right_Player.bmp", 0, 2, 0.1f, true);
+
+		MainRenderer->CreateAnimation("Left_Run", "Left_Player.bmp", 3, 6, 0.1f, true);
+		MainRenderer->CreateAnimation("Right_Run", "Right_Player.bmp", 3, 6, 0.1f, true);
+
+
+		MainRenderer->ChangeAnimation("Left_Idle");
+		MainRenderer->SetRenderScaleToTexture();
 	}
 
 	{
@@ -46,55 +62,112 @@ void Player::Start()
 		Ptr->SetTexture("HPBar.bmp");
 	}
 
-
+	ChanageState(PlayerState::Idle);
+	Dir = PlayerDir::Right;
 }
+
+
 void Player::Update(float _Delta)
 {
-
-	float Speed = 1000.0f;
-
-	float4 MovePos = float4::ZERO;
-
-	if (true == GameEngineInput::IsPress('A'))
-	{
-		MovePos = { -Speed * _Delta, 0.0f };
-	}
-
-	if (true == GameEngineInput::IsPress('D'))
-	{
-		MovePos = { Speed * _Delta, 0.0f };
-	}
-
-	if (true == GameEngineInput::IsPress('W'))
-	{
-		MovePos = { 0.0f, -Speed * _Delta };
-	}
-
-	if (true == GameEngineInput::IsPress('S'))
-	{
-		MovePos = { 0.0f, Speed * _Delta };
-	}
-
-	if (true == GameEngineInput::IsUp(VK_LBUTTON))
-	{
-		float4 Pos = GameEngineWindow::MainWindow.GetMousePos();
-
-		Bullet* NewBullet = GetLevel()->CreateActor<Bullet>();
-		NewBullet->Renderer->SetTexture("Test.Bmp");
-		NewBullet->SetDir(float4::RIGHT);
-		NewBullet->SetPos(GetPos());
-	}
-
-	AddPos(MovePos);
-	GetLevel()->GetMainCamera()->AddPos(MovePos);
-
+	StateUpdate(_Delta);
 }
-void Player::Render()
+
+void Player::StateUpdate(float _Delta)
 {
-
+	switch (State)
+	{
+	case PlayerState::Idle:
+		return IdleUpdate(_Delta);
+	case PlayerState::Run:
+		return RunUpdate(_Delta);
+	default:
+		break;
+	}
 
 }
-void Player::Release()
+
+void Player::ChanageState(PlayerState _State)
 {
+	if (_State != State)
+	{
+		switch (_State)
+		{
+		case PlayerState::Idle:
+			IdleStart();
+			break;
+		case PlayerState::Run:
+			RunStart();
+			break;
+		default:
+			break;
+		}
+	}
+
+	State = _State;
+}
+
+void Player::DirCheck()
+{
+	PlayerDir CheckDir = PlayerDir::Max;
+
+	bool ChangeDir = false;
+
+	if (true == GameEngineInput::IsDown('A'))
+	{
+		CheckDir = PlayerDir::Left;
+	}
+	if (true == GameEngineInput::IsDown('D'))
+	{
+		CheckDir = PlayerDir::Right;
+	}
+
+	if (true == GameEngineInput::IsPress('A') && true == GameEngineInput::IsUp('D') /*&& Dir == PlayerDir::Right*/)
+	{
+		CheckDir = PlayerDir::Left;
+	}
+
+	if (true == GameEngineInput::IsPress('D') && true == GameEngineInput::IsUp('A') /*&& Dir == PlayerDir::Left*/)
+	{
+		CheckDir = PlayerDir::Right;
+	}
+
+
+	if (CheckDir != PlayerDir::Max)
+	{
+		ChangeDir = true;
+		Dir = CheckDir;
+	}
+
+	if (CheckDir != PlayerDir::Max && true == ChangeDir)
+	{
+		ChangeAnimationState(CurState);
+	}
 
 }
+
+void Player::ChangeAnimationState(const std::string& _StateName)
+{
+	// "Idle"
+	// _StateName
+
+	std::string AnimationName;
+
+	switch (Dir)
+	{
+	case PlayerDir::Right:
+		AnimationName = "Right_";
+		break;
+	case PlayerDir::Left:
+		AnimationName = "Left_";
+		break;
+	default:
+		break;
+	}
+
+	AnimationName += _StateName;
+
+	CurState = _StateName;
+
+	MainRenderer->ChangeAnimation(AnimationName);
+}
+

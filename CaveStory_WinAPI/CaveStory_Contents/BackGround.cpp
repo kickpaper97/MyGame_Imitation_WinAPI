@@ -32,13 +32,13 @@ void BackGround::Release()
 {
 }
 
-void BackGround::Init(const std::string& _FileName)
+void BackGround::Init(const std::string& _FileName,const float _ScaleRatio)
 {
 	FileName = _FileName;
 	if (false == ResourcesManager::GetInst().IsLoadTexture(_FileName))
 	{
 		GameEnginePath FilePath;
-		FilePath.GetCurrentPath();
+		FilePath.SetCurrentPath();
 
 		FilePath.MoveParentToExistsChild("Resources");
 		FilePath.MoveChild("Resources\\Texture\\" + _FileName);
@@ -47,8 +47,8 @@ void BackGround::Init(const std::string& _FileName)
 
 		float4 Scale = Text->GetScale();
 
-		Scale.X *= 3.0f;
-		Scale.Y *= 3.0f;
+		Scale.X *= _ScaleRatio;
+		Scale.Y *= _ScaleRatio;
 
 
 		GameEngineRenderer* Render = CreateRenderer(_FileName, RenderOrder::BackGround);

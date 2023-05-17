@@ -13,6 +13,7 @@ public:
 	TitleLevel& operator=(const TitleLevel& _Other) = delete;
 	TitleLevel& operator=(const TitleLevel&& _Other) noexcept = delete;
 
+	void Start();
 
 protected:
 	void Update(float _DeltaTime) override;

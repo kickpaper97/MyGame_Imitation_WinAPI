@@ -5,6 +5,7 @@
 #include <GameEngineBase/GameEnginePath.h>
 
 
+class GameEngineSprite;
 class GameEngineWindowTexture;
 class ResourcesManager
 {
@@ -31,6 +32,31 @@ public:
 
 	bool IsLoadTexture(const std::string& _Image);
 
+
+	GameEngineSprite* FindSprite(const std::string& _Name);
+
+	GameEngineSprite* CreateSpriteFolder(const std::string& _SpriteName, const std::string& _Path);
+	GameEngineSprite* CreateSpriteFolder(const std::string& _Path)
+	{
+		GameEnginePath FolderPath = _Path;
+
+		return CreateSpriteFolder(FolderPath.GetFileName(), _Path);
+	}
+
+	GameEngineSprite* CreateSpriteSheet(const std::string& _SpriteName, const std::string& _TexturePath,int _XCount, int _YCount);
+	GameEngineSprite* CreateSpriteSheet(const std::string& _TexturePath, int _XCount, int _YCount)
+	{
+		GameEnginePath Path = _TexturePath;
+
+		return CreateSpriteSheet(Path.GetFileName(), _TexturePath, _XCount, _YCount);
+	}
+
+
+
+	//
+	void TextureFileLoad(const std::string& _FileName, const std::string& _Path);
+	void SpriteFileLoad(const std::string& _FileName, const std::string& _Path, int _XCount, int _YCount);
+
 protected:
 
 private:
@@ -40,6 +66,8 @@ private:
 	static ResourcesManager Inst;
 
 	std::map<std::string, GameEngineWindowTexture*> AllTexture;
+
+	std::map<std::string, GameEngineSprite*> AllSprite;
 
 };
 

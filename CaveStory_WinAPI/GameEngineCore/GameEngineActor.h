@@ -39,7 +39,7 @@ public:
 	template<typename EnumType>
 	GameEngineRenderer* CreateRenderer(EnumType _Order)
 	{
-		return CreateRenderer("", stataic_cast<int>(_Order));
+		return CreateRenderer("", static_cast<int>(_Order));
 	}
 
 	GameEngineRenderer* CreateRenderer(int _Order=0)

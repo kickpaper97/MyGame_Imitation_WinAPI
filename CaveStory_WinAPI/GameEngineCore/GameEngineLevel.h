@@ -59,7 +59,7 @@ private:
 	void ActorInit(GameEngineActor* _Actor,int _Order);
 
 	void ActorUpdate(float _Delta);
-	void ActorRender();
+	void ActorRender(float _Delta);
 	void ActorRelease();
 
 };

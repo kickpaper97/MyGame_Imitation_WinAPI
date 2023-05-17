@@ -53,7 +53,7 @@ void GameEngineCamera::Release()
 }
 
 
-void GameEngineCamera::Render()
+void GameEngineCamera::Render(float _Delta)
 {
 	std::map<int, std::list<GameEngineRenderer*>>::iterator GroupStartIter = Renderers.begin();
 	std::map<int, std::list<GameEngineRenderer*>>::iterator GroupEndIter = Renderers.end();
@@ -75,7 +75,7 @@ void GameEngineCamera::Render()
 				continue;
 			}
 
-			Render->Render(this);
+			Render->Render(this,_Delta);
 		}
 	}
 }
