@@ -1,5 +1,6 @@
 #include "Player.h"
 #include"ContentsEnum.h"
+
 #include <Windows.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
 #include <GameEngineCore/ResourcesManager.h>
@@ -9,6 +10,7 @@
 #include <GameEngineCore/GameEngineCamera.h>
 #include <CaveStory_Contents/Bullet.h>
 
+Player* Player::MainPlayer = nullptr;
 
 Player::Player()
 {
@@ -174,3 +176,7 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 	MainRenderer->ChangeAnimation(AnimationName);
 }
 
+void Player::LevelStart()
+{
+	MainPlayer =this;
+}

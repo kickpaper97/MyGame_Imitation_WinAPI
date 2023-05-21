@@ -4,6 +4,7 @@
 #include<GameEnginePlatform/GameEngineInput.h>
 #include<GameEngineCore/GameEngineCamera.h>
 #include <GameEngineCore/GameEngineCore.h>
+#include<GameEngineCore/ResourcesManager.h>
 
 
 
@@ -20,9 +21,20 @@ PlayLevel::~PlayLevel()
 
 void PlayLevel::Start()
 {
+	if (false == ResourcesManager::GetInst().IsLoadTexture("Col_FirstCave_StartPoint.Bmp"))
+	{
+		GameEnginePath FilePath;
+		FilePath.SetCurrentPath();
+		FilePath.MoveParentToExistsChild("Resources");
 
-	BackGround* Back = CreateActor<BackGround>();
-	Back->Init("StageTest.Bmp",3);
+		GameEnginePath FolderPath = FilePath;
+
+		FilePath.MoveChild("Resources\\Texture\\");
+		ResourcesManager::GetInst().TextureLoad(FilePath.PlusFilePath("Col_FirstCave_StartPoint.Bmp"));
+	}
+
+	BackGroundPtr = CreateActor<BackGround>();
+	BackGroundPtr->Init("FirstCave_StartPoint.Bmp","Col_FirstCave_StartPoint.Bmp");
 
 	LevelPlayer = CreateActor<Player>();
 }
@@ -34,7 +46,10 @@ void PlayLevel::Update(float _Delta)
 	{
 		GameEngineCore::ChangeLevel("TitleLevel");
 	}
-
+	if (true == GameEngineInput::IsDown('J'))
+	{
+		BackGroundPtr->SwitchRender();
+	}
 }
 
 void PlayLevel::Render()

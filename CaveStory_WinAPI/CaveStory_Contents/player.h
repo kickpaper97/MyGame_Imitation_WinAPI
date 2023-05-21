@@ -28,6 +28,13 @@ public:
 	Player& operator=(const Player&& _Other) noexcept = delete;
 
 	GameEngineRenderer* MainRenderer = nullptr;
+
+	static Player* GetMainPlayer() 
+	{
+		return MainPlayer;
+	}
+
+
 protected:
 	void StateUpdate(float _Delta);
 
@@ -51,7 +58,10 @@ protected:
 private:
 	void Start() override;
 	void Update(float _Delta) override;
+
+	void LevelStart() override;
 		
+	static Player* MainPlayer;
 
 };
 

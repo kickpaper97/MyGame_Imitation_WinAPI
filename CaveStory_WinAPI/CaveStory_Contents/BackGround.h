@@ -14,13 +14,28 @@ public:
 	BackGround& operator=(const BackGround& _Other) = delete;
 	BackGround& operator=(const BackGround&& _Other) noexcept = delete;
 
-	void Init(const std::string& _FileName, const float _ScaleRatio);
+	void Init(const std::string& _FileName, const float _ScaleRatio = 1);
+
+	void Init(const std::string& _FileName, const std::string& _DebugFileName,const float _scaleRatio=1);
+
+
+	void SwitchRender();
 
 protected:
 
+	
+
 private:
+	bool IsNeedBackGroundDebug = true;
+	
+	bool SwitchRenderValue = true;
 
 	std::string FileName;
+	class GameEngineRenderer* Renderer;
+	class GameEngineRenderer* DebugRenderer;
+
+
+
 
 	void Start() override;
 	void Update(float _Delta) override;

@@ -7,6 +7,7 @@
 class GameEngineObject
 {
 	friend class GameEngineLevel;
+	friend class GameEngineCore;
 public:
 	GameEngineObject();
 	~GameEngineObject();
