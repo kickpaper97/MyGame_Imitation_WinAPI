@@ -179,11 +179,15 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="PlayActor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Player.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="PlayLevel.h">
+    <ClInclude Include="FirstCave_startPointLevel.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -209,12 +213,16 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="PlayActor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Player.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="Player_State.cpp" />
-    <ClCompile Include="PlayLevel.cpp">
+    <ClCompile Include="FirstCave_startPointLevel.cpp">
       <SubType>
       </SubType>
     </ClCompile>

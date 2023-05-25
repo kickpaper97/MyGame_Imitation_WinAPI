@@ -1,13 +1,14 @@
-
 #pragma once
-#include<Windows.h>
+#include <Windows.h>
+#include <map>
+#include <string>
 #include <GameEngineBase/GameEngineMath.h>
-#include<map>
 
+// 설명 :
 class GameEngineInput
 {
 private:
-	class GameEngineKey 
+	class GameEngineKey
 	{
 		friend GameEngineInput;
 
@@ -16,7 +17,7 @@ private:
 		bool Up = false;
 		bool Free = true;
 
-
+		// 의미가 없다고 봐요.
 		float PressTime = 0.0f;
 
 		int Key = -1;
@@ -30,42 +31,46 @@ private:
 		{
 			if (true == Press)
 			{
-				bool Down = false;
-				bool Press = false;
-				bool Up = true;
-				bool Free = true;
+				Down = false;
+				Press = false;
+				Up = true;
+				Free = true;
 			}
 			else if (true == Up)
 			{
-				bool Down = false;
-				bool Press = false;
-				bool Up = false;
-				bool Free = true;
+				Down = false;
+				Press = false;
+				Up = false;
+				Free = true;
 			}
 		}
 
 		void Update(float _DeltaTime);
-		
 
 	public:
-		GameEngineKey():Key(-1)
+		GameEngineKey()
+			: Key(-1)
 		{
+
 		}
 
-		GameEngineKey(int _Key):Key(_Key)
+		GameEngineKey(int _Key)
+			: Key(_Key)
 		{
+
 		}
 	};
 
-
 public:
+	// constrcuter destructer
 	GameEngineInput();
 	~GameEngineInput();
 
+	// delete Function
 	GameEngineInput(const GameEngineInput& _Other) = delete;
 	GameEngineInput(GameEngineInput&& _Other) noexcept = delete;
 	GameEngineInput& operator=(const GameEngineInput& _Other) = delete;
-	GameEngineInput& operator=(const GameEngineInput&& _Other) noexcept = delete;
+	GameEngineInput& operator=(GameEngineInput&& _Other) noexcept = delete;
 
 	static float4 MousePos();
 

@@ -1,6 +1,6 @@
 #include "ContentsCore.h"
 #include"TitleLevel.h"
-#include"PlayLevel.h"
+#include"FirstCave_startPointLevel.h"
 #include "EndingLevel.h"
 #include <GameEnginePlatform/GameEngineWindow.h>
 
@@ -17,8 +17,8 @@ void ContentsCore::Start()
 	GameEngineWindow::MainWindow.SetPosAndScale({ 200,30 }, { 1280, 960 });
 	
 	GameEngineCore::CreateLevel<TitleLevel>("TitleLevel");
-	GameEngineCore::CreateLevel<PlayLevel>("PlayLevel");
-	GameEngineCore::CreateLevel<PlayLevel>("EndingLevel");
+	GameEngineCore::CreateLevel<FirstCave_StartPointLevel>("FirstCave_StartPointLevel");
+	//GameEngineCore::CreateLevel<EndingLevel>("EndingLevel");
 
 
 	GameEngineCore::ChangeLevel("TitleLevel");

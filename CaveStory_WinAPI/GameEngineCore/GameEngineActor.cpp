@@ -1,8 +1,9 @@
 #include "GameEngineActor.h"
+#include "GameEngineRenderer.h"
+#include "GameEngineCollision.h"
+#include "GameEngineLevel.h"
+#include "GameEngineCamera.h"
 #include <GameEngineBase/GameEngineDebug.h>
-#include"GameEngineLevel.h"
-#include"GameEngineRenderer.h"
-#include"GameEngineCamera.h"
 
 GameEngineActor::GameEngineActor()
 {
@@ -10,15 +11,19 @@ GameEngineActor::GameEngineActor()
 
 GameEngineActor::~GameEngineActor()
 {
-
 	for (GameEngineRenderer* Render : AllRenderer)
 	{
 		delete Render;
 		Render = nullptr;
 	}
+
+	for (GameEngineCollision* Collision : AllCollision)
+	{
+		delete Collision;
+		Collision = nullptr;
+	}
+
 }
-
-
 
 void GameEngineActor::ActorRelease()
 {
@@ -44,6 +49,7 @@ void GameEngineActor::ActorRelease()
 		delete Renderer;
 		Renderer = nullptr;
 
+		// [s] [a] [a]     [a] [e]
 		ObjectStartIter = AllRenderer.erase(ObjectStartIter);
 
 	}
@@ -53,9 +59,10 @@ GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _ImageNam
 {
 	GameEngineRenderer* NewRenderer = new GameEngineRenderer();
 
-	GetLevel()->MainCamera->PushRenderer(NewRenderer, _Order);
-
 	NewRenderer->Master = this;
+	NewRenderer->Start();
+	NewRenderer->SetOrder(_Order);
+
 	if (_ImageName != "")
 	{
 		NewRenderer->SetTexture(_ImageName);
@@ -63,4 +70,16 @@ GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _ImageNam
 	AllRenderer.push_back(NewRenderer);
 
 	return NewRenderer;
+}
+
+GameEngineCollision* GameEngineActor::CreateCollision(int _Order/* = 0*/)
+{
+	GameEngineCollision* NewCollision = new GameEngineCollision();
+
+	NewCollision->Master = this;
+	NewCollision->Start();
+	NewCollision->SetOrder(_Order);
+	AllCollision.push_back(NewCollision);
+
+	return NewCollision;
 }

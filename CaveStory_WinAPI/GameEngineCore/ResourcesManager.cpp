@@ -1,10 +1,21 @@
 #include "ResourcesManager.h"
-#include <GameEngineBase/GameEngineString.h>
 #include <GameEnginePlatform/GameEngineWindowTexture.h>
+#include <GameEngineBase/GameEngineString.h>
 #include "GameEngineSprite.h"
 #include <GameEngineBase/GameEngineDebug.h>
+#include <GameEngineBase/GameEngineDirectory.h>
 
 ResourcesManager ResourcesManager::Inst;
+
+// 포인터 
+// ResourcesManager* ResourcesManager::Inst = new ResourcesManager();
+// ResourcesManager* ResourcesManager::Inst;
+
+
+bool ResourcesManager::IsLoadTexture(const std::string& _Name)
+{
+	return FindTexture(_Name) != nullptr;
+}
 
 ResourcesManager::ResourcesManager()
 {
@@ -12,9 +23,9 @@ ResourcesManager::ResourcesManager()
 
 ResourcesManager::~ResourcesManager()
 {
-	for (const std::pair<std::string,GameEngineWindowTexture*>& pair:AllTexture)
+	for (const std::pair<std::string, GameEngineWindowTexture*>& Pair : AllTexture)
 	{
-		GameEngineWindowTexture* Texture = pair.second;
+		GameEngineWindowTexture* Texture = Pair.second;
 
 		if (nullptr != Texture)
 		{
@@ -22,7 +33,6 @@ ResourcesManager::~ResourcesManager()
 			Texture = nullptr;
 		}
 	}
-
 
 	for (const std::pair<std::string, GameEngineSprite*>& Pair : AllSprite)
 	{
@@ -37,10 +47,26 @@ ResourcesManager::~ResourcesManager()
 
 }
 
+GameEngineWindowTexture* ResourcesManager::FindTexture(const std::string& _Name)
+{
+	std::string UpperName = GameEngineString::ToUpperReturn(_Name);
+
+
+	std::map<std::string, GameEngineWindowTexture*>::iterator FindIter = AllTexture.find(UpperName);
+
+	if (FindIter == AllTexture.end())
+	{
+		return nullptr;
+	}
+
+	return FindIter->second;
+}
+
 GameEngineWindowTexture* ResourcesManager::TextureLoad(const std::string& _Name, const std::string& _Path)
 {
 	std::string UpperName = GameEngineString::ToUpperReturn(_Name);
 
+	// 동적 바인딩이라고 합니다.
 	GameEngineWindowTexture* LoadTexture = new GameEngineWindowTexture();
 
 	LoadTexture->ResLoad(_Path);
@@ -48,23 +74,6 @@ GameEngineWindowTexture* ResourcesManager::TextureLoad(const std::string& _Name,
 	AllTexture.insert(std::make_pair(UpperName, LoadTexture));
 
 	return LoadTexture;
-}
-
-GameEngineWindowTexture* ResourcesManager::FindTexture(const std::string& _Name)
-{
-	std::string UpperName = GameEngineString::ToUpperReturn(_Name);
-
-	std::map<std::string, GameEngineWindowTexture*>::iterator Finder = AllTexture.find(UpperName);
-	if (Finder == AllTexture.end())
-	{
-		return nullptr;
-	}
-	return Finder->second;
-}
-
-bool ResourcesManager::IsLoadTexture(const std::string& _Image)
-{
-	return FindTexture(_Image) != nullptr;
 }
 
 GameEngineSprite* ResourcesManager::FindSprite(const std::string& _Name)
@@ -82,45 +91,50 @@ GameEngineSprite* ResourcesManager::FindSprite(const std::string& _Name)
 	return FindIter->second;
 }
 
-GameEngineSprite* ResourcesManager::CreateSpriteFolder(const std::string& _SpriteName, const std::string& _Path)
+GameEngineSprite* ResourcesManager::CreateSpriteSheet(const std::string& _SpriteName
+	, const std::string& _TexturePath
+	, int _XCount
+	, int _YCount)
 {
 	std::string UpperName = GameEngineString::ToUpperReturn(_SpriteName);
 
 	if (nullptr != FindSprite(UpperName))
 	{
-		MsgBoxAssert("이미 로드한 스프라이트를 다시 로드하려 하였습니다.");
+		MsgBoxAssert("이미 로드한 스프라이트를 또 로드하려고 했습니다.");
 	}
+
+	GameEnginePath Path = _TexturePath;
+
+	GameEngineWindowTexture* Texture = ResourcesManager::FindTexture(Path.GetFileName());
+
+	if (nullptr == Texture)
+	{
+		Texture = ResourcesManager::TextureLoad(_TexturePath);
+	}
+
+	float4 Scale = Texture->GetScale();
+
 	GameEngineSprite* NewSprite = new GameEngineSprite();
 
-	NewSprite->CreateSpriteFolder(_Path);
+	NewSprite->CreateSpriteSheet(Texture, _XCount, _YCount);
 
 	AllSprite.insert(std::make_pair(UpperName, NewSprite));
 
 	return NewSprite;
 }
 
-GameEngineSprite* ResourcesManager::CreateSpriteSheet(const std::string& _SpriteName, const std::string& _TexturePath, int _XCount, int _YCount)
+GameEngineSprite* ResourcesManager::CreateSpriteFolder(const std::string& _SpriteName, const std::string& _Path)
 {
 	std::string UpperName = GameEngineString::ToUpperReturn(_SpriteName);
 
 	if (nullptr != FindSprite(UpperName))
 	{
-		MsgBoxAssert("이미 로드한 스프라이트를 다시 로드하려 하였습니다.");
+		MsgBoxAssert("이미 로드한 스프라이트를 또 로드하려고 했습니다.");
 	}
 
-	GameEnginePath Path = _TexturePath;
-	GameEngineWindowTexture* Texture = ResourcesManager::FindTexture(Path.GetFileName());
-
-	if (nullptr==Texture)
-	{
-		Texture = ResourcesManager::TextureLoad(_TexturePath);
-	}
-
-	float4 Scale = Texture->GetScale();
-	
 	GameEngineSprite* NewSprite = new GameEngineSprite();
 
-	NewSprite->CreateSpriteSheet(Texture, _XCount, _YCount);
+	NewSprite->CreateSpriteFolder(_Path);
 
 	AllSprite.insert(std::make_pair(UpperName, NewSprite));
 
@@ -141,7 +155,6 @@ void ResourcesManager::TextureFileLoad(const std::string& _FileName, const std::
 	}
 }
 
-
 void ResourcesManager::SpriteFileLoad(const std::string& _FileName, const std::string& _Path, int _XCount, int _YCount)
 {
 	if (true == ResourcesManager::GetInst().IsLoadTexture(_FileName))
@@ -151,7 +164,13 @@ void ResourcesManager::SpriteFileLoad(const std::string& _FileName, const std::s
 
 	GameEnginePath FilePath;
 
+	// _Path
+	// "BBB\\CCC\\DDD"
+	// "BBB\\CCC\\DDD\\FFF"
 	std::string ParentPath = GameEnginePath::GetParentString(_Path);
+	// ParentPath
+	// "BBB"
+
 	FilePath.MoveParentToExistsChild(ParentPath);
 	FilePath.MoveChild(_Path);
 

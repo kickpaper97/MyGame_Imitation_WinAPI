@@ -14,14 +14,16 @@ GameEngineSprite::~GameEngineSprite()
 void GameEngineSprite::CreateSpriteSheet(GameEngineWindowTexture* _Texture, int _XCount, int _YCount)
 {
 	float4 TexScale = _Texture->GetScale();
-	AllSprite.resize(_XCount*_YCount);
+
+	AllSprite.resize(_XCount * _YCount);
 
 	float4 StartPos = { float4::ZERO };
 	float4 ImageSize = { TexScale.X / _XCount, TexScale.Y / _YCount };
 
+
 	for (size_t y = 0; y < _YCount; y++)
 	{
-		for(size_t x = 0;x<_XCount;x++ )
+		for (size_t x = 0; x < _XCount; x++)
 		{
 			size_t Index = (y * _XCount) + x;
 
@@ -33,12 +35,13 @@ void GameEngineSprite::CreateSpriteSheet(GameEngineWindowTexture* _Texture, int 
 			AllSprite[Index].RenderScale.Y = ImageSize.Y;
 
 			StartPos.X += ImageSize.X;
-
 		}
 
 		StartPos.X = 0;
 		StartPos.Y += ImageSize.Y;
 	}
+
+
 }
 
 void GameEngineSprite::CreateSpriteFolder(const std::string& _Path)
@@ -60,7 +63,6 @@ void GameEngineSprite::CreateSpriteFolder(const std::string& _Path)
 
 const GameEngineSprite::Sprite& GameEngineSprite::GetSprite(size_t _Index)
 {
-
 	static GameEngineSprite::Sprite ReturnValue;
 
 	if (0 > _Index)
@@ -68,7 +70,6 @@ const GameEngineSprite::Sprite& GameEngineSprite::GetSprite(size_t _Index)
 		MsgBoxAssert("0보다 작은 스프라이트 인덱스 입니다.");
 		return ReturnValue;
 	}
-
 
 	if (AllSprite.size() <= _Index)
 	{

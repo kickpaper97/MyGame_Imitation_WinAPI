@@ -32,7 +32,8 @@ void Player::Start()
 
 		FilePath.MoveChild("Resources\\Texture\\Player\\");
 
-		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("MyChar.bmp"), 11, 2);
+		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("MyChar.bmp"), 15, 2);
+
 
 
 
@@ -41,7 +42,10 @@ void Player::Start()
 		//ResourcesManager::GetInst().CreateSpriteFolder("FolderPlayer", FolderPath.PlusFilePath("FolderPlayer"));
 
 		//ResourcesManager::GetInst().TextureLoad(FilePath.PlusFilePath("Test.bmp"));
-		ResourcesManager::GetInst().TextureLoad(FilePath.PlusFilePath("HPBar.bmp"));
+		FilePath.MoveParentToExistsChild("Texture");
+		FilePath.MoveChild("Texture\\");
+
+		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Arms.Bmp"), 6, 1);
 	}
 
 	{
@@ -49,11 +53,38 @@ void Player::Start()
 
 
 
-		MainRenderer->CreateAnimation("Left_Idle", "MyChar.bmp", 0,0,0.2f, false);
-		MainRenderer->CreateAnimation("Right_Idle", "MyChar.bmp", 11, 11,0.1f, false);
 
-		MainRenderer->CreateAnimation("Left_Run", "MyChar.bmp", 0, 2, 0.2f, true);
-		MainRenderer->CreateAnimation("Right_Run", "MyChar.bmp", 11, 13, 0.2f, true);
+		MainRenderer->CreateAnimation("Left_Idle", "MyChar.bmp", 0, 0, 0.1f, false);
+		MainRenderer->CreateAnimation("Right_Idle", "MyChar.bmp", 15, 15, 0.1f, false);
+
+		MainRenderer->CreateAnimation("Left_Run", "MyChar.bmp", 1, 4, 0.1f, true);
+		MainRenderer->CreateAnimation("Right_Run", "MyChar.bmp", 16, 19, 0.1f, true);
+
+		MainRenderer->CreateAnimation("Left_Jump", "MyChar.bmp", 3, 3, 0.1f, false);
+		MainRenderer->CreateAnimation("Right_Jump", "MyChar.bmp", 18, 18, 0.1f, false);
+
+		MainRenderer->CreateAnimation("Left_Fall", "MyChar.bmp", 1, 1, 0.1f, false);
+		MainRenderer->CreateAnimation("Right_Fall", "MyChar.bmp", 16, 16, 0.1f, false);
+
+
+
+
+		MainRenderer->CreateAnimation("Left_UP_Idle", "MyChar.bmp", 5, 5, 0.1f, false);
+		MainRenderer->CreateAnimation("Right_Up_Idle", "MyChar.bmp", 20, 20, 0.1f, false);
+
+		MainRenderer->CreateAnimation("Left_Up_Run", "MyChar.bmp", 6, 9, 0.1f, true);
+		MainRenderer->CreateAnimation("Right_Up_Run", "MyChar.bmp", 21, 24, 0.1f, true);
+
+		MainRenderer->CreateAnimation("Left_Up_Jump", "MyChar.bmp", 6, 6, 0.1f, false);
+		MainRenderer->CreateAnimation("Right__UP_Jump", "MyChar.bmp", 21, 21, 0.1f, false);
+
+		MainRenderer->CreateAnimation("Left_Down_Jump", "MyChar.bmp", 11, 11, 0.1f, false);
+		MainRenderer->CreateAnimation("Right_Back", "MyChar.bmp", 26, 26, 0.1f, false);
+
+
+		MainRenderer->CreateAnimation("Left_Back", "MyChar.bmp", 10, 10, 0.1f, false);
+		MainRenderer->CreateAnimation("Right_Down_Jump", "MyChar.bmp", 25, 25, 0.1f, false);
+
 
 
 		MainRenderer->ChangeAnimation("Left_Idle");
@@ -61,20 +92,33 @@ void Player::Start()
 	}
 
 	{
-		GameEngineRenderer* Ptr = CreateRenderer("HPBar.bmp", RenderOrder::Play);
-		Ptr->SetRenderPos({ 0, -100 });
-		Ptr->SetRenderScale({ 200, 40 });
-		Ptr->SetTexture("HPBar.bmp");
+		ArmRenderer = CreateRenderer(RenderOrder::Nomal_Arms);
+		ArmRenderer->CreateAnimation("Left_Arm", "Arms.Bmp", 0, 0, 0.0f, false);
+		ArmRenderer->CreateAnimation("Right_Arm", "Arms.Bmp", 1, 1, 0.0f, false);
+
+		ArmRenderer->CreateAnimation("Left_Up_Arm", "Arms.Bmp", 2, 2, 0.0f, false);
+		ArmRenderer->CreateAnimation("Right_Up_Arm", "Arms.Bmp", 3, 3, 0.0f, false);
+
+		ArmRenderer->CreateAnimation("Left_Down_Arm", "Arms.Bmp", 4, 4, 0.0f, false);
+		ArmRenderer->CreateAnimation("Right_Down_Arm", "Arms.Bmp", 5, 5, 0.0f, false);
+
+
+		ArmRenderer->SetRenderPos({ 10,0 });
+		ArmRenderer->ChangeAnimation("Left_Arm");
+		ArmRenderer->SetScaleRatio(4.0f);
+
 	}
 
 	ChanageState(PlayerState::Idle);
 	Dir = PlayerDir::Right;
+
 }
 
 
 void Player::Update(float _Delta)
 {
 	StateUpdate(_Delta);
+	CameraFocus();
 }
 
 void Player::StateUpdate(float _Delta)
@@ -85,6 +129,8 @@ void Player::StateUpdate(float _Delta)
 		return IdleUpdate(_Delta);
 	case PlayerState::Run:
 		return RunUpdate(_Delta);
+	case PlayerState::Jump:
+		return JumpUpdate(_Delta);
 	default:
 		break;
 	}
@@ -103,6 +149,12 @@ void Player::ChanageState(PlayerState _State)
 		case PlayerState::Run:
 			RunStart();
 			break;
+		case PlayerState::Jump:
+			if (true == IsJump)
+			{
+			JumpStart();
+
+			}
 		default:
 			break;
 		}
@@ -114,17 +166,31 @@ void Player::ChanageState(PlayerState _State)
 void Player::DirCheck()
 {
 	PlayerDir CheckDir = PlayerDir::Max;
+	Look = PlayerLook::Middle;
 
 	bool ChangeDir = false;
 
-	if (true == GameEngineInput::IsDown('A'))
+	if (true == GameEngineInput::IsDown('A')||true==GameEngineInput::IsPress('A'))
 	{
 		CheckDir = PlayerDir::Left;
+		Look = PlayerLook::Middle;
 	}
-	if (true == GameEngineInput::IsDown('D'))
+	if (true == GameEngineInput::IsDown('D') || true == GameEngineInput::IsPress('D'))
 	{
 		CheckDir = PlayerDir::Right;
+		Look = PlayerLook::Middle;
+
 	}
+	if (true == GameEngineInput::IsDown('W'))
+	{
+		Look = PlayerLook::Up;
+		
+	}
+	if (true == GameEngineInput::IsDown('S') && true == GetIsOnAir())
+	{
+		Look = PlayerLook::Down;
+	}
+
 
 	if (true == GameEngineInput::IsPress('A') && true == GameEngineInput::IsUp('D') /*&& Dir == PlayerDir::Right*/)
 	{
@@ -161,9 +227,55 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 	{
 	case PlayerDir::Right:
 		AnimationName = "Right_";
+
 		break;
 	case PlayerDir::Left:
 		AnimationName = "Left_";
+		break;
+	default:
+		break;
+	}
+
+	switch (Look)
+	{
+	case PlayerLook::Up:
+
+		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::Jump_Arms));
+
+		if (Dir == PlayerDir::Left)
+		{
+			ArmRenderer->SetRenderPos({ 30,-4 });
+		}
+		else if (Dir == PlayerDir::Right)
+		{
+			ArmRenderer->SetRenderPos({ 30,4 });
+		}
+		ArmRenderer->ChangeAnimation(AnimationName + "Up_Arm");
+		break;
+	case PlayerLook::Middle:
+
+		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::Nomal_Arms));
+		if (Dir == PlayerDir::Left)
+		{
+			ArmRenderer->SetRenderPos({ -28,-12 });
+		}
+		else if (Dir == PlayerDir::Right)
+		{
+			ArmRenderer->SetRenderPos({ 24,-12 });
+		}
+		ArmRenderer->ChangeAnimation(AnimationName + "Arm");
+		break;
+	case PlayerLook::Down:
+		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::Jump_Arms));
+		if (Dir == PlayerDir::Left)
+		{
+			ArmRenderer->SetRenderPos({ -34,-4 });
+		}
+		else if (Dir == PlayerDir::Right)
+		{
+			ArmRenderer->SetRenderPos({ 30,-4 });
+		}
+		ArmRenderer->ChangeAnimation(AnimationName + "Down_Arm");
 		break;
 	default:
 		break;
@@ -178,5 +290,5 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 
 void Player::LevelStart()
 {
-	MainPlayer =this;
+	MainPlayer = this;
 }

@@ -1,12 +1,14 @@
 #include "GameEngineRenderer.h"
 #include <GameEngineBase/GameEngineDebug.h>
-#include	<GameEngineBase/GameEngineString.h>
+#include <GameEngineBase/GameEngineString.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
-#include<GameEnginePlatform/GameEngineWindowTexture.h>
-#include<GameEngineCore/GameEngineActor.h>
-#include"GameEngineCamera.h"
+#include <GameEnginePlatform/GameEngineWindowTexture.h>
+#include "GameEngineCamera.h"
 #include "ResourcesManager.h"
-#include"GameEngineSprite.h"
+#include "GameEngineActor.h"
+#include "GameEngineSprite.h"
+#include "GameEngineLevel.h"
+#include <math.h>
 
 GameEngineRenderer::GameEngineRenderer()
 {
@@ -37,9 +39,10 @@ void GameEngineRenderer::SetSprite(const std::string& _Name, size_t _Index/* = 0
 void GameEngineRenderer::SetTexture(const std::string& _Name)
 {
 	Texture = ResourcesManager::GetInst().FindTexture(_Name);
+
 	if (nullptr == Texture)
 	{
-		MsgBoxAssert("존재하지 않는 텍스쳐를 불러오려 시도했습니다." + _Name);
+		MsgBoxAssert("존재하지 않는 텍스처를 세팅하려고 했습니다." + _Name);
 	}
 
 	SetCopyPos(float4::ZERO);
@@ -49,33 +52,34 @@ void GameEngineRenderer::SetTexture(const std::string& _Name)
 	{
 		SetRenderScaleToTexture();
 	}
-
 }
+
 void GameEngineRenderer::SetRenderScaleToTexture()
 {
 	if (nullptr != Texture)
 	{
-	RenderScale = Texture->GetScale();
+		RenderScale = Texture->GetScale();
 	}
 	ScaleCheck = false;
 }
 
-void GameEngineRenderer::Render(GameEngineCamera* _Camera,float _DeltaTime)
+void GameEngineRenderer::Render(GameEngineCamera* _Camera, float _DeltaTime)
 {
 	if (nullptr != CurAnimation)
 	{
-
 		CurAnimation->CurInter -= _DeltaTime;
 		if (0.0f >= CurAnimation->CurInter)
 		{
-			CurAnimation->CurInter=CurAnimation->Inters[CurAnimation->CurFrame - CurAnimation->StartFrame];
+			CurAnimation->CurInter
+				= CurAnimation->Inters[CurAnimation->CurFrame];
+
 			++CurAnimation->CurFrame;
 
-			if (CurAnimation->CurFrame > CurAnimation->EndFrame)
+			if (CurAnimation->CurFrame > abs(static_cast<int>(CurAnimation->EndFrame - CurAnimation->StartFrame)))
 			{
 				if (true == CurAnimation->Loop)
 				{
-					CurAnimation->CurFrame = CurAnimation->StartFrame;
+					CurAnimation->CurFrame = 0;
 				}
 				else
 				{
@@ -85,8 +89,10 @@ void GameEngineRenderer::Render(GameEngineCamera* _Camera,float _DeltaTime)
 
 		}
 
+		size_t Frame = CurAnimation->Frames[CurAnimation->CurFrame];
+
 		Sprite = CurAnimation->Sprite;
-		const GameEngineSprite::Sprite& SpriteInfo = Sprite->GetSprite(CurAnimation->CurFrame);
+		const GameEngineSprite::Sprite& SpriteInfo = Sprite->GetSprite(Frame);
 		Texture = SpriteInfo.BaseTexture;
 		SetCopyPos(SpriteInfo.RenderPos);
 		SetCopyScale(SpriteInfo.RenderScale);
@@ -95,23 +101,20 @@ void GameEngineRenderer::Render(GameEngineCamera* _Camera,float _DeltaTime)
 		{
 			SetRenderScale(SpriteInfo.RenderScale * ScaleRatio);
 		}
-
 	}
 
 	if (nullptr == Texture)
 	{
-		MsgBoxAssert("이미지가 세팅이 안된 렌더러입니다");
+		MsgBoxAssert("이미지를 세팅하지 않은 랜더러 입니다.");
 	}
+
 	GameEngineWindowTexture* BackBuffer = GameEngineWindow::MainWindow.GetBackBuffer();
 
-	BackBuffer->TransCopy(Texture, Master->GetPos() + RenderPos - _Camera->GetPos(), RenderScale, CopyPos,CopyScale);
+	BackBuffer->TransCopy(Texture, GetActor()->GetPos() + RenderPos - _Camera->GetPos(), RenderScale, CopyPos, CopyScale);
+
 }
 
 
-bool GameEngineRenderer::IsDeath()
-{
-	return true == GameEngineObject::IsDeath() || Master->IsDeath();
-}
 GameEngineRenderer::Animation* GameEngineRenderer::FindAnimation(const std::string& _AniamtionName)
 {
 	std::string UpperName = GameEngineString::ToUpperReturn(_AniamtionName);
@@ -171,11 +174,27 @@ void GameEngineRenderer::CreateAnimation(
 		Animation.EndFrame = Animation.Sprite->GetSpriteCount() - 1;
 	}
 
-	Animation.Inters.resize((Animation.EndFrame - Animation.StartFrame)+1);
+	// 0 - 5 - 5
+	// 역
+
+	// 0, 0
+	Animation.Inters.resize(abs(static_cast<int>(Animation.EndFrame - Animation.StartFrame)) + 1);
+	Animation.Frames.resize(abs(static_cast<int>(Animation.EndFrame - Animation.StartFrame)) + 1);
+
+	int FrameDir = 1;
+
+	if (_Start > _End)
+	{
+		FrameDir = -1;
+	}
+
+	size_t Start = Animation.StartFrame;
 
 	for (size_t i = 0; i < Animation.Inters.size(); i++)
 	{
+		Animation.Frames[i] = Start;
 		Animation.Inters[i] = _Inter;
+		Start += FrameDir;
 	}
 
 	Animation.Loop = _Loop;
@@ -195,11 +214,38 @@ void GameEngineRenderer::ChangeAnimation(const std::string& _AniamtionName, bool
 	CurAnimation = FindAnimation(_AniamtionName);
 
 	CurAnimation->CurInter = CurAnimation->Inters[0];
-	CurAnimation->CurFrame = CurAnimation->StartFrame;
+	CurAnimation->CurFrame = 0;
 
 	if (nullptr == CurAnimation)
 	{
 		MsgBoxAssert("존재하지 않는 애니메이션으로 체인지 하려고 했습니다." + _AniamtionName);
 		return;
 	}
+}
+
+void GameEngineRenderer::Start()
+{
+	Camera = GetActor()->GetLevel()->GetMainCamera();
+}
+
+void GameEngineRenderer::SetOrder(int _Order)
+{
+	if (nullptr == Camera)
+	{
+		MsgBoxAssert("카메라가 세팅되지 않았는데 오더를 지정했습니다.");
+	}
+
+	// 0 => 5번으로 바꾸고 싶다.
+
+	// 오더를 변경하는건 마구잡이로 쓸만한건 아니다. 
+	// 0번 랜더 그룹
+	// 0번그룹에서는 삭제가 된다.
+	std::list<GameEngineRenderer*>& PrevRenders = Camera->Renderers[GetOrder()];
+	PrevRenders.remove(this);
+
+	GameEngineObject::SetOrder(_Order);
+
+	std::list<GameEngineRenderer*>& NextRenders = Camera->Renderers[GetOrder()];
+	NextRenders.push_back(this);
+
 }

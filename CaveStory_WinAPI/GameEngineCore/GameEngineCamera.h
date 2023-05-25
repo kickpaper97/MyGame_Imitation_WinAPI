@@ -1,23 +1,26 @@
-
 #pragma once
 #include "GameEngineRenderer.h"
-#include<list>
-#include<map>
+#include <map>
+#include <list>
 
+// Ό³Έν :
 class GameEngineRenderer;
 class GameEngineCamera
 {
+	friend class GameEngineRenderer;
 	friend class GameEngineActor;
 	friend class GameEngineLevel;
 
 public:
+	// constrcuter destructer
 	GameEngineCamera();
 	~GameEngineCamera();
 
+	// delete Function
 	GameEngineCamera(const GameEngineCamera& _Other) = delete;
 	GameEngineCamera(GameEngineCamera&& _Other) noexcept = delete;
 	GameEngineCamera& operator=(const GameEngineCamera& _Other) = delete;
-	GameEngineCamera& operator=(const GameEngineCamera&& _Other) noexcept = delete;
+	GameEngineCamera& operator=(GameEngineCamera&& _Other) noexcept = delete;
 
 	float4 GetPos()
 	{
@@ -46,6 +49,5 @@ private:
 	void Release();
 
 	void Render(float _Delta);
-
 };
 

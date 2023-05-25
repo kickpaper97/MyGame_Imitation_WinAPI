@@ -4,12 +4,13 @@ GameEngineFile::GameEngineFile()
 {
 }
 
-GameEngineFile::GameEngineFile(const std::string& _Path)
-	:GameEnginePath(_Path)
-
+GameEngineFile::~GameEngineFile()
 {
 }
 
-GameEngineFile::~GameEngineFile()
+
+GameEngineFile::GameEngineFile(const std::string& _path)
+	: GameEnginePath(_path)
 {
+
 }

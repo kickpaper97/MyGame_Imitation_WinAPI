@@ -5,7 +5,7 @@
     <ClInclude Include="TitleLevel.h">
       <Filter>Level</Filter>
     </ClInclude>
-    <ClInclude Include="PlayLevel.h">
+    <ClInclude Include="FirstCave_startPointLevel.h">
       <Filter>Level</Filter>
     </ClInclude>
     <ClInclude Include="EndingLevel.h">
@@ -23,13 +23,16 @@
     <ClInclude Include="Bullet.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="PlayActor.h">
+      <Filter>Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp" />
     <ClCompile Include="TitleLevel.cpp">
       <Filter>Level</Filter>
     </ClCompile>
-    <ClCompile Include="PlayLevel.cpp">
+    <ClCompile Include="FirstCave_startPointLevel.cpp">
       <Filter>Level</Filter>
     </ClCompile>
     <ClCompile Include="EndingLevel.cpp">
@@ -45,6 +48,9 @@
       <Filter>Global</Filter>
     </ClCompile>
     <ClCompile Include="Player_State.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayActor.cpp">
       <Filter>Global</Filter>
     </ClCompile>
   </ItemGroup>
