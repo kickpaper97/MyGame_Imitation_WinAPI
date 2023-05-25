@@ -9,6 +9,7 @@
 #include<GameEngineCore/GameEngineLevel.h>
 #include <GameEngineCore/GameEngineCamera.h>
 #include <CaveStory_Contents/Bullet.h>
+#include<GameEngineCore/GameEngineCollision.h>
 
 Player* Player::MainPlayer = nullptr;
 
@@ -92,6 +93,13 @@ void Player::Start()
 	}
 
 	{
+		BodyCollision = CreateCollision(CollisionOrder::PlayerBody);
+		BodyCollision->SetCollisionPos({ 0,-32 });
+		BodyCollision->SetCollisionScale({ 32, 54 });
+		BodyCollision->SetCollisionType(CollisionType::Rect);
+	}
+
+	{
 		ArmRenderer = CreateRenderer(RenderOrder::Nomal_Arms);
 		ArmRenderer->CreateAnimation("Left_Arm", "Arms.Bmp", 0, 0, 0.0f, false);
 		ArmRenderer->CreateAnimation("Right_Arm", "Arms.Bmp", 1, 1, 0.0f, false);
@@ -170,34 +178,36 @@ void Player::DirCheck()
 
 	bool ChangeDir = false;
 
-	if (true == GameEngineInput::IsDown('A')||true==GameEngineInput::IsPress('A'))
+	if (true == GameEngineInput::IsDown(VK_LEFT))
 	{
 		CheckDir = PlayerDir::Left;
 		Look = PlayerLook::Middle;
 	}
-	if (true == GameEngineInput::IsDown('D') || true == GameEngineInput::IsPress('D'))
+	if (true == GameEngineInput::IsDown(VK_RIGHT) )
 	{
 		CheckDir = PlayerDir::Right;
 		Look = PlayerLook::Middle;
 
 	}
-	if (true == GameEngineInput::IsDown('W'))
+	if (true == GameEngineInput::IsDown(VK_UP))
 	{
 		Look = PlayerLook::Up;
 		
 	}
-	if (true == GameEngineInput::IsDown('S') && true == GetIsOnAir())
+	if (true == GameEngineInput::IsDown(VK_DOWN) && true == GetIsOnAir())
 	{
 		Look = PlayerLook::Down;
 	}
 
+	
 
-	if (true == GameEngineInput::IsPress('A') && true == GameEngineInput::IsUp('D') /*&& Dir == PlayerDir::Right*/)
+
+	if (true == GameEngineInput::IsPress(VK_LEFT) && true == GameEngineInput::IsUp('D') /*&& Dir == PlayerDir::Right*/)
 	{
 		CheckDir = PlayerDir::Left;
 	}
 
-	if (true == GameEngineInput::IsPress('D') && true == GameEngineInput::IsUp('A') /*&& Dir == PlayerDir::Left*/)
+	if (true == GameEngineInput::IsPress(VK_RIGHT) && true == GameEngineInput::IsUp('A') /*&& Dir == PlayerDir::Left*/)
 	{
 		CheckDir = PlayerDir::Right;
 	}

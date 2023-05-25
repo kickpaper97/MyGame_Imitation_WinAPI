@@ -14,3 +14,11 @@ enum class RenderOrder
 	Nomal_Arms,
 	PlayUI,
 };
+
+enum class CollisionOrder
+{
+	Map,
+	Potal,
+	PlayerBody,
+	MonsterBody,
+};

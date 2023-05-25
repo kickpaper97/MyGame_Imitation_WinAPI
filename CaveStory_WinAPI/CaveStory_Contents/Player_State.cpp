@@ -48,8 +48,8 @@ void Player::IdleUpdate(float _Delta)
 	}
 
 
-	if (true == GameEngineInput::IsDown('A')
-		|| true == GameEngineInput::IsDown('D'))
+	if (true == GameEngineInput::IsDown(VK_LEFT)
+		|| true == GameEngineInput::IsDown(VK_RIGHT))
 	{
 		DirCheck();
 		ChanageState(PlayerState::Run);
@@ -100,6 +100,8 @@ void Player::RunUpdate(float _Delta)
 
 	MovePos = float4::ZERO;
 
+	DirCheck();
+
 	{
 		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
 		if (RGB(255, 255, 255) == Color)
@@ -122,27 +124,26 @@ void Player::RunUpdate(float _Delta)
 
 	}
 
-	DirCheck();
-	if (true == GameEngineInput::IsPress('A')&&Dir==PlayerDir::Left)
+	if (true == GameEngineInput::IsPress(VK_LEFT)&&Dir==PlayerDir::Left)
 	{
 		MovePos = { -Speed * _Delta, 0.0f };
 		
 
 	}
 
-	 if (true == GameEngineInput::IsPress('D') && Dir == PlayerDir::Right)
+	 if (true == GameEngineInput::IsPress(VK_RIGHT) && Dir == PlayerDir::Right)
 	{
  		MovePos = { Speed * _Delta, 0.0f };
 		
 	}
 
-	if (true == GameEngineInput::IsPress('W'))
+	if (true == GameEngineInput::IsPress(VK_UP))
 	{
 		Look = PlayerLook::Up;
 		
 	}
 
-	if (true == GameEngineInput::IsPress('S'))
+	if (true == GameEngineInput::IsPress(VK_DOWN))
 	{
 		Look= PlayerLook::Down;
 		
@@ -204,8 +205,8 @@ void Player::JumpUpdate(float _Delta)
 	float Speed = 300.0f;
 	float4 JumpPos = float4::ZERO;
 
-	DirCheck();
 
+	DirCheck();
 	JumpPos = float4::UP * JumpPower *_Delta* Speed;
 
 	
@@ -221,6 +222,7 @@ void Player::JumpUpdate(float _Delta)
 	{
 		GravityReset();
 		IsJump = false;
+		
 		DirCheck();
 		ChanageState(PlayerState::Idle);
 	}
