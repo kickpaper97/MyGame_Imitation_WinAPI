@@ -54,9 +54,6 @@ void FirstCave_StartPointLevel::Update(float _Delta)
 	}
 }
 
-void FirstCave_StartPointLevel::Render()
-{
-}
 
 void FirstCave_StartPointLevel::Release()
 {

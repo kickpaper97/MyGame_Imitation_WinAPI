@@ -28,9 +28,6 @@ void ContentsCore::Update(float _Delta)
 {
 }
 
-void ContentsCore::Render()
-{
-}
 
 void ContentsCore::Release()
 {
