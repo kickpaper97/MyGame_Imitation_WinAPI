@@ -101,6 +101,23 @@ void Player::RunUpdate(float _Delta)
 	MovePos = float4::ZERO;
 
 	DirCheck();
+	if (0.0f <= GetGravityVector().Y)
+	{
+		float4 CheckPos = float4::DOWN;
+		int CountCheck = 0;
+		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
+		while (RGB(255, 255, 255) != Color)
+		{
+			CheckPos += float4::DOWN;
+			Color = GetGroundColor(RGB(255, 255, 255), CheckPos);
+			++CountCheck;
+		}
+
+		if (3 > CountCheck)
+		{
+			SetPos(GetPos() + CheckPos);
+		}
+	}
 
 	{
 		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
@@ -187,6 +204,7 @@ void Player::RunUpdate(float _Delta)
 		DirCheck();
 		ChanageState(PlayerState::Idle);
 	}
+	else
 
 	
 	AddPos(MovePos);

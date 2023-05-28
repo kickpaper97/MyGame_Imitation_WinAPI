@@ -65,6 +65,7 @@ protected:
 
 	void DirCheck();
 
+
 	void ChangeAnimationState(const std::string& _StateName);
 
 

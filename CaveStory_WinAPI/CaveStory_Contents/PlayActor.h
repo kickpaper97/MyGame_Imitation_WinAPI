@@ -41,6 +41,16 @@ public:
 
 	float4 ActorCameraPos();
 
+	float4 GetGravityVector() const
+	{
+		return GravityVector;
+	}
+
+	void SetGravityVector(float4 _GravityVector)
+	{
+		GravityVector = _GravityVector;
+	}
+
 	
 protected:
 
