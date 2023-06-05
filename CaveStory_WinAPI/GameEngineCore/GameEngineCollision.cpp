@@ -262,8 +262,14 @@ bool GameEngineCollision::CollisonCheck(GameEngineCollision* _Other
 	return CollisionFunction[static_cast<int>(_ThisType)][static_cast<int>(_OtherType)](this, _Other);
 }
 
-void GameEngineCollision::DebugRender()
+void GameEngineCollision::DebugRender() 
 {
+
+	if (false == CollisionRenderValue)
+	{
+		return;
+	}
+
 	CollisionData Data = GetCollisionData();
 
 	Data.Pos -= GetActor()->GetLevel()->GetMainCamera()->GetPos();

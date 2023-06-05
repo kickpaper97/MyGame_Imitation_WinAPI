@@ -21,7 +21,7 @@ public:
 
 	bool IsDeath() override;
 
-	GameEngineActor* GetActor()
+	GameEngineActor* GetActor() 
 	{
 		return Master;
 	}

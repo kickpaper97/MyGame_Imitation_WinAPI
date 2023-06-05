@@ -1,11 +1,18 @@
 #pragma once
-#include <string>
 #include <Windows.h>
+#include <gdiplus.h>
+#include <string>
 #include <GameEngineBase/GameEngineMath.h>
 
 // Ό³Έν :
 class GameEngineWindowTexture
 {
+	friend class GDIPlusInit;
+
+private:
+	static ULONG_PTR Token;
+	static Gdiplus::GdiplusStartupInput Input;
+
 public:
 	// constrcuter destructer
 	GameEngineWindowTexture();
@@ -18,7 +25,7 @@ public:
 	GameEngineWindowTexture& operator=(GameEngineWindowTexture&& _Other) noexcept = delete;
 
 	void ResLoad(const std::string& _Path);
-	void ResCreate(HDC  _ImageDC)
+	void ResCreate(HDC  _ImageDC) 
 	{
 		ImageDC = _ImageDC;
 		ScaleCheck();
@@ -27,7 +34,7 @@ public:
 	void ResCreate(const float4& _Scale);
 
 
-	HDC GetImageDC()
+	HDC GetImageDC() 
 	{
 		return ImageDC;
 	}

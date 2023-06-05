@@ -73,17 +73,21 @@ private:
 	bool IsJump = false;
 	float JumpPower = 0.0f;
 
-	float4 MovePos = float4::ZERO;
 
 	GameEngineCollision* BodyCollision = nullptr;
 
 
 	void Start() override;
 	void Update(float _Delta) override;
+	void Render(float _Delta) override;
 
 	void LevelStart() override;
 		
 	static Player* MainPlayer;
+
+	float4 LeftCheck = { -20.0f, -50.0f };
+	float4 RightCheck = { 20.0f, -50.0f };
+	float4 UpCheck = { 0.0f,-64.f };
 
 };
 

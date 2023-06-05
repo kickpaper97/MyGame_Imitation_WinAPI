@@ -8,7 +8,7 @@
 class GameEngineSprite
 {
 public:
-	class Sprite
+	class Sprite 
 	{
 	public:
 		GameEngineWindowTexture* BaseTexture = nullptr;
@@ -33,7 +33,7 @@ public:
 
 	const Sprite& GetSprite(size_t _Index);
 
-	size_t GetSpriteCount()
+	size_t GetSpriteCount() 
 	{
 		return AllSprite.size();
 	}
@@ -43,6 +43,6 @@ protected:
 private:
 
 	std::vector<Sprite> AllSprite;
-
+	
 };
 

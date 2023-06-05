@@ -98,12 +98,13 @@ void Player::RunUpdate(float _Delta)
 {
 	float Speed = 300.0f;
 
-	MovePos = float4::ZERO;
+	float4 MovePos = float4::ZERO;
+	float4 CheckPos = UpCheck;
 
 	DirCheck();
 	if (0.0f <= GetGravityVector().Y)
 	{
-		float4 CheckPos = float4::DOWN;
+		CheckPos = float4::DOWN;
 		int CountCheck = 0;
 		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
 		while (RGB(255, 255, 255) != Color)
@@ -117,6 +118,8 @@ void Player::RunUpdate(float _Delta)
 		{
 			SetPos(GetPos() + CheckPos);
 		}
+
+		CheckPos = UpCheck;
 	}
 
 	{
@@ -143,6 +146,8 @@ void Player::RunUpdate(float _Delta)
 
 	if (true == GameEngineInput::IsPress(VK_LEFT)&&Dir==PlayerDir::Left)
 	{
+		CheckPos = LeftCheck;
+		
 		MovePos = { -Speed * _Delta, 0.0f };
 		
 
@@ -150,6 +155,8 @@ void Player::RunUpdate(float _Delta)
 
 	 if (true == GameEngineInput::IsPress(VK_RIGHT) && Dir == PlayerDir::Right)
 	{
+		 CheckPos = RightCheck;
+		 
  		MovePos = { Speed * _Delta, 0.0f };
 		
 	}
@@ -206,11 +213,17 @@ void Player::RunUpdate(float _Delta)
 	}
 	else
 
-	
-	AddPos(MovePos);
-	
-	GetLevel()->GetMainCamera()->AddPos(MovePos);
+	{
+		
+		unsigned int CeilingColor = GetGroundColor(RGB(255, 255, 255), UpCheck+float4::UP);
+		unsigned int Color = GetGroundColor(RGB(255, 255, 255), CheckPos);
 
+		if (Color == RGB(255, 255, 255)&&CeilingColor== RGB(255, 255, 255))
+		{
+			AddPos(MovePos);
+			GetLevel()->GetMainCamera()->AddPos(MovePos);
+		}
+	}
 
 }
 
@@ -227,22 +240,37 @@ void Player::JumpUpdate(float _Delta)
 	DirCheck();
 	JumpPos = float4::UP * JumpPower *_Delta* Speed;
 
-	
-	AddPos(JumpPos+MovePos);
-	
+	{
 
-	unsigned int Color = GetGroundColor(RGB(255, 255, 255));
-	if (RGB(255, 255, 255) == Color)
-	{
-		Gravity(_Delta);
-	}
-	else
-	{
-		GravityReset();
-		IsJump = false;
+		unsigned int CeilingColor = GetGroundColor(RGB(255, 255, 255), UpCheck );
 		
-		DirCheck();
-		ChanageState(PlayerState::Idle);
+		if (CeilingColor == RGB(255, 255, 255))
+		{
+			AddPos(JumpPos);
+		}
+		else
+		{
+			AddPos({ 0,3 });
+			JumpPos = float4::DOWN;
+			AddPos(JumpPos);
+			
+		}
+	}
+	
+	{
+		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
+		if (RGB(255, 255, 255) == Color)
+		{
+			Gravity(_Delta);
+		}
+		else
+		{
+			GravityReset();
+			IsJump = false;
+		
+			DirCheck();
+			ChanageState(PlayerState::Idle);
+		}
 	}
 }
 

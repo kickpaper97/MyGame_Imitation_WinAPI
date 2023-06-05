@@ -95,7 +95,7 @@ void Player::Start()
 	{
 		BodyCollision = CreateCollision(CollisionOrder::PlayerBody);
 		BodyCollision->SetCollisionPos({ 0,-32 });
-		BodyCollision->SetCollisionScale({ 32, 54 });
+		BodyCollision->SetCollisionScale({ 40, 54 });
 		BodyCollision->SetCollisionType(CollisionType::Rect);
 	}
 
@@ -117,6 +117,8 @@ void Player::Start()
 
 	}
 
+	
+
 	ChanageState(PlayerState::Idle);
 	Dir = PlayerDir::Right;
 
@@ -125,6 +127,22 @@ void Player::Start()
 
 void Player::Update(float _Delta)
 {
+	if (true == GameEngineInput::IsDown('X'))
+	{
+		
+		Bullet* NewBullet = GetLevel()->CreateActor<Bullet>();
+		NewBullet->SetPos(GetPos());
+		NewBullet->SetDir(Look,Dir);
+		
+		
+	}
+
+	if (true == GameEngineInput::IsPress('Y'))
+	{
+		// GameEngineWindow::MainWindow.AddDoubleBufferingCopyScaleRatio(-1.0f * _Delta);
+		GameEngineLevel::CollisionDebugRenderSwitch();
+	}
+
 	StateUpdate(_Delta);
 	CameraFocus();
 }
@@ -301,4 +319,25 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 void Player::LevelStart()
 {
 	MainPlayer = this;
+}
+void Player::Render(float _Delta) 
+{
+	HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
+	CollisionData Data;
+
+	Data.Pos = ActorCameraPos();
+	Data.Scale = { 5,5 };
+	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
+
+	Data.Pos = ActorCameraPos() + LeftCheck;
+	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
+
+	Data.Pos = ActorCameraPos() + RightCheck;
+	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
+
+
+	Data.Pos = ActorCameraPos() + UpCheck;
+	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
+
+
 }

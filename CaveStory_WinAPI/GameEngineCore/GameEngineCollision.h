@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 
-enum class CollisionType
+enum class CollisionType 
 {
 	Point, // 점
 	Rect, // 사각형
@@ -13,26 +13,26 @@ enum class CollisionType
 	Max, // 원
 };
 
-class CollisionData
+class CollisionData 
 {
 public:
 	float4 Pos;
 	float4 Scale;
 
-	float Left()
-	{
+	float Left() 
+	{ 
 		return Pos.X - Scale.hX();
 	}
-	float Right()
+	float Right() 
 	{
 		return Pos.X + Scale.hX();
 	}
-	float Top()
-	{
+	float Top() 
+	{ 
 		return Pos.Y - Scale.hY();
 	}
-	float Bot()
-	{
+	float Bot() 
+	{ 
 		return Pos.Y + Scale.hY();
 	}
 
@@ -62,7 +62,7 @@ class GameEngineCollision : public GameEngineActorSubObject
 {
 	// 함수 포인터
 	static bool (*CollisionFunction[static_cast<int>(CollisionType::Max)][static_cast<int>(CollisionType::Max)])(GameEngineCollision* _Left, GameEngineCollision* _Right);
-
+	
 	friend CollisionInitClass;
 	friend GameEngineActor;
 	friend GameEngineLevel;
@@ -135,7 +135,7 @@ public:
 		return CollisionScale;
 	}
 
-	CollisionData GetCollisionData()
+	CollisionData GetCollisionData() 
 	{
 		CollisionData Data;
 		Data.Pos = GetActorPivotPos();
@@ -148,10 +148,24 @@ public:
 		ColType = _ColType;
 	}
 
+	void On() override
+	{
+		GameEngineActorSubObject::On();
+		CollisionRenderValue = true;
+	}
+
+	void Off() override
+	{
+		GameEngineActorSubObject::Off();
+		CollisionRenderValue = false;
+	}
+
 protected:
 
 private:
 	CollisionType ColType = CollisionType::Rect;
+
+	bool CollisionRenderValue = true;
 
 	float4 CollisionPos;
 	float4 CollisionScale;

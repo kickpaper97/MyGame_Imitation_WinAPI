@@ -3,15 +3,15 @@
 #include <GameEngineBase/GameEngineDirectory.h>
 #include "ResourcesManager.h"
 
-GameEngineSprite::GameEngineSprite()
+GameEngineSprite::GameEngineSprite() 
 {
 }
 
-GameEngineSprite::~GameEngineSprite()
+GameEngineSprite::~GameEngineSprite() 
 {
 }
 
-void GameEngineSprite::CreateSpriteSheet(GameEngineWindowTexture* _Texture, int _XCount, int _YCount)
+void GameEngineSprite::CreateSpriteSheet(GameEngineWindowTexture* _Texture, int _XCount, int _YCount) 
 {
 	float4 TexScale = _Texture->GetScale();
 
@@ -41,7 +41,7 @@ void GameEngineSprite::CreateSpriteSheet(GameEngineWindowTexture* _Texture, int 
 		StartPos.Y += ImageSize.Y;
 	}
 
-
+	
 }
 
 void GameEngineSprite::CreateSpriteFolder(const std::string& _Path)
