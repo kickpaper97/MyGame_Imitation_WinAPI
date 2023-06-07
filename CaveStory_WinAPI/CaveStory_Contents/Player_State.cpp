@@ -147,7 +147,7 @@ void Player::RunUpdate(float _Delta)
 	if (true == GameEngineInput::IsPress(VK_LEFT)&&Dir==PlayerDir::Left)
 	{
 		CheckPos = LeftCheck;
-		
+		UpCheck.X = LeftCheck.X;
 		MovePos = { -Speed * _Delta, 0.0f };
 		
 
@@ -156,7 +156,7 @@ void Player::RunUpdate(float _Delta)
 	 if (true == GameEngineInput::IsPress(VK_RIGHT) && Dir == PlayerDir::Right)
 	{
 		 CheckPos = RightCheck;
-		 
+		 UpCheck.X = RightCheck.X;
  		MovePos = { Speed * _Delta, 0.0f };
 		
 	}
@@ -192,9 +192,9 @@ void Player::RunUpdate(float _Delta)
 	if (true == GameEngineInput::IsUp('Z'))
 	{
 
-		if (0.3 >= JumpPower)
+		if (0.5 >= JumpPower)
 		{
-			JumpPower = 0.3f;
+			JumpPower = 0.5f;
 		}
 		IsJump = true;
 		DirCheck();
@@ -215,14 +215,17 @@ void Player::RunUpdate(float _Delta)
 
 	{
 		
-		unsigned int CeilingColor = GetGroundColor(RGB(255, 255, 255), UpCheck+float4::UP);
+		unsigned int CeilingColor = GetGroundColor(RGB(255, 255, 255), UpCheck);
 		unsigned int Color = GetGroundColor(RGB(255, 255, 255), CheckPos);
-
-		if (Color == RGB(255, 255, 255)&&CeilingColor== RGB(255, 255, 255))
+		if(CeilingColor== RGB(255, 255, 255))
 		{
-			AddPos(MovePos);
-			GetLevel()->GetMainCamera()->AddPos(MovePos);
+			if (Color == RGB(255, 255, 255))
+			{
+				AddPos(MovePos);
+				GetLevel()->GetMainCamera()->AddPos(MovePos);
+			}
 		}
+		
 	}
 
 }
@@ -239,7 +242,6 @@ void Player::JumpUpdate(float _Delta)
 
 	DirCheck();
 	JumpPos = float4::UP * JumpPower *_Delta* Speed;
-
 	{
 
 		unsigned int CeilingColor = GetGroundColor(RGB(255, 255, 255), UpCheck );
@@ -250,10 +252,19 @@ void Player::JumpUpdate(float _Delta)
 		}
 		else
 		{
-			AddPos({ 0,3 });
-			JumpPos = float4::DOWN;
-			AddPos(JumpPos);
+			while (CeilingColor != RGB(255, 255, 255))
+			{
+				CeilingColor = GetGroundColor(RGB(255, 255, 255), float4::DOWN);
+				AddPos(float4::DOWN);
+				
+			}
 			
+			JumpPower = 0;
+			GravityReset();
+			
+			
+			float4 posi=GetPos();
+			int a = 0;
 		}
 	}
 	
