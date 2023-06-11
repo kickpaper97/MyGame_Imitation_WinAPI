@@ -9,10 +9,11 @@ enum class UpdateOrder
 enum class RenderOrder
 {
 	BackGround,
-	Jump_Arms,
-	Play,
-	Nomal_Arms,
-	PlayUI,
+	BackPlay,
+	MiddlePlay,
+	FrontPlay,
+	FrontGround,
+	
 };
 
 enum class CollisionOrder

@@ -11,6 +11,9 @@
 #include <CaveStory_Contents/Bullet.h>
 #include<GameEngineCore/GameEngineCollision.h>
 
+#define  MaxEXP 100
+
+
 Player* Player::MainPlayer = nullptr;
 
 Player::Player()
@@ -50,7 +53,7 @@ void Player::Start()
 	}
 
 	{
-		MainRenderer = CreateRenderer(RenderOrder::Play);
+		MainRenderer = CreateRenderer(RenderOrder::MiddlePlay);
 
 
 
@@ -100,7 +103,7 @@ void Player::Start()
 	}
 
 	{
-		ArmRenderer = CreateRenderer(RenderOrder::Nomal_Arms);
+		ArmRenderer = CreateRenderer(RenderOrder::FrontPlay);
 		ArmRenderer->CreateAnimation("Left_Arm", "Arms.Bmp", 0, 0, 0.0f, false);
 		ArmRenderer->CreateAnimation("Right_Arm", "Arms.Bmp", 1, 1, 0.0f, false);
 
@@ -157,6 +160,8 @@ void Player::StateUpdate(float _Delta)
 		return RunUpdate(_Delta);
 	case PlayerState::Jump:
 		return JumpUpdate(_Delta);
+	case PlayerState::Hover:
+		return HoverUpdate(_Delta);
 	default:
 		break;
 	}
@@ -176,11 +181,11 @@ void Player::ChanageState(PlayerState _State)
 			RunStart();
 			break;
 		case PlayerState::Jump:
-			if (true == IsJump)
-			{
 			JumpStart();
-
-			}
+			break;
+		case PlayerState::Hover:
+			HoverStart();
+			break;
 		default:
 			break;
 		}
@@ -268,7 +273,7 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 	{
 	case PlayerLook::Up:
 
-		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::Jump_Arms));
+		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::BackPlay));
 
 		if (Dir == PlayerDir::Left)
 		{
@@ -282,7 +287,7 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 		break;
 	case PlayerLook::Middle:
 
-		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::Nomal_Arms));
+		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::FrontPlay));
 		if (Dir == PlayerDir::Left)
 		{
 			ArmRenderer->SetRenderPos({ -28,-12 });
@@ -294,7 +299,7 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 		ArmRenderer->ChangeAnimation(AnimationName + "Arm");
 		break;
 	case PlayerLook::Down:
-		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::Jump_Arms));
+		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::BackPlay));
 		if (Dir == PlayerDir::Left)
 		{
 			ArmRenderer->SetRenderPos({ -34,-4 });
@@ -322,7 +327,15 @@ void Player::LevelStart()
 }
 void Player::Render(float _Delta) 
 {
+
+	deltacheck += _Delta;
+	std::string Text = "";
+	Text += "플레이어 테스트 값 : ";
+	Text += std::to_string(deltacheck);
+
 	HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
+	TextOutA(dc, 2, 3, Text.c_str(), static_cast<int>(Text.size()));
+
 	CollisionData Data;
 
 	Data.Pos = ActorCameraPos();

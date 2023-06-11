@@ -51,6 +51,11 @@ public:
 		GravityVector = _GravityVector;
 	}
 
+	void AddGravityVector(float4 _GravityVector)
+	{
+		GravityVector += _GravityVector;
+	}
+
 	
 protected:
 

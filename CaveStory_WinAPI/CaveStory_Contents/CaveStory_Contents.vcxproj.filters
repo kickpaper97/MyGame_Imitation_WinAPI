@@ -26,6 +26,9 @@
     <ClInclude Include="PlayActor.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="EggCorridor.h">
+      <Filter>Level</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp" />
@@ -52,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="PlayActor.cpp">
       <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="EggCorridor.cpp">
+      <Filter>Level</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

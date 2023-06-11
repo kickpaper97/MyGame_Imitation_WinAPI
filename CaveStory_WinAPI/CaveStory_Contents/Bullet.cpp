@@ -29,7 +29,7 @@ void Bullet::Start()
 
 	}
 	{
-		Renderer = CreateRenderer(RenderOrder::Play);
+		Renderer = CreateRenderer(RenderOrder::MiddlePlay);
 		Renderer->CreateAnimation("BulletFire", "Bullet_Effect.Bmp",0,3,0.05f,false);
 		Renderer->ChangeAnimation("");
 

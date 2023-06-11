@@ -40,6 +40,6 @@ void TitleLevel::Update(float _DeltaTime)
 {
 	if (true == GameEngineInput::IsDown('P'))
 	{
-		GameEngineCore::ChangeLevel("FirstCave_startPointLevel");
+		GameEngineCore::ChangeLevel("EggCorridor");
 	}
 }

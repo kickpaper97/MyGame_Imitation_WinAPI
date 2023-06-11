@@ -7,6 +7,7 @@ enum class PlayerState
 	Idle,
 	Run,
 	Jump,
+	Hover,
 	Max,
 };
 
@@ -50,11 +51,13 @@ protected:
 	void IdleStart();
 	void RunStart();
 	void JumpStart();
+	void HoverStart();
 
 	// 클래스로 만들어도 되고.
 	void IdleUpdate(float _Delta);
 	void RunUpdate(float _Delta);
 	void JumpUpdate(float _Delta);
+	void HoverUpdate(float _Delta);
 
 	void ChanageState(PlayerState State);
 
@@ -70,9 +73,15 @@ protected:
 
 
 private:
-	bool IsJump = false;
 	float JumpPower = 0.0f;
+	int Exp = 0;
+	int PlayerLevel = 1;
 
+	bool CanHover = true;
+	float4 MovePos = float4::ZERO;
+	float4 CheckPos = UpCheck;
+
+	float deltacheck = 0.0f;
 
 	GameEngineCollision* BodyCollision = nullptr;
 
