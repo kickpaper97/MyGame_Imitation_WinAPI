@@ -130,11 +130,20 @@ void Player::Start()
 
 void Player::Update(float _Delta)
 {
+
 	if (true == GameEngineInput::IsDown('X'))
 	{
 		
 		Bullet* NewBullet = GetLevel()->CreateActor<Bullet>();
 		NewBullet->SetPos(GetPos());
+		if (Dir == PlayerDir::Right)
+		{
+			NewBullet->AddPos({ 40,-20 });
+		}
+		else if (Dir == PlayerDir::Left)
+		{
+			NewBullet->AddPos({ -40,-20 });
+		}
 		NewBullet->SetDir(Look,Dir);
 		
 		
@@ -148,6 +157,7 @@ void Player::Update(float _Delta)
 
 	StateUpdate(_Delta);
 	CameraFocus();
+
 }
 
 void Player::StateUpdate(float _Delta)
@@ -196,20 +206,29 @@ void Player::ChanageState(PlayerState _State)
 
 void Player::DirCheck()
 {
-	PlayerDir CheckDir = PlayerDir::Max;
+	
+	
 	Look = PlayerLook::Middle;
 
 	bool ChangeDir = false;
-
-	if (true == GameEngineInput::IsDown(VK_LEFT))
+	if (true == GameEngineInput::IsFree(VK_LEFT) && true == GameEngineInput::IsFree(VK_RIGHT))
 	{
-		CheckDir = PlayerDir::Left;
-		Look = PlayerLook::Middle;
+		return;
 	}
-	if (true == GameEngineInput::IsDown(VK_RIGHT) )
+
+	if (true == GameEngineInput::IsDown(VK_LEFT)|| true == GameEngineInput::IsFree(VK_RIGHT))
 	{
-		CheckDir = PlayerDir::Right;
+		Dir = PlayerDir::Left;
 		Look = PlayerLook::Middle;
+		ChangeAnimationState(CurState);
+		return;
+	}
+	if (true == GameEngineInput::IsDown(VK_RIGHT) || true == GameEngineInput::IsFree(VK_LEFT))
+	{
+		Dir = PlayerDir::Right;
+		Look = PlayerLook::Middle;
+		ChangeAnimationState(CurState);
+		return;
 
 	}
 	if (true == GameEngineInput::IsDown(VK_UP))
@@ -217,7 +236,7 @@ void Player::DirCheck()
 		Look = PlayerLook::Up;
 		
 	}
-	if (true == GameEngineInput::IsDown(VK_DOWN) && true == GetIsOnAir())
+	if (true == GameEngineInput::IsDown(VK_DOWN) && float4::ZERO == GetGravityVector())
 	{
 		Look = PlayerLook::Down;
 	}
@@ -225,27 +244,17 @@ void Player::DirCheck()
 	
 
 
-	if (true == GameEngineInput::IsPress(VK_LEFT) && true == GameEngineInput::IsUp('D') /*&& Dir == PlayerDir::Right*/)
-	{
-		CheckDir = PlayerDir::Left;
-	}
+	//if (true == GameEngineInput::IsPress(VK_LEFT) && true == GameEngineInput::IsUp('D') /*&& Dir == PlayerDir::Right*/)
+	//{
+	//	Dir = PlayerDir::Left;
+	//}
 
-	if (true == GameEngineInput::IsPress(VK_RIGHT) && true == GameEngineInput::IsUp('A') /*&& Dir == PlayerDir::Left*/)
-	{
-		CheckDir = PlayerDir::Right;
-	}
+	//if (true == GameEngineInput::IsPress(VK_RIGHT) && true == GameEngineInput::IsUp('A') /*&& Dir == PlayerDir::Left*/)
+	//{
+	//	Dir = PlayerDir::Right;
+	//}
 
 
-	if (CheckDir != PlayerDir::Max)
-	{
-		ChangeDir = true;
-		Dir = CheckDir;
-	}
-
-	if (CheckDir != PlayerDir::Max && true == ChangeDir)
-	{
-		ChangeAnimationState(CurState);
-	}
 
 }
 
@@ -327,11 +336,12 @@ void Player::LevelStart()
 }
 void Player::Render(float _Delta) 
 {
+	
 
 	deltacheck += _Delta;
 	std::string Text = "";
 	Text += "플레이어 테스트 값 : ";
-	Text += std::to_string(deltacheck);
+	Text += std::to_string(GetLevel()->GetMainCamera()->GetPos().Y);
 
 	HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
 	TextOutA(dc, 2, 3, Text.c_str(), static_cast<int>(Text.size()));

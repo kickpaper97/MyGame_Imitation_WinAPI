@@ -98,6 +98,19 @@ void BackGround::Init(const std::string& _FileName, const std::string& _DebugFil
 
 }
 
+//
+//float4 BackGround::GetBackGroundScale() const
+//{
+//	if (Scale == float4::ZERO)
+//	{
+//		MsgBoxAssert("세팅되지 않은 배경의 Scale을 가져오려 했습니다.");
+//		return ;
+//	}
+//
+//	
+//
+//	return Scale;
+//}
 
 void BackGround::SwitchRender()
 {

@@ -49,7 +49,7 @@ protected:
 
 private:
 	float4 Dir;
-	float Speed = 2000.0f;
+	float Speed = 1000.0f;
 
 	
 

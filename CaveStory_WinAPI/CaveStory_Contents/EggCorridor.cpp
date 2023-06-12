@@ -47,7 +47,9 @@ void EggCorridor::Start()
 	MiddlePtr->Init("EggCorridor_Middle.Bmp", "EggCorridor_Ground.Bmp");
 
 	LevelPlayer = CreateActor<Player>();
+
 	LevelPlayer->SetGroundTexture("EggCorridor_Ground.Bmp");
+	LevelPlayer->SetActorBoundery("EggCorridor_Middle.Bmp");
 	LevelPlayer->SetPos(float4{ 925 ,500 });
 	
 }
@@ -80,6 +82,8 @@ void EggCorridor::LevelStart(GameEngineLevel* _PrevLevel)
 
 
 	LevelPlayer->SetGroundTexture("EggCorridor_Ground.Bmp");
+	LevelPlayer->SetActorBoundery("EggCorridor_Middle.Bmp");
+
 
 	float4 WinScale = GameEngineWindow::MainWindow.GetScale();
 	//LevelPlayer->SetPos(WinScale.Half());

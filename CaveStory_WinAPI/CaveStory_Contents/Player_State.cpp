@@ -6,13 +6,17 @@
 #include <GameEngineBase/GameEngineString.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
 
+#define PlayerSpeed 300.0f
+
 
 
 
 void Player::IdleStart()
 {
+	
+
 	ChangeAnimationState("Idle");
-	MovePos = float4::ZERO;
+	
 	JumpPower = 0;
 }
 
@@ -72,7 +76,10 @@ void Player::IdleUpdate(float _Delta)
 
 
 	if (true == GameEngineInput::IsDown(VK_LEFT)
-		|| true == GameEngineInput::IsDown(VK_RIGHT))
+		|| true == GameEngineInput::IsDown(VK_RIGHT)
+		|| true == GameEngineInput::IsPress(VK_LEFT)
+		|| true == GameEngineInput::IsPress(VK_RIGHT)
+		)
 	{
 		DirCheck();
 		ChanageState(PlayerState::Run);
@@ -123,11 +130,13 @@ void Player::IdleUpdate(float _Delta)
 
 void Player::RunUpdate(float _Delta)
 {
-	float Speed = 300.0f;
+	
 
 	
 
 	DirCheck();
+
+	//속도 빠를때 경사로 공중부양 제한
 	if (0.0f <= GetGravityVector().Y)
 	{
 		CheckPos = float4::DOWN;
@@ -176,37 +185,19 @@ void Player::RunUpdate(float _Delta)
 		
 		CheckPos = LeftCheck;
 		UpCheck.X = LeftCheck.X;
-		MovePos = { -Speed * _Delta, 0.0f };
+		MovePos = { -PlayerSpeed * _Delta, 0.0f };
 		
 
 	}
-	if (true == GameEngineInput::IsUp(VK_LEFT))
-	{
-		if (true == GameEngineInput::IsPress(VK_RIGHT))
-		{
-			Dir = PlayerDir::Right;
-		}
-		DirCheck();
-	}
-
 	 if (true == GameEngineInput::IsPress(VK_RIGHT) && Dir == PlayerDir::Right)
 	{
 
 		
 		 CheckPos = RightCheck;
 		 UpCheck.X = RightCheck.X;
- 		MovePos = { Speed * _Delta, 0.0f };
+ 		MovePos = { PlayerSpeed * _Delta, 0.0f };
 		
 	}
-	 if (true == GameEngineInput::IsUp(VK_RIGHT))
-	 {
-		 if (true == GameEngineInput::IsPress(VK_LEFT))
-		 {
-			 Dir = PlayerDir::Left;
-		 }
-		 DirCheck();
-
-	 }
 
 	if (true == GameEngineInput::IsPress(VK_UP))
 	{
@@ -235,9 +226,9 @@ void Player::RunUpdate(float _Delta)
 
 	if (true == GameEngineInput::IsUp('Z'))
 	{
-		if (1.5f <= JumpPower)
+		if (2.5f <= JumpPower)
 		{
-			JumpPower = 1.5f;
+			JumpPower = 2.5f;
 		}
 		else if (1.0 >= JumpPower)
 		{
@@ -249,6 +240,7 @@ void Player::RunUpdate(float _Delta)
 
 			DirCheck();
 			ChanageState(PlayerState::Jump);
+			return;
 
 
 		}
@@ -263,6 +255,7 @@ void Player::RunUpdate(float _Delta)
 	{
 		DirCheck();
 		ChanageState(PlayerState::Idle);
+		return;
 	}
 	else
 
@@ -281,13 +274,13 @@ void Player::RunUpdate(float _Delta)
 		}
 		
 	}
-
+	DirCheck();
 }
 
 void Player::JumpUpdate(float _Delta) 
 {
 	
-	float Speed = 300.0f;
+	
 	//float4 JumpPos = float4::ZERO;
 	
 
@@ -299,7 +292,7 @@ void Player::JumpUpdate(float _Delta)
 	{
 		CheckPos = LeftCheck;
 		UpCheck.X = LeftCheck.X;
-		MovePos = { -Speed * _Delta,0.0f };
+		MovePos = { -PlayerSpeed * _Delta,0.0f };
 
 
 	}
@@ -308,20 +301,37 @@ void Player::JumpUpdate(float _Delta)
 	{
 		CheckPos = RightCheck;
 		UpCheck.X = RightCheck.X;
-		MovePos = { Speed * _Delta, 0.0f };
+		MovePos = { PlayerSpeed * _Delta, 0.0f };
 
 	}
 
-	AddPos(MovePos);
-	GetLevel()->GetMainCamera()->AddPos(MovePos);
 
 	{
 
-		unsigned int CeilingColor = GetGroundColor(RGB(255, 255, 255), UpCheck );
-		
+		unsigned int CeilingColor = GetGroundColor(RGB(255, 255, 255), UpCheck);
+		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
+
 		if (CeilingColor == RGB(255, 255, 255))
 		{
-			
+			if (Color == RGB(255, 255, 255))
+			{
+				if (true == GameEngineInput::IsDown('Z'))
+				{
+					if (true == CanHover)
+					{
+						ChanageState(PlayerState::Hover);
+						return;
+					}
+				}
+				AddPos(MovePos);
+				GetLevel()->GetMainCamera()->AddPos(MovePos);
+			}
+			else
+			{
+				DirCheck();
+				MovePos = float4::ZERO;
+				ChanageState(PlayerState::Idle);
+			}
 		}
 		else
 		{
@@ -329,42 +339,18 @@ void Player::JumpUpdate(float _Delta)
 			{
 				CeilingColor = GetGroundColor(RGB(255, 255, 255), float4::DOWN);
 				AddPos(float4::DOWN);
-				
+
 			}
-			
+
 			GravityReset();
-			
-			
+
 		}
 
+	}
 
+			/*AddPos(MovePos);
+			GetLevel()->GetMainCamera()->AddPos(MovePos);*/
 	
-	{
-		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
-		if (RGB(255, 255, 255) == Color)
-		{
-			if (true == GameEngineInput::IsDown('Z'))
-			{
-				if (true == CanHover)
-				{
-					ChanageState(PlayerState::Hover);
-					return;
-				}
-			}
-
-		
-		}
-		else
-		{
-			GravityReset();
-			
-		
-			DirCheck();
-			ChanageState(PlayerState::Idle);
-		}
-	}
-
-	}
 }
 
 void Player::HoverUpdate(float _Delta)
@@ -386,11 +372,33 @@ void Player::HoverUpdate(float _Delta)
 
 	}
 
+	DirCheck();
+
+	if (true == GameEngineInput::IsPress(VK_LEFT) && Dir == PlayerDir::Left)
+	{
+
+
+		CheckPos = LeftCheck;
+		UpCheck.X = LeftCheck.X;
+		MovePos = { -PlayerSpeed * _Delta, 0.0f };
+
+
+	}
+	if (true == GameEngineInput::IsPress(VK_RIGHT) && Dir == PlayerDir::Right)
+	{
+
+
+		CheckPos = RightCheck;
+		UpCheck.X = RightCheck.X;
+		MovePos = { PlayerSpeed * _Delta, 0.0f };
+
+	}
+
 		{
 			unsigned int Color = GetGroundColor(RGB(255, 255, 255));
 			if (RGB(255, 255, 255) != Color)
 			{
-				HoverTime = 2.0f;
+				HoverTime = 1.0f;
 				ChanageState(PlayerState::Idle);
 				return;
 			}
@@ -414,7 +422,16 @@ void Player::HoverUpdate(float _Delta)
 
 
 			}
+			else
+			{
+
+			AddPos(MovePos);
+			GetLevel()->GetMainCamera()->AddPos(MovePos);
+			}
+			
+			
 		}
+
 }
 
 

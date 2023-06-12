@@ -18,6 +18,9 @@ public:
 
 	void Init(const std::string& _FileName, const std::string& _DebugFileName,const float _scaleRatio=1);
 
+	//float4 GetBackGroundScale() const;
+	
+
 
 	void SwitchRender();
 
@@ -34,7 +37,7 @@ private:
 	class GameEngineRenderer* Renderer;
 	class GameEngineRenderer* DebugRenderer;
 
-
+	//float4 Scale = float4::ZERO;
 
 
 	void Start() override;

@@ -35,10 +35,14 @@ void FirstCave_StartPointLevel::Start()
 
 	BackGroundPtr = CreateActor<BackGround>();
 	BackGroundPtr->Init("FirstCave_StartPoint.Bmp","Col_FirstCave_StartPoint.Bmp");
+	
 
 	LevelPlayer = CreateActor<Player>();
 	LevelPlayer->SetGroundTexture("Col_FirstCave_StartPoint.Bmp");
+	LevelPlayer->SetActorBoundery("FirstCave_StartPoint.Bmp");
 	LevelPlayer->SetPos(float4{925 ,500 });
+
+	
 }
 
 void FirstCave_StartPointLevel::Update(float _Delta)
@@ -69,6 +73,7 @@ void FirstCave_StartPointLevel::LevelStart(GameEngineLevel* _PrevLevel)
 
 
 	LevelPlayer->SetGroundTexture("Col_FirstCave_StartPoint.Bmp");
+	LevelPlayer->SetActorBoundery("FirstCave_StartPoint.Bmp");
 
 	float4 WinScale = GameEngineWindow::MainWindow.GetScale();
 	//LevelPlayer->SetPos(WinScale.Half());

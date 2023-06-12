@@ -28,10 +28,6 @@ public:
 	{
 		IsGravity = false;
 	}
-	bool GetIsOnAir()
-	{
-		return IsGravity;
-	}
 
 	void SetGroundTexture(const std::string& _GroundTextureName);
 
@@ -56,19 +52,22 @@ public:
 		GravityVector += _GravityVector;
 	}
 
+	void SetActorBoundery(const std::string& _BounderyTextureName);
+
 	
 protected:
+	
 
 private:
 	class GameEngineWindowTexture* GroundTexture = nullptr;
+	class GameEngineWindowTexture* BounderyTexture = nullptr;
 
+	float4 Boundery = float4::ZERO;
 	
-
-
 	bool IsGravity = true;
 
-
-	float GravityPower = 1.0f;
+	float GravityPower = 1.5f;
 	float4 GravityVector = float4::ZERO;
+
 };
 
