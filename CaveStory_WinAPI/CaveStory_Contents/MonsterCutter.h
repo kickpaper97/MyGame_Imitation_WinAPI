@@ -35,6 +35,6 @@ private:
 	float4 RightBodyCheck = { 30.0f, -10.0f };
 	float4 LeftHeadCheck;
 	float4 RightHeadCheck;
-	float4 UpCheck = { 0.0f,-50.f };
+	float4 UpCheck = { 0.0f,-55.f };
 };
 

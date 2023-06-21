@@ -111,13 +111,8 @@ void GameEngineRenderer::TextRender(float _DeltaTime)
 	return;
 }
 
-void GameEngineRenderer::Render(float _DeltaTime) 
+void GameEngineRenderer::Update(float _Delta)
 {
-	if ("" != Text)
-	{
-		TextRender(_DeltaTime);
-		return;
-	}
 
 	if (nullptr != CurAnimation)
 	{
@@ -126,7 +121,7 @@ void GameEngineRenderer::Render(float _DeltaTime)
 			CurAnimation->IsEnd = false;
 		}
 
-		CurAnimation->CurInter -= _DeltaTime;
+		CurAnimation->CurInter -= _Delta;
 		if (0.0f >= CurAnimation->CurInter)
 		{
 			++CurAnimation->CurFrame;
@@ -140,7 +135,7 @@ void GameEngineRenderer::Render(float _DeltaTime)
 				{
 					CurAnimation->CurFrame = 0;
 				}
-				else 
+				else
 				{
 					--CurAnimation->CurFrame;
 				}
@@ -149,7 +144,13 @@ void GameEngineRenderer::Render(float _DeltaTime)
 			CurAnimation->CurInter
 				= CurAnimation->Inters[CurAnimation->CurFrame];
 		}
+	}
+}
 
+void GameEngineRenderer::Render(float _DeltaTime) 
+{
+	if (nullptr != CurAnimation)
+	{
 		size_t Frame = CurAnimation->Frames[CurAnimation->CurFrame];
 
 		Sprite = CurAnimation->Sprite;
@@ -165,6 +166,13 @@ void GameEngineRenderer::Render(float _DeltaTime)
 		}
 	}
 
+
+	if ("" != Text)
+	{
+		TextRender(_DeltaTime);
+		return;
+	}
+
 	if (nullptr == Texture)
 	{
 		MsgBoxAssert("이미지를 세팅하지 않은 랜더러 입니다.");
@@ -172,13 +180,17 @@ void GameEngineRenderer::Render(float _DeltaTime)
 
 	GameEngineWindowTexture* BackBuffer = GameEngineWindow::MainWindow.GetBackBuffer();
 
-	if (0 == Angle)
+	if (0 == Angle && 255 == Alpha)
 	{
 		BackBuffer->TransCopy(Texture, GetActor()->GetPos() + RenderPos - Camera->GetPos(), RenderScale, CopyPos, CopyScale);
 	}
-	else 
+	else if (0 != Angle)
 	{
 		BackBuffer->PlgCopy(Texture, MaskTexture, GetActor()->GetPos() + RenderPos - Camera->GetPos(), RenderScale, CopyPos, CopyScale, Angle);
+	}
+	else if(255 != Alpha)
+	{
+		BackBuffer->AlphaCopy(Texture, GetActor()->GetPos() + RenderPos - Camera->GetPos(), RenderScale, CopyPos, CopyScale, Alpha);
 	}
 
 }
@@ -358,6 +370,11 @@ void GameEngineRenderer::SetAngle(float _Angle)
 	Angle = _Angle;
 }
 
+void GameEngineRenderer::SetAlpha(unsigned char _Alpha)
+{
+	Alpha = _Alpha;
+}
+
 void GameEngineRenderer::SetOrder(int _Order)
 {
 	if (nullptr == Camera)
@@ -378,4 +395,11 @@ void GameEngineRenderer::SetOrder(int _Order)
 	std::list<GameEngineRenderer*>& NextRenders = Camera->Renderers[GetOrder()];
 	NextRenders.push_back(this);
 
+}
+
+float GameEngineRenderer::GetActorYPivot()
+{
+	float4 ActorPos = GetActor()->GetPos() + RenderPos;
+
+	return ActorPos.Y + YPivot;
 }

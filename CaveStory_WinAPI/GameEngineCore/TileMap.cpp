@@ -1,11 +1,11 @@
 #include "TileMap.h"
 #include "GameEngineRenderer.h"
 
-TileMap::TileMap() 
+TileMap::TileMap()
 {
 }
 
-TileMap::~TileMap() 
+TileMap::~TileMap()
 {
 }
 
@@ -112,26 +112,28 @@ void TileMap::SetTile(int X, int Y, int _Index, float4 _TilePos, bool _IsImageSi
 	}
 }
 
-void TileMap::DeathTile(float4 _Pos)
+bool TileMap::MoveTile(int X1, int Y1, int X2, int Y2, float4 _TilePos)
 {
-	float4 Index = PosToIndex(_Pos);
-
-	DeathTile(Index.iX(), Index.iY());
-}
-
-void TileMap::DeathTile(int X, int Y)
-{
-	if (true == IsOver(X, Y))
+	if (nullptr == Tiles[Y1][X1])
 	{
-		return;
+		return false;
 	}
 
-	if (nullptr == Tiles[Y][X])
+	if (nullptr != Tiles[Y2][X2])
 	{
-		return;
+		return false;
 	}
 
-	Tiles[Y][X]->Death();
-	Tiles[Y][X] = nullptr;
+	GameEngineRenderer* Tile = Tiles[Y1][X1];
+	Tiles[Y1][X1] = nullptr;
+
+	Tiles[Y2][X2] = Tile;
+	Tile->SetRenderPos(IndexToPos(X2, Y2) + TileSize.Half() + _TilePos);
+	return true;
+
+	//Tiles[Y][X]->SetRenderPos(IndexToPos(X1, Y1) + TileSize.Half() + _TilePos);
+
+	//Tiles[Y1][X1];
+	//Tiles[Y2][X2];
 
 }

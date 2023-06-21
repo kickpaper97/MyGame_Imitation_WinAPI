@@ -11,13 +11,11 @@
 // 엔딩 장면
 class GameEngineCamera;
 class GameEngineCollision;
-
 class GameEngineLevel : public GameEngineObject
 {
 	friend class GameEngineCollision;
 	friend class GameEngineActor;
 	friend class GameEngineCore;
-	
 	
 public:
 	// constrcuter destructer

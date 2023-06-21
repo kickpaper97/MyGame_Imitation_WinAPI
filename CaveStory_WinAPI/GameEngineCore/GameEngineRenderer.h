@@ -59,6 +59,10 @@ public:
 		ScaleRatio = _Scale;
 	}
 
+	void SetYPivot(float _Pivot)
+	{
+		YPivot = _Pivot;
+	}
 
 
 	CameraType GetCameraType()
@@ -66,7 +70,7 @@ public:
 		return CameraTypeValue;
 	}
 
-
+	void SetAlpha(unsigned char _Alpha);
 
 	void SetAngle(float _Angle);
 
@@ -77,6 +81,8 @@ public:
 	void SetRenderScaleToTexture();
 
 	void SetOrder(int _Order) override; 
+
+	float GetActorYPivot();
 
 protected:
 	void Start() override;
@@ -97,7 +103,10 @@ private:
 	CameraType CameraTypeValue = CameraType::MAIN;
 	std::string Text;
 
+	float YPivot = 0.0f;
+
 	float Angle = 0.0f;
+	unsigned char Alpha = 255;
 
 	void TextRender(float _DeltaTime);
 
@@ -142,6 +151,8 @@ public:
 
 	void MainCameraSetting();
 	void UICameraSetting();
+
+	void Update(float _Delta) override;
 
 	size_t GetCurFrame() 
 	{
