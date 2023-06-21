@@ -1,5 +1,7 @@
 #include "EggCorridor.h"
 #include "ContentsEnum.h"
+#include"Monster.h"
+#include"MonsterCutter.h"
 
 #include<GameEngineBase/GameEngineDebug.h>
 #include<GameEnginePlatform/GameEngineWindow.h>
@@ -46,11 +48,17 @@ void EggCorridor::Start()
 	MiddlePtr = CreateActor<BackGround>(RenderOrder::BackGround);
 	MiddlePtr->Init("EggCorridor_Middle.Bmp", "EggCorridor_Ground.Bmp");
 
-	LevelPlayer = CreateActor<Player>();
+	LevelPlayer = CreateActor<Player>(RenderOrder::MiddlePlay);
 
 	LevelPlayer->SetGroundTexture("EggCorridor_Ground.Bmp");
 	LevelPlayer->SetActorBoundery("EggCorridor_Middle.Bmp");
 	LevelPlayer->SetPos(float4{ 925 ,500 });
+
+
+
+
+	
+
 	
 }
 
@@ -83,6 +91,14 @@ void EggCorridor::LevelStart(GameEngineLevel* _PrevLevel)
 
 	LevelPlayer->SetGroundTexture("EggCorridor_Ground.Bmp");
 	LevelPlayer->SetActorBoundery("EggCorridor_Middle.Bmp");
+
+
+	{
+		Monster* NewMonster = CreateActor<MonsterCutter>();
+		NewMonster->SetGroundTexture("EggCorridor_Ground.Bmp");
+
+		NewMonster->SetPos(float4{ 1200 ,300 });
+	}
 
 
 	float4 WinScale = GameEngineWindow::MainWindow.GetScale();

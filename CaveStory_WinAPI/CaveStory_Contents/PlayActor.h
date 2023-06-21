@@ -54,6 +54,28 @@ public:
 
 	void SetActorBoundery(const std::string& _BounderyTextureName);
 
+	bool IsActorInBoundery()
+	{
+		if (GetPos().X> Boundery.X)
+		{
+			return false;
+		}
+		if (GetPos().X < 0.0f)
+		{
+			return false;
+		}
+		if (GetPos().Y < 0.0f)
+		{
+			return false;
+		}
+		if (GetPos().Y > Boundery.Y)
+		{
+			return false;
+		}
+
+			return true;
+	}
+
 	
 protected:
 	
@@ -66,7 +88,7 @@ private:
 	
 	bool IsGravity = true;
 
-	float GravityPower = 1.5f;
+	float GravityPower = 1.8f;
 	float4 GravityVector = float4::ZERO;
 
 };

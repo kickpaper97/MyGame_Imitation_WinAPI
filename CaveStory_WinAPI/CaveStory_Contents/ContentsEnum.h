@@ -12,6 +12,7 @@ enum class RenderOrder
 	BackPlay,
 	MiddlePlay,
 	FrontPlay,
+	Bullet,
 	FrontGround,
 	
 };

@@ -27,8 +27,9 @@ public:
 	Bullet& operator=(const Bullet& _Other) = delete;
 	Bullet& operator=(const Bullet&& _Other) noexcept = delete;
 
-	class GameEngineRenderer* Renderer=nullptr;
-	class GameEngineCollision* BulletCollision = nullptr;
+	
+
+
 
 	template<typename EnumLook,typename EnumDir>
 	void SetDir(const EnumLook& _Look, const EnumDir& _Dir) 
@@ -51,6 +52,12 @@ private:
 	float4 Dir;
 	float Speed = 1000.0f;
 
+	class GameEngineRenderer* Renderer = nullptr;
+	GameEngineRenderer* EffectRenderer = nullptr;
+
+
+	class GameEngineCollision* BulletCollision = nullptr;
+	GameEngineCollision* EffectCollision = nullptr;
 	
 
 	void Start() override;

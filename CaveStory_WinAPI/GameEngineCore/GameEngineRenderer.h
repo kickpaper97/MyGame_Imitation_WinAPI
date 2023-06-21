@@ -31,9 +31,6 @@ public:
 	GameEngineRenderer& operator=(const GameEngineRenderer& _Other) = delete;
 	GameEngineRenderer& operator=(GameEngineRenderer&& _Other) noexcept = delete;
 
-	void SetSprite(const std::string& _Name, size_t _Index = 0);
-
-	void SetTexture(const std::string& _Name);
 
 	void SetRenderPos(const float4& _Value)
 	{
@@ -63,8 +60,21 @@ public:
 	}
 
 
-	void SetRenderScaleToTexture();
 
+	CameraType GetCameraType()
+	{
+		return CameraTypeValue;
+	}
+
+
+
+	void SetAngle(float _Angle);
+
+	void SetSprite(const std::string& _Name, size_t _Index = 0);
+
+	void SetTexture(const std::string& _Name);
+
+	void SetRenderScaleToTexture();
 
 	void SetOrder(int _Order) override; 
 
@@ -75,24 +85,31 @@ protected:
 private:
 	GameEngineCamera* Camera = nullptr;
 	GameEngineWindowTexture* Texture = nullptr;
+	GameEngineWindowTexture* MaskTexture = nullptr;
+
 	GameEngineSprite* Sprite = nullptr;
-
 	float ScaleRatio = 1.0f;
-
 	bool ScaleCheck = false;
-
 	float4 RenderPos;
 	float4 RenderScale;
-
 	float4 CopyPos;
 	float4 CopyScale;
+	CameraType CameraTypeValue = CameraType::MAIN;
+	std::string Text;
+
+	float Angle = 0.0f;
+
+	void TextRender(float _DeltaTime);
 
 	void Render(float _DeltaTime);
 
+
+/////////////////////////////////// 애니메이션
 private:
 	class Animation
 	{
 	public:
+		std::string Name = "";
 		GameEngineSprite* Sprite = nullptr;
 		size_t CurFrame = 0;
 		size_t StartFrame = -1;
@@ -107,20 +124,18 @@ private:
 public:
 	Animation* FindAnimation(const std::string& _AniamtionName);
 
-	/// <summary>
-	/// 애니메이션 생성함수
-	/// </summary>
-	/// <param name="_AniamtionName">애니메이션 이름</param>
-	/// <param name="_SpriteName">스프라이트 이름</param>
-	/// <param name="_Start">시작 프레임</param>
-	/// <param name="_End">끝 프레임</param>
-	/// <param name="_Inter">애니메이션 시간</param>
-	/// <param name="_Loop">애니메이션 반복</param>
 	void CreateAnimation(
 		const std::string& _AniamtionName, 
 		const std::string& _SpriteName, 
 		size_t _Start = -1, size_t _End = -1,
 		float _Inter = 0.1f, 
+		bool _Loop = true);
+
+	void CreateAnimationToFrame(
+		const std::string& _AniamtionName,
+		const std::string& _SpriteName,
+		const std::vector<size_t>& _Frame,
+		float _Inter = 0.1f,
 		bool _Loop = true);
 
 	void ChangeAnimation(const std::string& _AniamtionName, int _StartFrame = 0, bool _ForceChange = false);
@@ -138,9 +153,26 @@ public:
 		return CurAnimation->IsEnd;
 	}
 
-	CameraType CameraTypeValue = CameraType::MAIN;
+	bool IsAnimation(const std::string& _Name)
+	{
+		return CurAnimation->Name == _Name;
+	}
 
+private:
 	std::map<std::string, Animation> AllAnimation;
 	Animation* CurAnimation = nullptr;
+
+/////////////////////////////////// Text관련
+public:
+	void SetText(const std::string& _Text, int _TextScale = 20, const std::string& _Face = "굴림")
+	{
+		Text = _Text;
+		TextScale = _TextScale;
+		Face = _Face;
+	}
+
+private:
+	std::string Face;
+	int TextScale;
 };
 

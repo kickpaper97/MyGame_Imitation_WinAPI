@@ -97,6 +97,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,6 +128,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -175,11 +177,31 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="ContentsEnum.h" />
+    <ClInclude Include="EggCorridor-Cthulhu%27sAbode.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="EggCorridor.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="EndingLevel.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="FieldEffect.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="HoverEffect.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="MonsterCutter.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -192,6 +214,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="FirstCave_startPointLevel.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="QuestionMark.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -213,11 +239,31 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="EggCorridor-Cthulhu%27sAbode.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="EggCorridor.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="EndingLevel.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="FieldEffect.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="HoverEffect.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="MonsterCutter.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -231,6 +277,10 @@
     </ClCompile>
     <ClCompile Include="Player_State.cpp" />
     <ClCompile Include="FirstCave_startPointLevel.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="QuestionMark.cpp">
       <SubType>
       </SubType>
     </ClCompile>

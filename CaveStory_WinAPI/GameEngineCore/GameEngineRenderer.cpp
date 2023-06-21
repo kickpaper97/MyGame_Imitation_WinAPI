@@ -63,8 +63,62 @@ void GameEngineRenderer::SetRenderScaleToTexture()
 	ScaleCheck = false;
 }
 
+void GameEngineRenderer::TextRender(float _DeltaTime)
+{
+	float4 TextPos = GetActor()->GetPos() + RenderPos - Camera->GetPos();
+
+	HDC hdc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
+	HFONT hFont, OldFont;
+	LOGFONTA lf;
+	lf.lfHeight = TextScale;// TextHeight;
+	lf.lfWidth = 0;
+	lf.lfEscapement = 0;
+	lf.lfOrientation = 0;
+	lf.lfWeight = 0;
+	lf.lfItalic = 0;
+	lf.lfUnderline = 0;
+	lf.lfStrikeOut = 0;
+	lf.lfCharSet = HANGEUL_CHARSET;
+	lf.lfOutPrecision = 0;
+	lf.lfClipPrecision = 0;
+	lf.lfQuality = 0;
+	lf.lfPitchAndFamily = VARIABLE_PITCH | FF_ROMAN;
+	// lstrcpy(lf.lfFaceName, TEXT(TextType.c_str()));
+	lstrcpy(lf.lfFaceName, Face.c_str());
+	hFont = CreateFontIndirect(&lf);
+	OldFont = static_cast<HFONT>(SelectObject(hdc, hFont));
+
+	//SetTextAlign(hdc, static_cast<UINT>(Align));
+	SetTextColor(hdc, RGB(255, 0, 0));
+	SetBkMode(hdc, TRANSPARENT);
+
+	RECT Rect;
+	Rect.left = TextPos.iX();
+	Rect.top = TextPos.iY();
+	Rect.right = TextPos.iX() + TextScale * static_cast<int>(Text.size());// TextBoxScale.ix();
+	Rect.bottom = TextPos.iY() + TextScale;// TextBoxScale.iy();
+
+
+
+	DrawTextA(hdc, Text.c_str(), static_cast<int>(Text.size()), &Rect, static_cast<UINT>(DT_BOTTOM));
+
+
+	// TextOutA(GameEngineWindow::GetDoubleBufferImage()->GetImageDC(), RenderPos.ix(), RenderPos.iy(), RenderText.c_str(), static_cast<int>(RenderText.size()));
+
+	SelectObject(hdc, OldFont);
+	DeleteObject(hFont);
+
+	return;
+}
+
 void GameEngineRenderer::Render(float _DeltaTime) 
 {
+	if ("" != Text)
+	{
+		TextRender(_DeltaTime);
+		return;
+	}
+
 	if (nullptr != CurAnimation)
 	{
 		if (true == CurAnimation->Loop)
@@ -101,6 +155,7 @@ void GameEngineRenderer::Render(float _DeltaTime)
 		Sprite = CurAnimation->Sprite;
 		const GameEngineSprite::Sprite& SpriteInfo = Sprite->GetSprite(Frame);
 		Texture = SpriteInfo.BaseTexture;
+		MaskTexture = SpriteInfo.MaskTexture;
 		SetCopyPos(SpriteInfo.RenderPos);
 		SetCopyScale(SpriteInfo.RenderScale);
 
@@ -117,7 +172,14 @@ void GameEngineRenderer::Render(float _DeltaTime)
 
 	GameEngineWindowTexture* BackBuffer = GameEngineWindow::MainWindow.GetBackBuffer();
 
-	BackBuffer->TransCopy(Texture, GetActor()->GetPos() + RenderPos - Camera->GetPos(), RenderScale, CopyPos, CopyScale);
+	if (0 == Angle)
+	{
+		BackBuffer->TransCopy(Texture, GetActor()->GetPos() + RenderPos - Camera->GetPos(), RenderScale, CopyPos, CopyScale);
+	}
+	else 
+	{
+		BackBuffer->PlgCopy(Texture, MaskTexture, GetActor()->GetPos() + RenderPos - Camera->GetPos(), RenderScale, CopyPos, CopyScale, Angle);
+	}
 
 }
 
@@ -161,6 +223,7 @@ void GameEngineRenderer::CreateAnimation(
 
 	GameEngineRenderer::Animation& Animation = AllAnimation[UpperName];
 
+	Animation.Name = _AniamtionName;
 	Animation.Sprite = Sprite;
 
 	if (_Start != -1)
@@ -208,6 +271,49 @@ void GameEngineRenderer::CreateAnimation(
 
 }
 
+void GameEngineRenderer::CreateAnimationToFrame(
+	const std::string& _AniamtionName,
+	const std::string& _SpriteName,
+	const std::vector<size_t>& _Frame,
+	float _Inter,
+	bool _Loop)
+{
+	std::string UpperName = GameEngineString::ToUpperReturn(_AniamtionName);
+
+	if (nullptr != FindAnimation(UpperName))
+	{
+		MsgBoxAssert("이미 존재하는 애니메이션 네임입니다." + UpperName);
+		return;
+	}
+
+	GameEngineSprite* Sprite = ResourcesManager::GetInst().FindSprite(_SpriteName);
+
+	if (nullptr == Sprite)
+	{
+		MsgBoxAssert("존재하지 않는 스프라이트로 애니메이션을 만들려고 했습니다." + _SpriteName);
+		return;
+	}
+
+	GameEngineRenderer::Animation& Animation = AllAnimation[UpperName];
+
+	Animation.Name = _AniamtionName;
+	Animation.Sprite = Sprite;
+	Animation.StartFrame = 0;
+	Animation.EndFrame = _Frame.size() - 1;
+
+	Animation.Inters.resize(_Frame.size() + 1);
+
+	Animation.Frames = _Frame;
+
+	for (size_t i = 0; i < Animation.Frames.size(); i++)
+	{
+		Animation.Inters[i] = _Inter;
+	}
+
+	Animation.Loop = _Loop;
+}
+
+
 
 void GameEngineRenderer::ChangeAnimation(const std::string& _AniamtionName, int _FrameCount, bool _ForceChange)
 {
@@ -245,6 +351,11 @@ void GameEngineRenderer::UICameraSetting()
 
 void GameEngineRenderer::Start() 
 {
+}
+
+void GameEngineRenderer::SetAngle(float _Angle)
+{
+	Angle = _Angle;
 }
 
 void GameEngineRenderer::SetOrder(int _Order)

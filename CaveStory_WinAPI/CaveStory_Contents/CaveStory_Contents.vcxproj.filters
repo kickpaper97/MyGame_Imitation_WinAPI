@@ -29,6 +29,24 @@
     <ClInclude Include="EggCorridor.h">
       <Filter>Level</Filter>
     </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterCutter.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="EggCorridor-Cthulhu%27sAbode.h">
+      <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldEffect.h">
+      <Filter>Global\FieldEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="HoverEffect.h">
+      <Filter>Global\FieldEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestionMark.h">
+      <Filter>Global\FieldEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp" />
@@ -59,6 +77,24 @@
     <ClCompile Include="EggCorridor.cpp">
       <Filter>Level</Filter>
     </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterCutter.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="EggCorridor-Cthulhu%27sAbode.cpp">
+      <Filter>Level</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldEffect.cpp">
+      <Filter>Global\FieldEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="HoverEffect.cpp">
+      <Filter>Global\FieldEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestionMark.cpp">
+      <Filter>Global\FieldEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Level">
@@ -66,6 +102,9 @@
     </Filter>
     <Filter Include="Global">
       <UniqueIdentifier>{4b3ea79b-8048-4e1a-a66d-de20948e1b8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global\FieldEffect">
+      <UniqueIdentifier>{78f1b3d2-53b5-4d23-a906-141dc96096d5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

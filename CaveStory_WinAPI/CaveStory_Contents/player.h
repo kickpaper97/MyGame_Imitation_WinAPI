@@ -9,6 +9,7 @@ enum class PlayerState
 	Run,
 	Jump,
 	Hover,
+	Search,
 	Max,
 };
 
@@ -39,6 +40,8 @@ public:
 
 	GameEngineRenderer* MainRenderer = nullptr;
 	GameEngineRenderer* ArmRenderer = nullptr;
+	
+	//GameEngineRenderer* BulletEffect=nullptr;
 
 	static Player* GetMainPlayer() 
 	{
@@ -53,12 +56,14 @@ protected:
 	void RunStart();
 	void JumpStart();
 	void HoverStart();
+	void SearchStart();
 
 	// 클래스로 만들어도 되고.
 	void IdleUpdate(float _Delta);
 	void RunUpdate(float _Delta);
 	void JumpUpdate(float _Delta);
 	void HoverUpdate(float _Delta);
+	void SearchUpdate(float _Delta);
 
 	void ChanageState(PlayerState State);
 
@@ -74,13 +79,16 @@ protected:
 
 
 private:
-	float JumpPower = 0.0f;
+	
+	int HP = 100;
 	int Exp = 0;
 	int PlayerLevel = 1;
 
 	bool CanHover = true;
+	bool CanSearch = true;
 	float4 MovePos = float4::ZERO;
-	float4 CheckPos = UpCheck;
+	float4 BodyCheckPos = LeftHeadCheck;
+	float4 HeadCheckPos = UpCheck;
 
 	float deltacheck = 0.0f;
 
@@ -95,9 +103,11 @@ private:
 		
 	static Player* MainPlayer;
 
-	float4 LeftCheck = { -20.0f, -50.0f };
-	float4 RightCheck = { 20.0f, -50.0f };
-	float4 UpCheck = { 0.0f,-64.f };
+	float4 LeftBodyCheck = { -20.0f, -10.0f };
+	float4 RightBodyCheck = { 20.0f, -10.0f };
+	float4 LeftHeadCheck;
+	float4 RightHeadCheck;
+	float4 UpCheck = { 0.0f,-62.f };
 
 };
 

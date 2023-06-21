@@ -11,7 +11,8 @@
 #include <CaveStory_Contents/Bullet.h>
 #include<GameEngineCore/GameEngineCollision.h>
 
-#define  MaxEXP 100
+#define MaxEXP 100
+#define BulletIntervalTime 0.05f
 
 
 Player* Player::MainPlayer = nullptr;
@@ -37,6 +38,9 @@ void Player::Start()
 		FilePath.MoveChild("Resources\\Texture\\Player\\");
 
 		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("MyChar.bmp"), 15, 2);
+		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Bullet_Effect.Bmp"), 4, 2);
+		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Hover_Effect.bmp"), 3, 1);
+
 
 
 
@@ -50,6 +54,7 @@ void Player::Start()
 		FilePath.MoveChild("Texture\\");
 
 		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Arms.Bmp"), 6, 1);
+		
 	}
 
 	{
@@ -82,12 +87,14 @@ void Player::Start()
 		MainRenderer->CreateAnimation("Left_Up_Jump", "MyChar.bmp", 6, 6, 0.1f, false);
 		MainRenderer->CreateAnimation("Right__UP_Jump", "MyChar.bmp", 21, 21, 0.1f, false);
 
-		MainRenderer->CreateAnimation("Left_Down_Jump", "MyChar.bmp", 11, 11, 0.1f, false);
+		MainRenderer->CreateAnimation("Left_Down_Jump", "MyChar.bmp", 10, 10, 0.1f, false);
+		MainRenderer->CreateAnimation("Right_Down_Jump", "MyChar.bmp", 25, 25, 0.1f, false);
+
+
+		MainRenderer->CreateAnimation("Left_Back", "MyChar.bmp", 11, 11, 0.1f, false);
 		MainRenderer->CreateAnimation("Right_Back", "MyChar.bmp", 26, 26, 0.1f, false);
 
 
-		MainRenderer->CreateAnimation("Left_Back", "MyChar.bmp", 10, 10, 0.1f, false);
-		MainRenderer->CreateAnimation("Right_Down_Jump", "MyChar.bmp", 25, 25, 0.1f, false);
 
 
 
@@ -120,6 +127,11 @@ void Player::Start()
 
 	}
 
+	{
+		
+	}
+
+	
 	
 
 	ChanageState(PlayerState::Idle);
@@ -131,23 +143,60 @@ void Player::Start()
 void Player::Update(float _Delta)
 {
 
-	if (true == GameEngineInput::IsDown('X'))
+
+
+	
 	{
-		
-		Bullet* NewBullet = GetLevel()->CreateActor<Bullet>();
-		NewBullet->SetPos(GetPos());
-		if (Dir == PlayerDir::Right)
+		static GameEngineRenderer* CheckBulletEffect = nullptr;
+
+
+		if (nullptr != CheckBulletEffect)
 		{
-			NewBullet->AddPos({ 40,-20 });
+			if (true == CheckBulletEffect->IsAnimationEnd())
+			{
+				CheckBulletEffect->Death();
+				CheckBulletEffect = nullptr;
+			}
 		}
-		else if (Dir == PlayerDir::Left)
+
+
+		if (true == GameEngineInput::IsDown('X'))
 		{
-			NewBullet->AddPos({ -40,-20 });
+
+	
+			Bullet* NewBullet = GetLevel()->CreateActor<Bullet>(RenderOrder::Bullet);
+			GameEngineRenderer* NewBulletEffect =CreateRenderer(RenderOrder::Bullet);
+			NewBulletEffect->CreateAnimation("BulletEffect", "Bullet_Effect.Bmp", 0, 3, 0.05f, false);
+			NewBullet->SetPos(GetPos());
+			if (Dir == PlayerDir::Right)
+			{
+				NewBullet->AddPos({ 40,-20 });
+				NewBulletEffect->SetRenderPos({ 40,-20 });
+
+
+			}
+			else if (Dir == PlayerDir::Left)
+			{
+				NewBullet->AddPos({ -40,-20 });
+				NewBulletEffect->SetRenderPos({ -40,-20 });
+
+			}
+			NewBullet->SetDir(Look,Dir);
+	
+			NewBulletEffect->SetScaleRatio(4.0f);
+			NewBulletEffect->ChangeAnimation("BulletEffect");
+	
+			CheckBulletEffect = NewBulletEffect;
+			
 		}
-		NewBullet->SetDir(Look,Dir);
+
 		
-		
+	
 	}
+
+
+
+
 
 	if (true == GameEngineInput::IsPress('Y'))
 	{
@@ -172,6 +221,8 @@ void Player::StateUpdate(float _Delta)
 		return JumpUpdate(_Delta);
 	case PlayerState::Hover:
 		return HoverUpdate(_Delta);
+	case PlayerState::Search:
+		return SearchUpdate(_Delta);
 	default:
 		break;
 	}
@@ -195,6 +246,9 @@ void Player::ChanageState(PlayerState _State)
 			break;
 		case PlayerState::Hover:
 			HoverStart();
+			break;
+		case PlayerState::Search:
+			SearchStart();
 			break;
 		default:
 			break;
@@ -337,14 +391,37 @@ void Player::LevelStart()
 void Player::Render(float _Delta) 
 {
 	
-
+	HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
+	{
 	deltacheck += _Delta;
 	std::string Text = "";
 	Text += "플레이어 테스트 값 : ";
 	Text += std::to_string(GetLevel()->GetMainCamera()->GetPos().Y);
 
-	HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
 	TextOutA(dc, 2, 3, Text.c_str(), static_cast<int>(Text.size()));
+
+	}
+
+	{
+		deltacheck += _Delta;
+		std::string Text = "";
+		Text += "GrivityVector 값 : ";
+		Text += std::to_string(GetGravityVector().Y);
+
+		TextOutA(dc, 2, 20, Text.c_str(), static_cast<int>(Text.size()));
+
+	}
+
+
+	{
+		deltacheck += _Delta;
+		std::string Text = "";
+		Text += "MovePos 값 : ";
+		Text += std::to_string(GetGravityVector().Y);
+
+		TextOutA(dc, 2, 32, Text.c_str(), static_cast<int>(Text.size()));
+
+	}
 
 	CollisionData Data;
 
@@ -352,10 +429,10 @@ void Player::Render(float _Delta)
 	Data.Scale = { 5,5 };
 	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
 
-	Data.Pos = ActorCameraPos() + LeftCheck;
+	Data.Pos = ActorCameraPos() + LeftBodyCheck;
 	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
 
-	Data.Pos = ActorCameraPos() + RightCheck;
+	Data.Pos = ActorCameraPos() + RightBodyCheck;
 	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
 
 
