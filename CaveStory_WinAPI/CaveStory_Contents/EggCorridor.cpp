@@ -2,6 +2,7 @@
 #include "ContentsEnum.h"
 #include"Monster.h"
 #include"MonsterCutter.h"
+#include"CureMachine.h"
 
 #include<GameEngineBase/GameEngineDebug.h>
 #include<GameEnginePlatform/GameEngineWindow.h>
@@ -100,6 +101,10 @@ void EggCorridor::LevelStart(GameEngineLevel* _PrevLevel)
 		NewMonster->SetPos(float4{ 1200 ,300 });
 	}
 
+	{
+		CureMachine* NewCure = CreateActor<CureMachine>(RenderOrder::MiddlePlay);
+		NewCure->SetPos({ 1000,400 });
+	}
 
 	float4 WinScale = GameEngineWindow::MainWindow.GetScale();
 	//LevelPlayer->SetPos(WinScale.Half());

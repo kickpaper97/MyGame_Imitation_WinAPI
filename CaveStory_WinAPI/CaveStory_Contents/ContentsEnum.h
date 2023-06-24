@@ -21,6 +21,7 @@ enum class CollisionOrder
 {
 	Map,
 	Potal,
+	Interct,
 	PlayerBody,
 	MonsterBody,
 	Bullet,

@@ -1,6 +1,7 @@
 #include "Bullet.h"
 #include "player.h"
 #include"ContentsEnum.h"
+#include <GameEngineCore/GameEngineSprite.h>
 #include <GameEngineCore/GameEngineRenderer.h>
 #include <GameEngineCore/GameEngineCore.h>
 #include <GameEngineCore/ResourcesManager.h>
@@ -27,12 +28,12 @@ void Bullet::Start()
 
 		FilePath.MoveChild("Resources\\Texture\\Player\\");
 
-		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Bullet_Effect.Bmp"), 4, 2);
+		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Bullet_Effect.Bmp"), 5, 2);
 
 	}
 	{
 		Renderer = CreateRenderer(RenderOrder::Bullet);
-		Renderer->CreateAnimation("BulletFire", "Bullet_Effect.Bmp", 0, 3, 0.05f, false);
+		Renderer->CreateAnimation("BulletFire", "Bullet_Effect.Bmp", 0, 4, 0.05f, false);
 
 
 		
@@ -117,7 +118,7 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 	{
 	case BulletLook::Up:
 		Dir = float4::UP;
-		Renderer->CreateAnimation("Bullet", "Bullet_Effect.Bmp", 5, 5, 0.05f, false);
+		Renderer->CreateAnimation("Bullet", "Bullet_Effect.Bmp", 6, 6, 0.05f, false);
 		BulletCollision->SetCollisionScale({ 40, 16 });
 		BulletCollision->SetCollisionPos({ 0,-4 });
 
@@ -126,7 +127,7 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 		if (PDir == BulletDir::Right)
 		{
 			Dir = float4::RIGHT;
-			Renderer->CreateAnimation("Bullet", "Bullet_Effect.Bmp", 6, 6, 0.05f, false);
+			Renderer->CreateAnimation("Bullet", "Bullet_Effect.Bmp", 7, 7, 0.05f, false);
 			BulletCollision->SetCollisionScale({ 40, 16 });
 			BulletCollision->SetCollisionPos({ 4,0 });
 
@@ -134,7 +135,7 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 		if (PDir == BulletDir::Left)
 		{
 			Dir = float4::LEFT;
-			Renderer->CreateAnimation("Bullet", "Bullet_Effect.Bmp", 4, 4, 0.05f, false);
+			Renderer->CreateAnimation("Bullet", "Bullet_Effect.Bmp", 5, 5, 0.05f, false);
 
 			BulletCollision->SetCollisionScale({ 42, 16 });
 			BulletCollision->SetCollisionPos({-4,0 });
@@ -144,7 +145,7 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 		break;
 	case BulletLook::Down:
 		Dir = float4::DOWN;
-		Renderer->CreateAnimation("Bullet", "Bullet_Effect.Bmp", 7, 7, 0.05f, false);
+		Renderer->CreateAnimation("Bullet", "Bullet_Effect.Bmp", 8, 8, 0.05f, false);
 		BulletCollision->SetCollisionPos({ 0,4 });
 		BulletCollision->SetCollisionScale({ 42, 16 });
 		break;

@@ -52,11 +52,11 @@ private:
 	float4 Dir;
 	float Speed = 1000.0f;
 
-	class GameEngineRenderer* Renderer = nullptr;
-	GameEngineRenderer* EffectRenderer = nullptr;
+	GameEngineSprite* Renderer = nullptr;
+	GameEngineSprite* EffectRenderer = nullptr;
 
 
-	class GameEngineCollision* BulletCollision = nullptr;
+	GameEngineCollision* BulletCollision = nullptr;
 	GameEngineCollision* EffectCollision = nullptr;
 	
 

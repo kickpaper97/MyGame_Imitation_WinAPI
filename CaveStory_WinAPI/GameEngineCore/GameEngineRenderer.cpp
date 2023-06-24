@@ -30,6 +30,7 @@ void GameEngineRenderer::SetSprite(const std::string& _Name, size_t _Index/* = 0
 	const GameEngineSprite::Sprite& SpriteInfo = Sprite->GetSprite(_Index);
 
 	Texture = SpriteInfo.BaseTexture;
+	MaskTexture = SpriteInfo.MaskTexture;
 
 	SetCopyPos(SpriteInfo.RenderPos);
 	SetCopyScale(SpriteInfo.RenderScale);
@@ -51,6 +52,16 @@ void GameEngineRenderer::SetTexture(const std::string& _Name)
 	if (false == ScaleCheck)
 	{
 		SetRenderScaleToTexture();
+	}
+}
+
+void GameEngineRenderer::SetMaskTexture(const std::string& _Name)
+{
+	MaskTexture = ResourcesManager::GetInst().FindTexture(_Name);
+
+	if (nullptr == MaskTexture)
+	{
+		MsgBoxAssert("존재하지 않는 마스크 텍스처를 세팅하려고 했습니다." + _Name);
 	}
 }
 

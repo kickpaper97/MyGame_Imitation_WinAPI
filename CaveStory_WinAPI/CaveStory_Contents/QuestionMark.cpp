@@ -29,7 +29,7 @@ void QuestionMark::Start()
 
 	}
 	{
-		Renderer = CreateRenderer("QuestionMark.Bmp",RenderOrder::FrontPlay);
+		 Renderer = CreateRenderer("QuestionMark.Bmp",RenderOrder::FrontPlay);
 		
 		
 		

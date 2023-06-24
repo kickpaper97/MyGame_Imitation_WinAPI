@@ -29,12 +29,6 @@
     <ClInclude Include="EggCorridor.h">
       <Filter>Level</Filter>
     </ClInclude>
-    <ClInclude Include="Monster.h">
-      <Filter>Global</Filter>
-    </ClInclude>
-    <ClInclude Include="MonsterCutter.h">
-      <Filter>Global</Filter>
-    </ClInclude>
     <ClInclude Include="EggCorridor-Cthulhu%27sAbode.h">
       <Filter>Level</Filter>
     </ClInclude>
@@ -46,6 +40,18 @@
     </ClInclude>
     <ClInclude Include="QuestionMark.h">
       <Filter>Global\FieldEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Global\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterCutter.h">
+      <Filter>Global\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="CureMachine.h">
+      <Filter>Global\Interect</Filter>
+    </ClInclude>
+    <ClInclude Include="Heart.h">
+      <Filter>Global\Interect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -77,12 +83,6 @@
     <ClCompile Include="EggCorridor.cpp">
       <Filter>Level</Filter>
     </ClCompile>
-    <ClCompile Include="Monster.cpp">
-      <Filter>Global</Filter>
-    </ClCompile>
-    <ClCompile Include="MonsterCutter.cpp">
-      <Filter>Global</Filter>
-    </ClCompile>
     <ClCompile Include="EggCorridor-Cthulhu%27sAbode.cpp">
       <Filter>Level</Filter>
     </ClCompile>
@@ -95,6 +95,18 @@
     <ClCompile Include="QuestionMark.cpp">
       <Filter>Global\FieldEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Global\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterCutter.cpp">
+      <Filter>Global\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="CureMachine.cpp">
+      <Filter>Global\Interect</Filter>
+    </ClCompile>
+    <ClCompile Include="Heart.cpp">
+      <Filter>Global\Interect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Level">
@@ -105,6 +117,12 @@
     </Filter>
     <Filter Include="Global\FieldEffect">
       <UniqueIdentifier>{78f1b3d2-53b5-4d23-a906-141dc96096d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global\Monster">
+      <UniqueIdentifier>{79c6405c-b9f9-436f-a84c-3d52d0e6627b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global\Interect">
+      <UniqueIdentifier>{e03ca1b7-b45e-420e-95ff-2940904951bc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

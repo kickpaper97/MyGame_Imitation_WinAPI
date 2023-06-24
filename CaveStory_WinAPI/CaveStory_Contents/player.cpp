@@ -38,7 +38,7 @@ void Player::Start()
 		FilePath.MoveChild("Resources\\Texture\\Player\\");
 
 		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("MyChar.bmp"), 15, 2);
-		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Bullet_Effect.Bmp"), 4, 2);
+		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Bullet_Effect.Bmp"), 5, 2);
 		ResourcesManager::GetInst().CreateSpriteSheet(FilePath.PlusFilePath("Hover_Effect.bmp"), 3, 1);
 
 
@@ -147,26 +147,28 @@ void Player::Update(float _Delta)
 
 	
 	{
-		static GameEngineRenderer* CheckBulletEffect = nullptr;
+		 static GameEngineRenderer* CheckBulletEffect = nullptr;
 
 
-		if (nullptr != CheckBulletEffect)
-		{
-			if (true == CheckBulletEffect->IsAnimationEnd())
-			{
-				CheckBulletEffect->Death();
-				CheckBulletEffect = nullptr;
-			}
-		}
+		
+		 if (nullptr != CheckBulletEffect)
+		 {
+			 if (true == CheckBulletEffect->IsAnimationEnd())
+			 {
+			
+			 CheckBulletEffect->Death();
+			 CheckBulletEffect = nullptr;
+			 }
+			 
 
+		 }
 
 		if (true == GameEngineInput::IsDown('X'))
 		{
-
 	
 			Bullet* NewBullet = GetLevel()->CreateActor<Bullet>(RenderOrder::Bullet);
 			GameEngineRenderer* NewBulletEffect =CreateRenderer(RenderOrder::Bullet);
-			NewBulletEffect->CreateAnimation("BulletEffect", "Bullet_Effect.Bmp", 0, 3, 0.05f, false);
+			NewBulletEffect->CreateAnimation("BulletEffect", "Bullet_Effect.Bmp", 0, 4, 0.05f, false);
 			NewBullet->SetPos(GetPos());
 			if (Dir == PlayerDir::Right)
 			{
@@ -190,7 +192,6 @@ void Player::Update(float _Delta)
 			
 		}
 
-		
 	
 	}
 

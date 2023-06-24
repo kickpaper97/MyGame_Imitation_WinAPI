@@ -177,6 +177,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="ContentsEnum.h" />
+    <ClInclude Include="CureMachine.h" />
     <ClInclude Include="EggCorridor-Cthulhu%27sAbode.h">
       <SubType>
       </SubType>
@@ -190,6 +191,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="FieldEffect.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Heart.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -239,6 +244,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="CureMachine.cpp" />
     <ClCompile Include="EggCorridor-Cthulhu%27sAbode.cpp">
       <SubType>
       </SubType>
@@ -252,6 +258,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="FieldEffect.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Heart.cpp">
       <SubType>
       </SubType>
     </ClCompile>
