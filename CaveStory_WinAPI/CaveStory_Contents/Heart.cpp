@@ -48,7 +48,7 @@ void Heart::Update(float _Delta)
 {
 	if (0.5 <= GetLiveTime())
 	{
-		if(true==Renderer->IsAnimation(""))
+		//if (true == Renderer->IsAnimation(""));
 	}
 
 }

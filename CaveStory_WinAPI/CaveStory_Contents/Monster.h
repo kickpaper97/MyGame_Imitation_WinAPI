@@ -29,6 +29,10 @@ protected:
 	void Update(float _Delta) override;
 
 	void Start() override;
+
+	class GameEngineRenderer* Renderer = nullptr;
+	class GameEngineCollision* BodyCollision = nullptr;
+	
 private:
 
 	int Hp = 100;

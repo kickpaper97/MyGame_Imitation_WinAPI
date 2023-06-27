@@ -27,6 +27,13 @@ enum class PlayerLook
 	Down,
 };
 
+enum class Weapon
+{
+	MorningStar,
+	Missile,
+
+};
+
 class Player : public PlayActor
 { 
 public:

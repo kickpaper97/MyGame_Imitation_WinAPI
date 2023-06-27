@@ -16,7 +16,7 @@ public:
 
 protected:
 
-	GameEngineSprite* Renderer = nullptr;
+	GameEngineRenderer* Renderer = nullptr;
 
 	void Start() override;
 	void Update(float _Delta) override;

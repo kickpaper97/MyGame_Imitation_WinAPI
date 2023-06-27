@@ -9,7 +9,6 @@
 
 
 #include "ContentsEnum.h"
-#include "PlayActor.h"
 #include "Player.h"
 
 #define SightLimit 300.0f
@@ -51,17 +50,18 @@ void MonsterCutter::Start()
 		Renderer->ChangeAnimation("GreenCutter_Left_Idle");
 	}
 	
-
-
-	GameEngineCollision* BodyCollsion = CreateCollision(CollisionOrder::MonsterBody);
-	BodyCollsion->SetCollisionScale({ 100, 100 });
-	BodyCollsion->SetCollisionType(CollisionType::Rect);
+	 BodyCollision = CreateCollision(CollisionOrder::MonsterBody);
+	 BodyCollision->SetCollisionScale({ 65, 55 });
+	 BodyCollision->SetCollisionPos({ 5.0f,-30.0f });
+	 BodyCollision->SetCollisionType(CollisionType::CirCle);
 }
 
 void MonsterCutter::Update(float _Delta)
 {
 
-	
+	Monster::Update(_Delta);
+
+
 	Gravity(_Delta);
 	
 

@@ -5,6 +5,7 @@
 #include "ContentsEnum.h"
 #include <GameEngineCore/ResourcesManager.h>
 #include "Player.h"
+#include"Bullet.h"
 
 std::list<Monster*> Monster::AllMonster;
 
@@ -33,16 +34,41 @@ void Monster::AllMonsterDeath()
 void Monster::Update(float _Delta)
 {
 	// Player::MainPlayer = nullptr;
+	if (nullptr == BodyCollision)
+	{
+		MsgBoxAssert("몬스터의 충돌체가 설정 되지 않았습니다.");
+		return;
+	}
 
-	float4 Dir = Player::GetMainPlayer()->GetPos() - GetPos();
+	if (nullptr == Renderer)
+	{
+		MsgBoxAssert("몬스터의 렌더러가 설정 되지 않았습니다.");
+		return;
+	}
 
-	Dir.Normalize();
 
-	// Dir <= 거리가 일정하지 않다는 게 문제에요.
+	
+	 if (0 >= Hp)
+	 {
+		 Death();
+	 }
 
-	// Dir *= 0.1f;
 
-	AddPos(Dir * _Delta * 100.0f);
+	std::vector<GameEngineCollision*> _Col;
+	if (true == BodyCollision->Collision(CollisionOrder::Bullet, _Col, CollisionType::CirCle, CollisionType::Rect))
+	{
+		for (size_t i = 0; i <_Col.size(); i++)
+		{
+			GameEngineCollision* Collison = _Col[i];
+
+			Bullet* HitBullet = dynamic_cast<Bullet*>(Collison->GetActor());
+
+			 Hp-=HitBullet->GetDamage();
+			 
+			
+		}
+	}
+
 }
 
 void Monster::Start()

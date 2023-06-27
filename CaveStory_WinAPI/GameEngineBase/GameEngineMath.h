@@ -18,7 +18,7 @@ public:
 
 };
 
-class float4 
+class float4
 {
 public:
 	static const float4 ZERO;
@@ -27,10 +27,6 @@ public:
 	static const float4 UP;
 	static const float4 DOWN;
 
-	// 실수는 기본적으로 == 이 거의 불가능하다. 
-	// 해도 정확하지 않는다. 실수를 처리하는 방식이 애초에 정확하지 않기 때문이다.
-	// 부동소수점 계산방식은 기본적으로 오차를 가지고 있고
-	// + - 등을 할때 여러분들의 생각과는 다른 값이 존재할 가능성이 높다. 
 	float X = 0.0f;
 	float Y = 0.0f;
 	float Z = 0.0f;
@@ -69,7 +65,7 @@ public:
 
 	inline float4 Half() const
 	{
-		return {hX(), hY(), Z, W};
+		return { hX(), hY(), Z, W };
 	}
 
 	float4 operator-() const
@@ -106,7 +102,7 @@ public:
 		return ReturnValue;
 	}
 
-	float4 operator*(const float4& _Other) const 
+	float4 operator*(const float4& _Other) const
 	{
 		float4 ReturnValue;
 
@@ -129,7 +125,7 @@ public:
 		return ReturnValue;
 	}
 
-	float4& operator+=(const float4& _Other) 
+	float4& operator+=(const float4& _Other)
 	{
 		X += _Other.X;
 		Y += _Other.Y;
@@ -169,11 +165,11 @@ public:
 	bool operator==(const float4 _Value) const
 	{
 		return X == _Value.X &&
-		Y == _Value.Y &&
-		Z == _Value.Z;
+			Y == _Value.Y &&
+			Z == _Value.Z;
 	}
 
-	inline void Normalize() 
+	inline void Normalize()
 	{
 		// 길이를 1로 만드는 함수입니다.
 		float Len = Size();
@@ -196,9 +192,9 @@ public:
 		return Result;
 	}
 
-	inline float Size() 
+	inline float Size()
 	{
-		float Value = X* X + Y * Y; // == 빗변 * 빗변
+		float Value = X * X + Y * Y; // == 빗변 * 빗변
 
 		// 제곱수이다.
 		// 제곱을 풀어서 제곱근이라고 합니다.
@@ -226,7 +222,7 @@ public:
 
 
 public:
-	inline float AngleDeg() 
+	inline float AngleDeg()
 	{
 		return AngleRad() * GameEngineMath::R2D;
 	}
@@ -252,7 +248,7 @@ public:
 		return GetRotationToRadZ(_Value, _Deg * GameEngineMath::D2R);
 	}
 
-	static float4 GetRotationToRadZ(const float4& _Value,  const float _Rad) 
+	static float4 GetRotationToRadZ(const float4& _Value, const float _Rad)
 	{
 		float4 Rot;
 		Rot.X = _Value.X * cosf(_Rad) - _Value.Y * sinf(_Rad);
@@ -261,6 +257,18 @@ public:
 	}
 
 	// GetUnitVectorFromDeg(45)
+
+	static float4 LerpClimp(const float4& Start, const float4& _End, float _Ratio)
+	{
+
+		if (1.0f <= _Ratio)
+		{
+			_Ratio = 1.0f;
+		}
+
+		return (Start * (1.0f - _Ratio)) + (_End * _Ratio);
+	}
+
 
 	static float4 GetUnitVectorFromDeg(const float _Degree)
 	{
@@ -274,13 +282,13 @@ public:
 		// cosf(_Rad)반지름의 길이 1일때의 cosf값이 구해집니다.
 		// sinf(_Rad)반지름의 길이 1일때의 sinf값이 구해집니다.
 		// => 빗변의 길이가 1일때의 결과가 나온다.
-		
+
 		// 1.57
 		return { cosf(_Rad) , sinf(_Rad) };
 	}
 };
 
-class GameEngineRect 
+class GameEngineRect
 {
 public:
 	float4 Pos;
@@ -289,7 +297,7 @@ public:
 public:
 	float4 CenterLeftTop()
 	{
-		return {CenterLeft(), CenterTop() };
+		return { CenterLeft(), CenterTop() };
 	}
 
 	float4 CenterRightTop()
@@ -327,7 +335,7 @@ public:
 		return Pos.Y + Scale.hY();
 	}
 
-	int iCenterLeft() 
+	int iCenterLeft()
 	{
 		return Pos.iX() - Scale.ihX();
 	}

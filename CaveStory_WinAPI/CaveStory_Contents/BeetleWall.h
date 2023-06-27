@@ -1,31 +1,33 @@
 
 #pragma once
-#include"Monster.h"
+#include "Monster.h"
 
-class MonsterCutter : public Monster
+class BeetleWall :public Monster
 {
 public:
-	MonsterCutter();
-	~MonsterCutter();
+	BeetleWall();
+	~BeetleWall();
 
-	MonsterCutter(const MonsterCutter& _Other) = delete;
-	MonsterCutter(MonsterCutter&& _Other) noexcept = delete;
-	MonsterCutter& operator=(const MonsterCutter& _Other) = delete;
-	MonsterCutter& operator=(const MonsterCutter&& _Other) noexcept = delete;
+	BeetleWall(const BeetleWall& _Other) = delete;
+	BeetleWall(BeetleWall&& _Other) noexcept = delete;
+	BeetleWall& operator=(const BeetleWall& _Other) = delete;
+	BeetleWall& operator=(const BeetleWall&& _Other) noexcept = delete;
 
 
 protected:
 
 private:
+
 	void Start() override;
 
 	void Update(float _Delta) override;
 	void Render(float _Delta) override;
 
-	
+	class GameEngineRenderer* Renderer = nullptr;
 
-	bool CanMove = true;
-	float MoveReLoad = 1.0f;
+
+
+
 
 	float4 BodyCheckPos = LeftHeadCheck;
 	float4 HeadCheckPos = UpCheck;

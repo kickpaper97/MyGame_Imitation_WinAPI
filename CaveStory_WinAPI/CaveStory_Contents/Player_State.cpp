@@ -17,8 +17,8 @@
 
 void Player::IdleStart()
 {
-	MovePos = float4::ZERO;
-
+	
+	
 	ChangeAnimationState("Idle");
 	
 }
@@ -63,6 +63,19 @@ void Player::SearchStart()
 
 void Player::IdleUpdate(float _Delta)
 {
+	if (float4::ZERO != MovePos)
+	{
+
+		MovePos = MovePos.LerpClimp(MovePos, float4::ZERO, 0.03f);
+
+		AddPos(MovePos * _Delta);
+
+		if (MovePos.Size() < float4{ 1.0f }.Size())
+		{
+			MovePos = float4::ZERO;
+		}
+
+	}
 
 	///////////////Gravity
 	{
@@ -182,9 +195,18 @@ void Player::RunUpdate(float _Delta)
 
 		
 			BodyCheckPos = LeftBodyCheck;
-			UpCheck.X = LeftHeadCheck.X;
-			MovePos = { -SpeedLimit * _Delta, 0.0f };
-		
+			UpCheck.X = LeftHeadCheck.X; 
+if (SpeedLimit < abs(MovePos.X))
+			{
+
+				MovePos = { -SpeedLimit ,  0.0f };
+
+			}
+			else
+			{
+				MovePos = MovePos.LerpClimp(MovePos, { -SpeedLimit ,  0.0f }, 0.03f) ;
+			}
+
 
 		}
 	else if (true == GameEngineInput::IsPress(VK_RIGHT) && Dir == PlayerDir::Right)
@@ -193,13 +215,22 @@ void Player::RunUpdate(float _Delta)
 		
 		BodyCheckPos = RightBodyCheck;
 		UpCheck.X = RightHeadCheck.X;
- 			MovePos = { SpeedLimit * _Delta, 0.0f };
+		if (SpeedLimit < abs(MovePos.X))
+		{
+
+ 			MovePos = { SpeedLimit ,  0.0f };
+		}
+		else
+		{
+			MovePos = MovePos.LerpClimp(MovePos, {   SpeedLimit ,  0.0f }, 0.03f) ;
+		}
 		
 		}
 	else
 	 {
-		 MovePos = float4::ZERO;
-
+		
+		MovePos	=MovePos.LerpClimp( MovePos, float4::ZERO, 0.03f) ;
+		
 	 }
 	}
 
@@ -229,7 +260,7 @@ void Player::RunUpdate(float _Delta)
 	
 
 
-	if (MovePos == float4::ZERO)
+	if (MovePos.Size() < float4{1.0f}.Size())
 	{
 		DirCheck();
 		ChanageState(PlayerState::Idle);
@@ -244,10 +275,10 @@ void Player::RunUpdate(float _Delta)
 		{
 			if (Color == RGB(255, 255, 255))
 			{
-				AddPos(MovePos);
+				AddPos(MovePos*_Delta);
 				GetLevel()->GetMainCamera()->AddPos(MovePos);
 			}
-			MovePos = float4::ZERO;
+			
 		}
 		
 	}
@@ -298,7 +329,17 @@ void Player::JumpUpdate(float _Delta)
 
 		BodyCheckPos = LeftBodyCheck;
 		UpCheck.X = LeftHeadCheck.X;
-		MovePos = { -SpeedLimit * _Delta,0.0f };
+		if (SpeedLimit < abs(MovePos.X))
+		{
+
+			MovePos = { -SpeedLimit ,  0.0f };
+
+		}
+		else
+		{
+			MovePos = MovePos.LerpClimp(MovePos, { -SpeedLimit ,  0.0f }, 0.03f);
+		}
+
 
 
 	}else if (true == GameEngineInput::IsPress(VK_RIGHT) && Dir == PlayerDir::Right)
@@ -307,12 +348,23 @@ void Player::JumpUpdate(float _Delta)
 
 		BodyCheckPos = RightBodyCheck;
 		UpCheck.X = RightHeadCheck.X;
-		MovePos = { SpeedLimit * _Delta, 0.0f };
+		if (SpeedLimit < abs(MovePos.X))
+		{
+
+			MovePos = { SpeedLimit ,  0.0f };
+
+		}
+		else
+		{
+			MovePos = MovePos.LerpClimp(MovePos, { SpeedLimit ,  0.0f }, 0.03f);
+		}
+
 
 	}
 	else
 	{
-		MovePos = float4::ZERO;
+		MovePos = MovePos.LerpClimp(MovePos, float4::ZERO, 0.03f);
+
 
 	}
 	
@@ -381,7 +433,7 @@ void Player::JumpUpdate(float _Delta)
 
 		if (Color == RGB(255, 255, 255))
 		{
-			AddPos(MovePos);
+			AddPos(MovePos*_Delta);
 			GetLevel()->GetMainCamera()->AddPos(MovePos);
 
 		}

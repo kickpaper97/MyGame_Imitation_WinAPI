@@ -170,6 +170,7 @@ void Player::Update(float _Delta)
 			GameEngineRenderer* NewBulletEffect =CreateRenderer(RenderOrder::Bullet);
 			NewBulletEffect->CreateAnimation("BulletEffect", "Bullet_Effect.Bmp", 0, 4, 0.05f, false);
 			NewBullet->SetPos(GetPos());
+			NewBullet->SetDamage();
 			if (Dir == PlayerDir::Right)
 			{
 				NewBullet->AddPos({ 40,-20 });
@@ -418,7 +419,9 @@ void Player::Render(float _Delta)
 		deltacheck += _Delta;
 		std::string Text = "";
 		Text += "MovePos °ª : ";
-		Text += std::to_string(GetGravityVector().Y);
+		Text += std::to_string(MovePos.X);
+		Text += " / ";
+		Text += std::to_string(MovePos.Y);
 
 		TextOutA(dc, 2, 32, Text.c_str(), static_cast<int>(Text.size()));
 

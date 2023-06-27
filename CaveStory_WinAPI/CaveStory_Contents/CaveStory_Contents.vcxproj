@@ -168,6 +168,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Basil.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="BeetleWall.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Bullet.h">
       <SubType>
       </SubType>
@@ -191,6 +199,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="FieldEffect.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="BeetleFree.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -236,6 +248,14 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Basil.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="BeetleWall.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Bullet.cpp">
       <SubType>
       </SubType>
@@ -258,6 +278,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="FieldEffect.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="BeetleFree.cpp">
       <SubType>
       </SubType>
     </ClCompile>

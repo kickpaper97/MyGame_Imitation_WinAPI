@@ -53,6 +53,15 @@
     <ClInclude Include="Heart.h">
       <Filter>Global\Interect</Filter>
     </ClInclude>
+    <ClInclude Include="Basil.h">
+      <Filter>Global\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="BeetleFree.h">
+      <Filter>Global\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="BeetleWall.h">
+      <Filter>Global\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp" />
@@ -106,6 +115,15 @@
     </ClCompile>
     <ClCompile Include="Heart.cpp">
       <Filter>Global\Interect</Filter>
+    </ClCompile>
+    <ClCompile Include="Basil.cpp">
+      <Filter>Global\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="BeetleFree.cpp">
+      <Filter>Global\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="BeetleWall.cpp">
+      <Filter>Global\Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

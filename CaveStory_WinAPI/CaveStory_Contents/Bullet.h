@@ -46,14 +46,67 @@ public:
 		Speed = _Speed;
 	}
 
+	void SetDamage(const int _PLevel)
+	{
+		Level = _PLevel;
+		return SetDamage();
+	}
+
+
+
+	void SetDamage()
+	{
+		switch (Level)
+		{
+		case 1:
+			Damage = 1;
+			break;
+
+		case 2:
+			Damage = 2;
+			break;
+
+
+		case 3:
+			Damage = 4;
+			break;
+
+		default:
+			MsgBoxAssert("플레이어의 레벨이 1~3이 아닙니다.");
+			return;
+			break;
+		}
+		
+		
+	}
+	
+	int GetDamage()
+	{
+		if (0 == Damage)
+		{
+			MsgBoxAssert("레벨에 따른 총알의 데미지가 설정되지 않았습니다.");
+			return 0;
+		}
+
+		return Damage;
+	}
+
+	void SetLevel(const int _PLevel)
+	{
+		Level = _PLevel;
+	}
+
 protected:
 
 private:
+	int Damage = 0;
+	int Level = 1;
+
 	float4 Dir;
 	float Speed = 1000.0f;
 
-	GameEngineSprite* Renderer = nullptr;
-	GameEngineSprite* EffectRenderer = nullptr;
+	GameEngineRenderer* Renderer = nullptr;
+	GameEngineRenderer* EffectRenderer = nullptr;
 
 
 	GameEngineCollision* BulletCollision = nullptr;

@@ -1,31 +1,36 @@
 
 #pragma once
-#include"Monster.h"
+#include "Monster.h"
 
-class MonsterCutter : public Monster
+#define SpeedLimit 300.0f
+
+
+class Basil : public Monster
 {
 public:
-	MonsterCutter();
-	~MonsterCutter();
+	Basil();
+	~Basil();
 
-	MonsterCutter(const MonsterCutter& _Other) = delete;
-	MonsterCutter(MonsterCutter&& _Other) noexcept = delete;
-	MonsterCutter& operator=(const MonsterCutter& _Other) = delete;
-	MonsterCutter& operator=(const MonsterCutter&& _Other) noexcept = delete;
+	Basil(const Basil& _Other) = delete;
+	Basil(Basil&& _Other) noexcept = delete;
+	Basil& operator=(const Basil& _Other) = delete;
+	Basil& operator=(const Basil&& _Other) noexcept = delete;
 
 
 protected:
 
 private:
+
 	void Start() override;
 
 	void Update(float _Delta) override;
 	void Render(float _Delta) override;
 
+	class GameEngineRenderer* Renderer = nullptr;
 	
-
-	bool CanMove = true;
-	float MoveReLoad = 1.0f;
+	float Speed = SpeedLimit;
+	
+	
 
 	float4 BodyCheckPos = LeftHeadCheck;
 	float4 HeadCheckPos = UpCheck;

@@ -44,6 +44,8 @@ void Bullet::Start()
 	{
 		BulletCollision = CreateCollision(CollisionOrder::Bullet);
 	}
+
+	
 	
 }
 
@@ -57,7 +59,13 @@ void Bullet::Update(float _Delta)
 	}
 	// Bullet¿⁄√º∞° 
 
-	if (0.1f < GetLiveTime())
+
+	
+
+
+
+
+	if (0.5f < GetLiveTime())
 	{
 		if (nullptr != Renderer)
 		{
@@ -90,6 +98,7 @@ void Bullet::Update(float _Delta)
 			Death();
 		}
 	}
+
 
 	AddPos(Dir * _Delta * Speed);
 }
