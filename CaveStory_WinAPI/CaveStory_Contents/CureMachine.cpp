@@ -30,7 +30,7 @@ void CureMachine::Start()
 
 	}
 	{
-		Renderer = CreateRenderer(RenderOrder::Bullet);
+		Renderer = CreateRenderer(RenderOrder::BackPlay);
 		Renderer->CreateAnimation("CureMachineOn", "CureMachine.Bmp", 0, 0, 0.05f, false);
 		Renderer->CreateAnimation("CureMachineOff", "CureMachine.Bmp", 1, 1, 0.05f, false);
 

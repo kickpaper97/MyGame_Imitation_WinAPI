@@ -62,6 +62,12 @@
     <ClInclude Include="BeetleWall.h">
       <Filter>Global\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="PlayUIManager.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Arthur_sHouse.h">
+      <Filter>Level</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp" />
@@ -125,6 +131,12 @@
     <ClCompile Include="BeetleWall.cpp">
       <Filter>Global\Monster</Filter>
     </ClCompile>
+    <ClCompile Include="PlayUIManager.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Arthur_sHouse.cpp">
+      <Filter>Level</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Level">
@@ -141,6 +153,9 @@
     </Filter>
     <Filter Include="Global\Interect">
       <UniqueIdentifier>{e03ca1b7-b45e-420e-95ff-2940904951bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{a502bf35-95cb-4e3e-8d83-e631f98fcc5e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

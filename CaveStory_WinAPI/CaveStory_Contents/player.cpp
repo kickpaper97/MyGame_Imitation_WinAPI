@@ -1,5 +1,6 @@
 #include "Player.h"
 #include"ContentsEnum.h"
+#include "PlayUIManager.h"
 
 #include <Windows.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
@@ -84,8 +85,12 @@ void Player::Start()
 		MainRenderer->CreateAnimation("Left_Up_Run", "MyChar.bmp", 6, 9, 0.1f, true);
 		MainRenderer->CreateAnimation("Right_Up_Run", "MyChar.bmp", 21, 24, 0.1f, true);
 
+
+		MainRenderer->CreateAnimation("Left_Down_Run", "MyChar.bmp", 10, 10, 0.1f, false);
+		MainRenderer->CreateAnimation("Right_Down_Run", "MyChar.bmp", 25, 25, 0.1f, false);
+
 		MainRenderer->CreateAnimation("Left_Up_Jump", "MyChar.bmp", 6, 6, 0.1f, false);
-		MainRenderer->CreateAnimation("Right__UP_Jump", "MyChar.bmp", 21, 21, 0.1f, false);
+		MainRenderer->CreateAnimation("Right_UP_Jump", "MyChar.bmp", 21, 21, 0.1f, false);
 
 		MainRenderer->CreateAnimation("Left_Down_Jump", "MyChar.bmp", 10, 10, 0.1f, false);
 		MainRenderer->CreateAnimation("Right_Down_Jump", "MyChar.bmp", 25, 25, 0.1f, false);
@@ -143,7 +148,12 @@ void Player::Start()
 void Player::Update(float _Delta)
 {
 
-
+	if (true==PlayUIManager::UI->GetTextBoxIsUpdate())
+	{
+		MovePos = float4::ZERO;
+		ChanageState(PlayerState::Idle);
+		return;
+	}
 
 	
 	{
@@ -200,9 +210,10 @@ void Player::Update(float _Delta)
 
 
 
-	if (true == GameEngineInput::IsPress('Y'))
+	if (true == GameEngineInput::IsDown('Y'))
 	{
 		// GameEngineWindow::MainWindow.AddDoubleBufferingCopyScaleRatio(-1.0f * _Delta);
+		DebugMode = !DebugMode;
 		GameEngineLevel::CollisionDebugRenderSwitch();
 	}
 
@@ -263,8 +274,6 @@ void Player::ChanageState(PlayerState _State)
 void Player::DirCheck()
 {
 	
-	
-	Look = PlayerLook::Middle;
 
 	bool ChangeDir = false;
 	if (true == GameEngineInput::IsFree(VK_LEFT) && true == GameEngineInput::IsFree(VK_RIGHT))
@@ -275,27 +284,29 @@ void Player::DirCheck()
 	if (true == GameEngineInput::IsDown(VK_LEFT)|| true == GameEngineInput::IsFree(VK_RIGHT))
 	{
 		Dir = PlayerDir::Left;
-		Look = PlayerLook::Middle;
 		ChangeAnimationState(CurState);
 		return;
 	}
 	if (true == GameEngineInput::IsDown(VK_RIGHT) || true == GameEngineInput::IsFree(VK_LEFT))
 	{
 		Dir = PlayerDir::Right;
-		Look = PlayerLook::Middle;
 		ChangeAnimationState(CurState);
 		return;
 
-	}
-	if (true == GameEngineInput::IsDown(VK_UP))
+	}/*
+	if (true == GameEngineInput::IsPress(VK_UP))
 	{
 		Look = PlayerLook::Up;
+
+		ChangeAnimationState(CurState);
 		
 	}
-	if (true == GameEngineInput::IsDown(VK_DOWN) && float4::ZERO == GetGravityVector())
+	if (true == GameEngineInput::IsPress(VK_DOWN) && float4::ZERO == GetGravityVector())
 	{
 		Look = PlayerLook::Down;
-	}
+
+		ChangeAnimationState(CurState);
+	}*/
 
 	
 
@@ -337,7 +348,7 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 	switch (Look)
 	{
 	case PlayerLook::Up:
-
+		AnimationName += "Up_";
 		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::BackPlay));
 
 		if (Dir == PlayerDir::Left)
@@ -348,9 +359,11 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 		{
 			ArmRenderer->SetRenderPos({ 30,4 });
 		}
-		ArmRenderer->ChangeAnimation(AnimationName + "Up_Arm");
+		ArmRenderer->ChangeAnimation(AnimationName + "Arm");
 		break;
 	case PlayerLook::Middle:
+
+		AnimationName += "";
 
 		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::FrontPlay));
 		if (Dir == PlayerDir::Left)
@@ -364,6 +377,7 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 		ArmRenderer->ChangeAnimation(AnimationName + "Arm");
 		break;
 	case PlayerLook::Down:
+		AnimationName += "Down_";
 		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::BackPlay));
 		if (Dir == PlayerDir::Left)
 		{
@@ -373,7 +387,7 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 		{
 			ArmRenderer->SetRenderPos({ 30,-4 });
 		}
-		ArmRenderer->ChangeAnimation(AnimationName + "Down_Arm");
+		ArmRenderer->ChangeAnimation(AnimationName + "Arm");
 		break;
 	default:
 		break;
@@ -392,56 +406,69 @@ void Player::LevelStart()
 }
 void Player::Render(float _Delta) 
 {
-	
 	HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
+	if(true==DebugMode)
 	{
-	deltacheck += _Delta;
-	std::string Text = "";
-	Text += "플레이어 테스트 값 : ";
-	Text += std::to_string(GetLevel()->GetMainCamera()->GetPos().Y);
-
-	TextOutA(dc, 2, 3, Text.c_str(), static_cast<int>(Text.size()));
-
-	}
-
-	{
+		{
 		deltacheck += _Delta;
 		std::string Text = "";
-		Text += "GrivityVector 값 : ";
-		Text += std::to_string(GetGravityVector().Y);
+		Text += "플레이어 테스트 값 : ";
+		Text += std::to_string(GetLevel()->GetMainCamera()->GetPos().Y);
 
-		TextOutA(dc, 2, 20, Text.c_str(), static_cast<int>(Text.size()));
+		TextOutA(dc, 2, 3, Text.c_str(), static_cast<int>(Text.size()));
+
+		}
+
+		{
+			deltacheck += _Delta;
+			std::string Text = "";
+			Text += "GrivityVector 값 : ";
+			Text += CurState;
+
+			TextOutA(dc, 2, 20, Text.c_str(), static_cast<int>(Text.size()));
+
+		}
+
+
+		{
+			deltacheck += _Delta;
+			std::string Text = "";
+			Text += "MovePos 값 : ";
+			Text += std::to_string(MovePos.X);
+			Text += " / ";
+			Text += std::to_string(MovePos.Y);
+
+			TextOutA(dc, 2, 60, Text.c_str(), static_cast<int>(Text.size()));
+
+		}
+
+		{
+			deltacheck += _Delta;
+			std::string Text = "";
+			Text += "LOOK 값 : ";
+			Text += std::to_string((int)Look);
+
+			TextOutA(dc, 2,80, Text.c_str(), static_cast<int>(Text.size()));
+
+		}
+
+		CollisionData Data;
+
+		Data.Pos = ActorCameraPos();
+		Data.Scale = { 5,5 };
+		Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
+
+		Data.Pos = ActorCameraPos() + LeftBodyCheck;
+		Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
+
+		Data.Pos = ActorCameraPos() + RightBodyCheck;
+		Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
+
+
+		Data.Pos = ActorCameraPos() + UpCheck;
+		Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
+
+
 
 	}
-
-
-	{
-		deltacheck += _Delta;
-		std::string Text = "";
-		Text += "MovePos 값 : ";
-		Text += std::to_string(MovePos.X);
-		Text += " / ";
-		Text += std::to_string(MovePos.Y);
-
-		TextOutA(dc, 2, 32, Text.c_str(), static_cast<int>(Text.size()));
-
-	}
-
-	CollisionData Data;
-
-	Data.Pos = ActorCameraPos();
-	Data.Scale = { 5,5 };
-	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
-
-	Data.Pos = ActorCameraPos() + LeftBodyCheck;
-	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
-
-	Data.Pos = ActorCameraPos() + RightBodyCheck;
-	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
-
-
-	Data.Pos = ActorCameraPos() + UpCheck;
-	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
-
-
 }

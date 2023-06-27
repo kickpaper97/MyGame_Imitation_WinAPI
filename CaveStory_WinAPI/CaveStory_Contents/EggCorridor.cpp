@@ -3,6 +3,7 @@
 #include"Monster.h"
 #include"MonsterCutter.h"
 #include"CureMachine.h"
+#include"PlayUIManager.h"
 
 #include<GameEngineBase/GameEngineDebug.h>
 #include<GameEnginePlatform/GameEngineWindow.h>
@@ -56,7 +57,7 @@ void EggCorridor::Start()
 	LevelPlayer->SetPos(float4{ 925 ,500 });
 
 
-
+	CreateActor<PlayUIManager>();
 
 	
 
@@ -74,6 +75,21 @@ void EggCorridor::Update(float _Delta)
 	{
 		MiddlePtr->SwitchRender();
 	}
+	if (true == GameEngineInput::IsDown('Q'))
+	{
+		if (PlayUIManager::UI->GetTextBoxIsUpdate())
+		{
+			PlayUIManager::UI->TextBoxOff();
+
+		}
+		else
+		{
+
+		PlayUIManager::UI->TextBoxOn();
+		}
+
+	}
+
 }
 
 

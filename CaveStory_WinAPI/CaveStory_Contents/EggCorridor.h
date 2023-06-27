@@ -27,7 +27,6 @@ private:
 
 	class BackGround* MiddlePtr;
 
-	class GameEngineRenderer* FrontGroundRenderer = nullptr;
 
 	class Player* LevelPlayer = nullptr;
 };

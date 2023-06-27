@@ -101,6 +101,8 @@ private:
 
 	GameEngineCollision* BodyCollision = nullptr;
 
+	bool DebugMode = false;
+
 
 	void Start() override;
 	void Update(float _Delta) override;

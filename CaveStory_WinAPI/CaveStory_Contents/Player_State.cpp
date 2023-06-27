@@ -17,7 +17,10 @@
 
 void Player::IdleStart()
 {
-	
+	if (true == GameEngineInput::IsFree(VK_UP))
+	{
+		Look = PlayerLook::Middle;
+	}
 	
 	ChangeAnimationState("Idle");
 	
@@ -124,7 +127,17 @@ void Player::IdleUpdate(float _Delta)
 		return;
 	}
 
-	
+	if (true == GameEngineInput::IsDown(VK_UP))
+	{
+		Look = PlayerLook::Up;
+		ChangeAnimationState(CurState);
+
+	}
+	if (true == GameEngineInput::IsUp(VK_UP))
+	{
+		Look = PlayerLook::Middle;
+		ChangeAnimationState(CurState);
+	}
 
 	// 줄줄이 사탕으로 
 	//if (true)
@@ -204,7 +217,7 @@ if (SpeedLimit < abs(MovePos.X))
 			}
 			else
 			{
-				MovePos = MovePos.LerpClimp(MovePos, { -SpeedLimit ,  0.0f }, 0.03f) ;
+				MovePos = MovePos.LerpClimp(MovePos, { -SpeedLimit ,  0.0f }, 0.04f) ;
 			}
 
 
@@ -222,29 +235,50 @@ if (SpeedLimit < abs(MovePos.X))
 		}
 		else
 		{
-			MovePos = MovePos.LerpClimp(MovePos, {   SpeedLimit ,  0.0f }, 0.03f) ;
+			MovePos = MovePos.LerpClimp(MovePos, {   SpeedLimit ,  0.0f }, 0.04f) ;
 		}
 		
 		}
 	else
 	 {
 		
-		MovePos	=MovePos.LerpClimp( MovePos, float4::ZERO, 0.03f) ;
+		MovePos	=MovePos.LerpClimp( MovePos, float4::ZERO, 0.04f) ;
 		
 	 }
 	}
 
-
-	if (true == GameEngineInput::IsPress(VK_UP))
+	if (true == GameEngineInput::IsDown(VK_DOWN)&&float4::ZERO==GetGravityVector())
 	{
-		Look = PlayerLook::Up;
-		
+		MovePos = float4::ZERO;
+		ChanageState(PlayerState::Search);
+		return;
 	}
 
-	if (true == GameEngineInput::IsPress(VK_DOWN))
+	if (true == GameEngineInput::IsDown(VK_UP))
 	{
-		Look= PlayerLook::Down;
-		
+		Look = PlayerLook::Up;
+		ChangeAnimationState(CurState);
+	}
+	if (true == GameEngineInput::IsUp(VK_UP))
+	{
+		Look = PlayerLook::Middle;
+		ChangeAnimationState(CurState);
+	}
+	if (true == GameEngineInput::IsDown(VK_DOWN)&&float4::ZERO != GetGravityVector())
+	{
+		Look = PlayerLook::Down;
+		ChangeAnimationState(CurState);
+
+	}
+	if (true == GameEngineInput::IsUp(VK_DOWN))
+	{
+		Look = PlayerLook::Middle;
+		ChangeAnimationState(CurState);
+	}
+	if (GetGravityVector() == float4::ZERO)
+	{
+
+		Look = PlayerLook::Middle;
 	}
 
 
@@ -323,6 +357,30 @@ void Player::JumpUpdate(float _Delta)
 
 	//static float PlayerSpeed = 0.0f;
 
+	if (true == GameEngineInput::IsDown(VK_UP))
+	{
+		Look = PlayerLook::Up;
+		ChangeAnimationState(CurState);
+
+	}
+	if (true == GameEngineInput::IsUp(VK_UP))
+	{
+		Look = PlayerLook::Middle;
+		ChangeAnimationState(CurState);
+	}
+	if (true == GameEngineInput::IsDown(VK_DOWN))
+	{
+		Look = PlayerLook::Down;
+		ChangeAnimationState(CurState);
+
+	}
+	if (true == GameEngineInput::IsUp(VK_DOWN))
+	{
+		Look = PlayerLook::Middle;
+		ChangeAnimationState(CurState);
+	}
+
+
 	if (true == GameEngineInput::IsPress(VK_LEFT) && Dir == PlayerDir::Left)
 	{
 		//PlayerSpeed += _Delta;
@@ -363,7 +421,7 @@ void Player::JumpUpdate(float _Delta)
 	}
 	else
 	{
-		MovePos = MovePos.LerpClimp(MovePos, float4::ZERO, 0.03f);
+		MovePos = MovePos.LerpClimp(MovePos, float4::ZERO, 0.03);
 
 
 	}
@@ -483,6 +541,30 @@ void Player::HoverUpdate(float _Delta)
 	DirCheck();
 	//static float PlayerSpeed = 0.0f;
 
+	if (true == GameEngineInput::IsDown(VK_UP))
+	{
+		Look = PlayerLook::Up;
+		ChangeAnimationState(CurState);
+
+	}
+	if (true == GameEngineInput::IsUp(VK_UP))
+	{
+		Look = PlayerLook::Middle;
+		ChangeAnimationState(CurState);
+	}
+	if (true == GameEngineInput::IsDown(VK_DOWN))
+	{
+		Look = PlayerLook::Down;
+		ChangeAnimationState(CurState);
+
+	}
+	if (true == GameEngineInput::IsUp(VK_DOWN))
+	{
+		Look = PlayerLook::Middle;
+		ChangeAnimationState(CurState);
+	}
+
+
 	if (true == GameEngineInput::IsPress(VK_LEFT) && Dir == PlayerDir::Left)
 	{
 		//PlayerSpeed += _Delta*10;
@@ -582,14 +664,20 @@ void Player::SearchUpdate(float _Delta)
 	
 	if (true == GameEngineInput::IsDown(VK_LEFT)
 		|| true == GameEngineInput::IsDown(VK_RIGHT)
-		|| true == GameEngineInput::IsPress(VK_LEFT)
-		|| true == GameEngineInput::IsPress(VK_RIGHT)
 		)
 	{
 		CanSearch = true;
 		ChanageState(PlayerState::Idle);
 		return;
 	}
+
+	if (true == GameEngineInput::IsDown('Z'))
+	{
+		CanSearch = true;
+		ChanageState(PlayerState::Jump);
+		return;
+	}
+
 	CanSearch = false;
 
 }
