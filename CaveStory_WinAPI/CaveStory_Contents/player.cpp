@@ -180,23 +180,55 @@ void Player::Update(float _Delta)
 			GameEngineRenderer* NewBulletEffect =CreateRenderer(RenderOrder::Bullet);
 			NewBulletEffect->CreateAnimation("BulletEffect", "Bullet_Effect.Bmp", 0, 4, 0.05f, false);
 			NewBullet->SetPos(GetPos());
-			NewBullet->SetDamage();
-			if (Dir == PlayerDir::Right)
+			NewBullet->SetDamage(PlayerLevel);
+			if (Dir == PlayerDir::Right&&Look==PlayerLook::Middle)
 			{
 				NewBullet->AddPos({ 40,-20 });
 				NewBulletEffect->SetRenderPos({ 40,-20 });
 
 
 			}
-			else if (Dir == PlayerDir::Left)
+			else if (Dir == PlayerDir::Left && Look == PlayerLook::Middle)
 			{
 				NewBullet->AddPos({ -40,-20 });
 				NewBulletEffect->SetRenderPos({ -40,-20 });
 
 			}
+			if (Look == PlayerLook::Up)
+			{
+				if (Dir == PlayerDir::Right)
+				{
+					NewBullet->AddPos({ 40,-20 });
+					NewBulletEffect->SetRenderPos({ 40,-20 });
+
+
+				}
+				else if (Dir == PlayerDir::Left )
+				{
+					NewBullet->AddPos({ -40,-20 });
+					NewBulletEffect->SetRenderPos({ -40,-20 });
+
+				}
+			}
+			if (Look == PlayerLook::Down)
+			{
+				if (Dir == PlayerDir::Right)
+				{
+					NewBullet->AddPos({ 40,-20 });
+					NewBulletEffect->SetRenderPos({ 40,-20 });
+
+
+				}
+				else if (Dir == PlayerDir::Left )
+				{
+					NewBullet->AddPos({ -40,-20 });
+					NewBulletEffect->SetRenderPos({ -40,-20 });
+
+				}
+			}
 			NewBullet->SetDir(Look,Dir);
 	
-			NewBulletEffect->SetScaleRatio(4.0f);
+			
 			NewBulletEffect->ChangeAnimation("BulletEffect");
 	
 			CheckBulletEffect = NewBulletEffect;

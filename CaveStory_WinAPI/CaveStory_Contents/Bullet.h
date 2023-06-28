@@ -100,7 +100,7 @@ protected:
 
 private:
 	int Damage = 0;
-	int Level = 1;
+	int Level = 0;
 
 	float4 Dir;
 	float Speed = 1000.0f;
