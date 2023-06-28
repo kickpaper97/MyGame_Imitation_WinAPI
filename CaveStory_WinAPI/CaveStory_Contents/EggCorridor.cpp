@@ -55,7 +55,8 @@ void EggCorridor::Start()
 	LevelPlayer->SetGroundTexture("EggCorridor_Ground.Bmp");
 	LevelPlayer->SetActorBoundery("EggCorridor_Middle.Bmp");
 	LevelPlayer->SetPos(float4{ 925 ,500 });
-
+	
+	
 
 	CreateActor<PlayUIManager>();
 
@@ -66,6 +67,7 @@ void EggCorridor::Start()
 
 void EggCorridor::Update(float _Delta)
 {
+	Monster::MonsterBoundaryCheck();
 
 	if (true == GameEngineInput::IsDown('O'))
 	{
@@ -113,7 +115,7 @@ void EggCorridor::LevelStart(GameEngineLevel* _PrevLevel)
 	{
 		Monster* NewMonster = CreateActor<MonsterCutter>();
 		NewMonster->SetGroundTexture("EggCorridor_Ground.Bmp");
-
+		NewMonster->SetHp(5);
 		NewMonster->SetPos(float4{ 1200 ,300 });
 	}
 

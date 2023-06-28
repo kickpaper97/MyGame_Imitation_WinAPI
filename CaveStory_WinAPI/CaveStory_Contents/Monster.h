@@ -15,6 +15,7 @@ public:
 	Monster& operator=(const Monster&& _Other) noexcept = delete;
 
 	static void AllMonsterDeath();
+	static void MonsterBoundaryCheck();
 
 	void SetHp(const int _HP)
 	{
@@ -24,6 +25,17 @@ public:
 	{
 		return Hp;
 	}
+
+	void SetPlayerPos(float4 _Pos)
+	{
+		PlayerPos = _Pos;
+	}
+	
+	float4 GetPlayerPos() const
+	{
+		return PlayerPos;
+	}
+
 
 protected:
 	void Update(float _Delta) override;
@@ -35,7 +47,9 @@ protected:
 	
 private:
 
-	int Hp = 100;
+	float4 PlayerPos;
+
+	int Hp ;
 
 	static std::list<Monster*> AllMonster;
 

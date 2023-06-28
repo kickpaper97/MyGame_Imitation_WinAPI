@@ -23,6 +23,7 @@ MonsterCutter::~MonsterCutter()
 
 void MonsterCutter::Start()
 {
+	Monster::Start();
 
 	if (false == ResourcesManager::GetInst().IsLoadTexture("NpcEggs1_GreenCutter.Bmp"))
 	{
@@ -150,7 +151,7 @@ void MonsterCutter::Update(float _Delta)
 	}
 
 
-	float4 Dir = Player::GetMainPlayer()->GetPos()-GetPos();
+	 Dir = GetPlayerPos() - GetPos();
 
 	 
 	
@@ -226,26 +227,30 @@ void MonsterCutter::Update(float _Delta)
 void MonsterCutter::Render(float _Delta)
 {
 
-	//HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
-	//{
-	//	
-	//	std::string Text = "";
-	//	Text += "플레이어 테스트 값 : ";
-	//	Text += std::to_string(GetLevel()->GetMainCamera()->GetPos().Y);
+	HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
+	{
+		
+		std::string Text = "";
+		Text += "플레이어 테스트 값 : ";
+		Text += std::to_string((int)IsUpdate());
 
-	//	TextOutA(dc, 2, 3, Text.c_str(), static_cast<int>(Text.size()));
+		TextOutA(dc, 2, 3, Text.c_str(), static_cast<int>(Text.size()));
 
-	//}
+	}
 
-	//{
-	//	
-	//	std::string Text = "";
-	//	Text += "GrivityVector 값 : ";
-	//	Text += std::to_string(GetGravityVector().Y);
+	{
+		
+		std::string Text = "";
+		Text += "GrivityVector 값 : ";
+		Text += std::to_string(Dir.X);
+		Text += std::to_string(Dir.Y);
 
-	//	TextOutA(dc, 2, 20, Text.c_str(), static_cast<int>(Text.size()));
+		
 
-	//}
+
+		TextOutA(dc, 2, 20, Text.c_str(), static_cast<int>(Text.size()));
+
+	}
 
 
 	//{

@@ -4,6 +4,7 @@
 #include <GameEngineCore/GameEngineCollision.h>
 #include "ContentsEnum.h"
 #include <GameEngineCore/ResourcesManager.h>
+#include <GameEnginePlatform/GameEngineWindow.h>
 #include "Player.h"
 #include"Bullet.h"
 
@@ -31,8 +32,12 @@ void Monster::AllMonsterDeath()
 	AllMonster.clear();
 }
 
+
 void Monster::Update(float _Delta)
 {
+	
+	
+
 	// Player::MainPlayer = nullptr;
 	if (nullptr == BodyCollision)
 	{
@@ -73,6 +78,40 @@ void Monster::Update(float _Delta)
 
 void Monster::Start()
 {
-	
+	SetPlayerPos(Player::GetMainPlayer()->GetPos());
+	float4 Dir = GetPlayerPos() - GetPos();
+
+	if (GameEngineWindow::MainWindow.GetScale().Size() < Dir.Size())
+	{
+		Off();
+	}
+
 }
 
+void Monster::MonsterBoundaryCheck()
+{
+
+
+	for (Monster* Monster : AllMonster)
+	{
+		Monster->SetPlayerPos(Player::GetMainPlayer()->GetPos());
+		float4 Dir = Monster->GetPlayerPos() -Monster-> GetPos();
+		
+		if (false == Monster->IsUpdate())
+		{
+
+			if (GameEngineWindow::MainWindow.GetScale().Size() >= Dir.Size())
+			{
+				Monster->On();
+			}
+		}
+		else
+		{
+			if (GameEngineWindow::MainWindow.GetScale().Size() < Dir.Size())
+			{
+				Monster->Off();
+				return;
+			}
+		}
+	}
+}

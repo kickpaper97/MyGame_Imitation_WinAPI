@@ -22,7 +22,7 @@ private:
 	void Update(float _Delta) override;
 	void Render(float _Delta) override;
 
-	
+	float4 Dir;
 
 	bool CanMove = true;
 	float MoveReLoad = 1.0f;
