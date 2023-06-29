@@ -28,7 +28,7 @@ public:
 	Bullet& operator=(const Bullet&& _Other) noexcept = delete;
 
 	
-
+	
 
 
 	template<typename EnumLook,typename EnumDir>

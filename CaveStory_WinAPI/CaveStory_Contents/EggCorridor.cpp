@@ -97,6 +97,8 @@ void EggCorridor::Update(float _Delta)
 
 void EggCorridor::Release()
 {
+	
+	Release();
 }
 
 
@@ -115,7 +117,7 @@ void EggCorridor::LevelStart(GameEngineLevel* _PrevLevel)
 	{
 		Monster* NewMonster = CreateActor<MonsterCutter>();
 		NewMonster->SetGroundTexture("EggCorridor_Ground.Bmp");
-		NewMonster->SetHp(5);
+		
 		NewMonster->SetPos(float4{ 1200 ,300 });
 	}
 
@@ -133,5 +135,5 @@ void EggCorridor::LevelStart(GameEngineLevel* _PrevLevel)
 
 void EggCorridor::LevelEnd(GameEngineLevel* _NextLevel)
 {
-
+	Monster::AllMonsterDeath();
 }

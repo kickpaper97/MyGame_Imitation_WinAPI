@@ -17,6 +17,10 @@ Bullet::~Bullet()
 	
 }
 
+
+
+	
+
 void Bullet::Start()
 {
 	if (false == ResourcesManager::GetInst().IsLoadTexture("Bullet_Morning.Bmp"))
@@ -90,9 +94,9 @@ void Bullet::Update(float _Delta)
 			// Death();
 			Renderer->ChangeAnimation("BulletFire");
 
-			if (BulletCollision->GetCollisionData().Scale != float4{ 42,42 })
+			if (BulletCollision->GetCollisionData().Scale != float4{ 50,50 })
 			{
-			BulletCollision->SetCollisionScale({ 42,42 });
+			BulletCollision->SetCollisionScale({ 50,50 });
 			BulletCollision->SetCollisionType(CollisionType::CirCle);
 			}
 			
@@ -153,20 +157,26 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 		{
 		case 1:
 			Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 1, 1, 0.05f, false);
+
+			BulletCollision->SetCollisionScale({ 12, 60 });
+			BulletCollision->SetCollisionPos({0,-2 });
 			break;
 		case 2:
 			Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 3, 3, 0.05f, false);
+
+			BulletCollision->SetCollisionScale({ 18, 60 });
+			BulletCollision->SetCollisionPos({ 0,-2 });
 			
 			break;
 		case 3:
 			Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 5, 5, 0.05f, false);
 
+			BulletCollision->SetCollisionScale({ 32, 60 });
+			BulletCollision->SetCollisionPos({ 0,-2 });
 			break;
 		default:
 			break;
 		}
-		BulletCollision->SetCollisionScale({ 40, 16 });
-		BulletCollision->SetCollisionPos({ 0,-4 });
 
 		break;
 	case BulletLook::Middle:
@@ -177,20 +187,26 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 			{
 			case 1:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 0, 0, 0.05f, false);
+
+				BulletCollision->SetCollisionScale({ 60, 12 });
+				BulletCollision->SetCollisionPos({ 2,0 });
 				break;
 			case 2:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 2, 2, 0.05f, false);
+
+				BulletCollision->SetCollisionScale({ 60, 18 });
+				BulletCollision->SetCollisionPos({ 2,0 });
 
 				break;
 			case 3:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 4, 4, 0.05f, false);
 
+				BulletCollision->SetCollisionScale({ 60, 32 });
+				BulletCollision->SetCollisionPos({ 2,0 });
 				break;
 			default:
 				break;
 			}
-			BulletCollision->SetCollisionScale({ 40, 16 });
-			BulletCollision->SetCollisionPos({ 4,0 });
 
 		}
 		if (PDir == BulletDir::Left)
@@ -200,21 +216,25 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 			{
 			case 1:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 0, 0, 0.05f, false);
+
+				BulletCollision->SetCollisionScale({ 60, 12 });
+				BulletCollision->SetCollisionPos({ -2,0 });
 				break;
 			case 2:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 2, 2, 0.05f, false);
 
+				BulletCollision->SetCollisionScale({ 60, 18 });
+				BulletCollision->SetCollisionPos({ -2,0 });
 				break;
 			case 3:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 4, 4, 0.05f, false);
 
+				BulletCollision->SetCollisionScale({ 60, 32 });
+				BulletCollision->SetCollisionPos({ -2,0 });
 				break;
 			default:
 				break;
 			}
-
-			BulletCollision->SetCollisionScale({ 42, 16 });
-			BulletCollision->SetCollisionPos({-4,0 });
 
 
 		}
@@ -225,21 +245,26 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 		{
 		case 1:
 			Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 1, 1, 0.05f, false);
+
+			BulletCollision->SetCollisionScale({ 12, 60 });
+			BulletCollision->SetCollisionPos({ 0,2 });
 			break;
 		case 2:
 			Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 3, 3, 0.05f, false);
 
+			BulletCollision->SetCollisionScale({ 18, 60 });
+			BulletCollision->SetCollisionPos({ 0,2 });
 			break;
 		case 3:
 			Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 5, 5, 0.05f, false);
 
+			BulletCollision->SetCollisionScale({ 32, 60 });
+			BulletCollision->SetCollisionPos({ 0,2 });
 			break;
 		default:
 			break;
 		}
 
-		BulletCollision->SetCollisionPos({ 0,4 });
-		BulletCollision->SetCollisionScale({ 42, 16 });
 		break;
 	default:
 		break;
@@ -253,3 +278,4 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 	
 
 }
+

@@ -55,6 +55,9 @@ void MonsterCutter::Start()
 	 BodyCollision->SetCollisionScale({ 65, 55 });
 	 BodyCollision->SetCollisionPos({ 5.0f,-30.0f });
 	 BodyCollision->SetCollisionType(CollisionType::CirCle);
+
+	 SetHp(5);
+
 }
 
 void MonsterCutter::Update(float _Delta)
@@ -63,164 +66,18 @@ void MonsterCutter::Update(float _Delta)
 	Monster::Update(_Delta);
 
 
-	Gravity(_Delta);
-	
-
-
-	{
-		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
-		if (RGB(255, 255, 255) == Color)
-		{
-			unsigned int DirColor = GetGroundColor(RGB(255, 255, 255), BodyCheckPos);
-
-			if (DirColor != RGB(255, 255, 255))
-			{
-				if (Renderer->IsAnimation("GreenCutter_Left_Jump"))
-				{
-					
-
-					while (DirColor == RGB(255, 255, 255))
-					{
-						DirColor = GetGroundColor(RGB(255, 255, 255), float4::RIGHT);
-						AddPos(float4::RIGHT);
-					}
-				}
-				if (Renderer->IsAnimation("GreenCutter_Right_Jump"))
-				{
-					Renderer->ChangeAnimation("GreenCutter_Right_Active");
-					while (DirColor == RGB(255, 255, 255))
-					{
-						DirColor = GetGroundColor(RGB(255, 255, 255), float4::LEFT);
-						AddPos(float4::LEFT);
-					}
-				}
-
-
-			}
-		}
-		else
-		{
-
-			if (Renderer->IsAnimation("GreenCutter_Left_Jump")&&Renderer->IsAnimationEnd())
-			{
-
-				Renderer->ChangeAnimation("GreenCutter_Left_Active");
-
-			}
-			if (Renderer->IsAnimation("GreenCutter_Right_Jump") && Renderer->IsAnimationEnd())
-			{
-				Renderer->ChangeAnimation("GreenCutter_Right_Active");
-				
-			}
-
-			unsigned int CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
-
-			while (CheckColor != RGB(255, 255, 255))
-			{
-				CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
-				AddPos(float4::UP);
-			}
-
-			
-
-			MoveReLoad += _Delta;
-			
-			GravityReset();
-		}
-	}
-
-
-
-	{
-		unsigned int CeilingColor = GetGroundColor(RGB(255, 255, 255), UpCheck);
-
-		if (CeilingColor != RGB(255, 255, 255))
-		{
-			while (CeilingColor != RGB(255, 255, 255))
-			{
-				CeilingColor = GetGroundColor(RGB(255, 255, 255), float4::DOWN);
-				AddPos(float4::DOWN);
-				
-
-			}
-
-			GravityReset();
-
-
-		}
-	}
-
-
-	 Dir = GetPlayerPos() - GetPos();
-
+	 PlayerDistance = GetPlayerPos() - GetPos();
 	 
-	
-
-	if (abs(Dir.X)<= 300.0f)
+	if (0.0f <= PlayerDistance.X)
 	{
-		
-		
-		 if (0 < Dir.X)
-		{
-			Renderer->ChangeAnimation("GreenCutter_Right_Active");
-			BodyCheckPos = RightBodyCheck;
-		}
-		else if(0 >= Dir.X)
-		{
-			Renderer->ChangeAnimation("GreenCutter_Left_Active");
-			BodyCheckPos = LeftBodyCheck;
-		}
-
-		 if (1.0f <= MoveReLoad)
-		 {
-			 CanMove = true;
-			 MoveReLoad = 0.0f;
-		 }
-
-		 if(true==CanMove&& abs(Dir.X) <= 200.0f)
-		 {
-			 if (Renderer->IsAnimation("GreenCutter_Left_Active"))
-			 {
-				 Renderer->ChangeAnimation("GreenCutter_Left_Jump");
-				 
-				 float4 JumpVector = float4::LEFT.GetUnitVectorFromDeg(250);;
-				 
-				 SetGravityVector(JumpVector *1.8f);
-				 CanMove =false;
-				
-			 }
-
-			 if (Renderer->IsAnimation("GreenCutter_Right_Active"))
-			 {
-				 Renderer->ChangeAnimation("GreenCutter_Right_Jump");
-
-				 float4 JumpVector = float4::RIGHT.GetUnitVectorFromDeg(290);;
-
-				 SetGravityVector(JumpVector *1.8f);
-				 CanMove = false;
-
-
-			 }
-
-
-			 
-		 }
-
+		Dir = CutterDir::Right;
 	}
-		
 	else
 	{
-		if (0 < Dir.X)
-		{
-			Renderer->ChangeAnimation("GreenCutter_Right_Idle");
-			BodyCheckPos = RightBodyCheck;
-		}
-		else
-		{
-			Renderer->ChangeAnimation("GreenCutter_Left_Idle");
-			BodyCheckPos = LeftBodyCheck;
-		}
+		Dir = CutterDir::Left;
 	}
+
+	StateUpdate(_Delta);
 }
 
 
@@ -229,55 +86,329 @@ void MonsterCutter::Render(float _Delta)
 
 	HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
 	{
-		
+
 		std::string Text = "";
 		Text += "플레이어 테스트 값 : ";
-		Text += std::to_string((int)IsUpdate());
+		Text += std::to_string((int)State);
 
 		TextOutA(dc, 2, 3, Text.c_str(), static_cast<int>(Text.size()));
 
 	}
 
 	{
-		
+
 		std::string Text = "";
 		Text += "GrivityVector 값 : ";
-		Text += std::to_string(Dir.X);
-		Text += std::to_string(Dir.Y);
-
-		
-
+		Text += std::to_string(GetGravityVector().X);
+		Text += std::to_string(GetGravityVector().Y);
 
 		TextOutA(dc, 2, 20, Text.c_str(), static_cast<int>(Text.size()));
 
 	}
 
+	{
 
-	//{
-	//	
-	//	std::string Text = "";
-	//	Text += "MovePos 값 : ";
-	//	Text += std::to_string(GetGravityVector().Y);
+		std::string Text = "";
+		Text += "GrivityVector 값 : ";
+		Text += std::to_string(PlayerDistance.X);
+		Text += std::to_string(PlayerDistance.Y);
 
-	//	TextOutA(dc, 2, 32, Text.c_str(), static_cast<int>(Text.size()));
+		TextOutA(dc, 2, 360, Text.c_str(), static_cast<int>(Text.size()));
 
-	//}
-
-	//CollisionData Data;
-
-	//Data.Pos = ActorCameraPos();
-	//Data.Scale = { 5,5 };
-	//Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
-
-	//Data.Pos = ActorCameraPos() + LeftBodyCheck;
-	//Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
-
-	//Data.Pos = ActorCameraPos() + RightBodyCheck;
-	//Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
+	}
 
 
-	//Data.Pos = ActorCameraPos() + UpCheck;
-	//Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
+}
 
+void MonsterCutter::ChangeAnimationState(const std::string& _StateName)
+{
+
+	std::string AnimationName="GreenCutter_";
+
+	switch (Dir)
+	{
+	case CutterDir::Right:
+		AnimationName += "Right_";
+
+		break;
+	case CutterDir::Left:
+		AnimationName += "Left_";
+		break;
+	default:
+		break;
+	}
+
+	AnimationName += _StateName;
+
+	CurState = _StateName;
+
+	Renderer->ChangeAnimation(AnimationName);
+}
+void MonsterCutter::StateUpdate(float _Delta)
+{
+	switch (State)
+	{
+	case CutterState::Idle:
+		return IdleUpdate(_Delta);
+	case CutterState::Jump:
+		return JumpUpdate(_Delta);
+	case CutterState::Active:
+		return ActiveUpdate(_Delta);
+	default:
+		break;
+	}
+
+}
+
+void MonsterCutter::ChanageState(CutterState _State)
+{
+	if (_State != State)
+	{
+		switch (_State)
+		{
+		case CutterState::Idle:
+			IdleStart();
+			break;
+		case CutterState::Jump:
+			JumpStart();
+			break;
+		case CutterState::Active:
+			ActiveStart();
+			break;
+		default:
+			break;
+		}
+	}
+
+	State = _State;
+}
+
+void MonsterCutter::IdleUpdate(float _Delta)
+{
+	{
+
+
+		if (1.0f <= MoveReLoad)
+		{
+			CanMove = true;
+			MoveReLoad = 0.0f;
+		}
+
+
+		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
+		if (RGB(255, 255, 255) == Color)
+		{
+			Gravity(_Delta);
+		}
+		else
+		{
+			unsigned int CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
+
+			while (CheckColor != RGB(255, 255, 255))
+			{
+				CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
+				AddPos(float4::UP);
+			}
+
+
+			GravityReset();
+
+
+			if (0.0f <= PlayerDistance.X)
+			{
+				Dir = CutterDir::Right;
+				
+			}
+			else
+			{
+				Dir = CutterDir::Left;
+			}
+			ChangeAnimationState("Idle");
+
+
+			MoveReLoad += _Delta;
+
+		}
+	}
+	
+
+	if (abs(PlayerDistance.Size()) <= 400.0f)
+	{
+		ChanageState(CutterState::Active);
+		return;
+	}
+
+
+}
+
+void MonsterCutter::IdleStart()
+{
+	if (Dir == CutterDir::Right)
+	{
+		BodyCheckPos = RightBodyCheck;
+	}
+	else
+	{
+		BodyCheckPos = LeftBodyCheck;
+	}
+
+	ChangeAnimationState("Idle");
+}
+
+void MonsterCutter::JumpUpdate(float _Delta)
+{
+	Gravity(_Delta);
+
+	unsigned int Color = GetGroundColor(RGB(255, 255, 255));
+	if (RGB(255, 255, 255) != Color)
+	{
+		ChanageState(CutterState::Idle);
+		return;
+	}
+
+
+
+	{
+		unsigned int DirColor = GetGroundColor(RGB(255, 255, 255), BodyCheckPos);
+
+		if (DirColor != RGB(255, 255, 255))
+		{
+			if (Renderer->IsAnimation("GreenCutter_Left_Jump"))
+			{
+
+
+				while (DirColor == RGB(255, 255, 255))
+				{
+					DirColor = GetGroundColor(RGB(255, 255, 255), float4::RIGHT);
+					AddPos(float4::RIGHT);
+				}
+			}
+			if (Renderer->IsAnimation("GreenCutter_Right_Jump"))
+			{
+				
+				while (DirColor == RGB(255, 255, 255))
+				{
+					DirColor = GetGroundColor(RGB(255, 255, 255), float4::LEFT);
+					AddPos(float4::LEFT);
+				}
+			}
+
+
+		}
+	}
+
+	{
+		unsigned int CeilingColor = GetGroundColor(RGB(255, 255, 255), UpCheck);
+
+		if (CeilingColor != RGB(255, 255, 255))
+		{
+
+			while (CeilingColor != RGB(255, 255, 255))
+			{
+				CeilingColor = GetGroundColor(RGB(255, 255, 255), float4::DOWN);
+				AddPos(float4::DOWN);
+
+
+			}
+
+			GravityReset();
+
+		}
+	}
+
+}
+
+void MonsterCutter::JumpStart()
+{
+
+
+	if (false == CanMove)
+	{
+		ChanageState(CutterState::Idle);
+		return;
+	}
+
+
+	if (Dir == CutterDir::Right)
+	{
+		float4 JumpVector = float4::RIGHT.GetUnitVectorFromDeg(290);;
+
+		SetGravityVector(JumpVector * 1.8f);
+		CanMove = false;
+	}
+	else
+	{
+		float4 JumpVector = float4::LEFT.GetUnitVectorFromDeg(250);;
+
+		SetGravityVector(JumpVector * 1.8f);
+		CanMove = false;
+	}
+
+	ChangeAnimationState("Jump");
+
+}
+
+
+void MonsterCutter::ActiveStart()
+{
+	ChangeAnimationState("Active");
+}
+
+
+void MonsterCutter::ActiveUpdate(float _Delta)
+{
+
+	if (1.0f <= MoveReLoad)
+	{
+		CanMove = true;
+		MoveReLoad = 0.0f;
+	}
+
+	{
+		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
+		if (RGB(255, 255, 255) == Color)
+		{
+			Gravity(_Delta);
+		}
+		else
+		{
+			unsigned int CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
+
+			while (CheckColor != RGB(255, 255, 255))
+			{
+				CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
+				AddPos(float4::UP);
+			}
+
+			GravityReset();
+
+			if (0.0f <= PlayerDistance.X)
+			{
+				Dir = CutterDir::Right;
+			}
+			else
+			{
+				Dir = CutterDir::Left;
+			}
+				ChangeAnimationState("Active");
+
+				MoveReLoad += _Delta;
+		}
+	}
+
+	if (abs(PlayerDistance.Size()) > 400.0f)
+	{
+		ChanageState(CutterState::Idle);
+		return;
+	}
+
+
+
+
+	if (true == CanMove && abs(PlayerDistance.X) <= 300.0f)
+	{
+		ChanageState(CutterState::Jump);
+		return;
+	}
 
 }

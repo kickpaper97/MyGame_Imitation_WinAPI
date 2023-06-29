@@ -5,6 +5,8 @@
 
 class Monster :public PlayActor
 {
+
+	friend class GameEngineLevel;
 public:
 	Monster();
 	~Monster();
@@ -41,6 +43,7 @@ protected:
 	void Update(float _Delta) override;
 
 	void Start() override;
+	void Release() override;
 
 	class GameEngineRenderer* Renderer = nullptr;
 	class GameEngineCollision* BodyCollision = nullptr;

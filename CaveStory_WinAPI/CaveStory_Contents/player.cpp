@@ -242,6 +242,20 @@ void Player::Update(float _Delta)
 
 
 
+	if (true == GameEngineInput::IsDown(VK_NUMPAD1))
+	{
+		PlayerLevel = 1;
+
+	}
+	if (true == GameEngineInput::IsDown(VK_NUMPAD2))
+	{
+		PlayerLevel = 2;
+	}
+	if (true == GameEngineInput::IsDown(VK_NUMPAD3))
+	{
+		PlayerLevel = 3;
+
+	}
 
 	if (true == GameEngineInput::IsDown('Y'))
 	{

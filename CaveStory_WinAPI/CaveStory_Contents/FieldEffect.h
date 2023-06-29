@@ -30,6 +30,10 @@ public:
 	}
 
 
+	void SetGroundTexture(const std::string& _GroundTextureName);
+
+	int GetGroundColor(unsigned int _DefaultColor, float4 _Pos = float4::ZERO);
+
 	void Update(float _Delta) override;
 
 	GameEngineRenderer* Renderer = nullptr;
@@ -37,5 +41,8 @@ public:
 protected:
 
 private:
+
+	class GameEngineWindowTexture* GroundTexture = nullptr;
+	
 };
 

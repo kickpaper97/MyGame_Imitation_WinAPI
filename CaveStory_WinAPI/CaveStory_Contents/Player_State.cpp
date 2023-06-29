@@ -421,7 +421,7 @@ void Player::JumpUpdate(float _Delta)
 	}
 	else
 	{
-		MovePos = MovePos.LerpClimp(MovePos, float4::ZERO, 0.03);
+		MovePos = MovePos.LerpClimp(MovePos, float4::ZERO, 0.03f);
 
 
 	}

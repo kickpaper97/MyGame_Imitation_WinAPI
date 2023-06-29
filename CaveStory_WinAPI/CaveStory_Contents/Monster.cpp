@@ -18,6 +18,7 @@ Monster::Monster()
 
 Monster::~Monster()
 {
+	Release();
 }
 
 
@@ -27,6 +28,7 @@ void Monster::AllMonsterDeath()
 	for (Monster* Monster : AllMonster)
 	{
 		Monster->Death();
+		
 	}
 
 	AllMonster.clear();
@@ -56,6 +58,7 @@ void Monster::Update(float _Delta)
 	 if (0 >= Hp)
 	 {
 		 Death();
+		 
 	 }
 
 
@@ -69,7 +72,7 @@ void Monster::Update(float _Delta)
 			Bullet* HitBullet = dynamic_cast<Bullet*>(Collison->GetActor());
 
 			 Hp-=HitBullet->GetDamage();
-			 
+			 HitBullet->Death();
 			
 		}
 	}
@@ -88,6 +91,32 @@ void Monster::Start()
 
 }
 
+void Monster::Release()
+{
+	std::list<Monster*>::iterator MonStartIter = AllMonster.begin();
+	std::list<Monster*>::iterator MonEndIter = AllMonster.end();
+
+	for (; MonStartIter != MonEndIter; )
+	{
+		Monster* Monster = *MonStartIter;
+		if (false == Monster->IsDeath())
+		{
+			++MonStartIter;
+			continue;
+		}
+
+		if (nullptr == Monster)
+		{
+			MsgBoxAssert("nullptr인 랜더러가 레벨의 리스트에 들어가 있었습니다.");
+			continue;
+		}
+		// [s] [a] [a]     [a] [e]
+		MonStartIter = AllMonster.erase(MonStartIter);
+
+	}
+
+}
+
 void Monster::MonsterBoundaryCheck()
 {
 
@@ -96,6 +125,7 @@ void Monster::MonsterBoundaryCheck()
 	{
 		Monster->SetPlayerPos(Player::GetMainPlayer()->GetPos());
 		float4 Dir = Monster->GetPlayerPos() -Monster-> GetPos();
+		
 		
 		if (false == Monster->IsUpdate())
 		{
@@ -110,7 +140,7 @@ void Monster::MonsterBoundaryCheck()
 			if (GameEngineWindow::MainWindow.GetScale().Size() < Dir.Size())
 			{
 				Monster->Off();
-				return;
+				continue;
 			}
 		}
 	}

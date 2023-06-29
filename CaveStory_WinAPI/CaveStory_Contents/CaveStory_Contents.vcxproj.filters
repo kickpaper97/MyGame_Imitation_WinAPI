@@ -68,6 +68,9 @@
     <ClInclude Include="Arthur_sHouse.h">
       <Filter>Level</Filter>
     </ClInclude>
+    <ClInclude Include="ExpBall.h">
+      <Filter>Global\FieldEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp" />
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="Arthur_sHouse.cpp">
       <Filter>Level</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpBall.cpp">
+      <Filter>Global\FieldEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

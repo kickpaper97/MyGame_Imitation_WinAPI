@@ -2,6 +2,21 @@
 #pragma once
 #include"Monster.h"
 
+enum class CutterState
+{
+	Idle,
+	Jump,
+	Active,
+	
+};
+
+enum class CutterDir
+{
+	Right,
+	Left,
+	
+};
+
 class MonsterCutter : public Monster
 {
 public:
@@ -13,6 +28,23 @@ public:
 	MonsterCutter& operator=(const MonsterCutter& _Other) = delete;
 	MonsterCutter& operator=(const MonsterCutter&& _Other) noexcept = delete;
 
+	void ChanageState(CutterState _State);
+	void StateUpdate(float _Delta);
+
+	void IdleStart();
+	void JumpStart();
+	void ActiveStart();
+
+	void IdleUpdate(float _Delta);
+	void JumpUpdate(float _Delta);
+	void ActiveUpdate(float _Delta);
+
+	std::string CurState = "";
+	CutterState State = CutterState::Idle;
+	CutterDir Dir = CutterDir::Left;
+
+	void ChangeAnimationState(const std::string& _StateName);
+
 
 protected:
 
@@ -22,7 +54,7 @@ private:
 	void Update(float _Delta) override;
 	void Render(float _Delta) override;
 
-	float4 Dir;
+	float4 PlayerDistance = {};
 
 	bool CanMove = true;
 	float MoveReLoad = 1.0f;

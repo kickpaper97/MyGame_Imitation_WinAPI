@@ -25,4 +25,5 @@ enum class CollisionOrder
 	PlayerBody,
 	MonsterBody,
 	Bullet,
+	ExpBall,
 };
