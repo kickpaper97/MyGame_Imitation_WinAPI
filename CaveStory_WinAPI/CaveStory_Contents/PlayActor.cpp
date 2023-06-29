@@ -1,5 +1,6 @@
 #include "PlayActor.h"
 #include <GameEnginePlatform/GameEngineWindow.h>
+
 #include <GameEngineCore/GameEngineLevel.h>
 #include <GameEngineCore/GameEngineCamera.h>
 #include <GameEngineCore/ResourcesManager.h>
@@ -65,6 +66,16 @@ void PlayActor::SetGroundTexture(const std::string& _GroundTextureName)
 
 }
 
+void PlayActor::SetGroundTexture(GameEngineWindowTexture* _GroundTexture)
+{
+	if (nullptr == _GroundTexture)
+	{
+		MsgBoxAssert("존재하지 않는 텍스처를 GroundTexture로 하려고 했습니다.");
+	}
+
+	GroundTexture = _GroundTexture;
+}
+
 int PlayActor::GetGroundColor(unsigned int _DefaultColor, float4 _Pos)
 {
 	if (nullptr == GroundTexture)
@@ -89,40 +100,6 @@ void PlayActor::SetActorBoundery(const std::string& _BounderyTextureName)
 }
 
 
-//void PlayActor::Update(float _delta)
-//{
-//	float4 CheckPos = GetPos();
-//
-//	if (CheckPos.X < 0)
-//	{
-//		while (GetPos().X >=0 )
-//		{
-//			AddPos(float4::RIGHT);
-//		}
-//		
-//	}
-//	if (CheckPos.X > Boundery.X)
-//	{
-//		while (GetPos().X <=Boundery.X)
-//		{
-//			AddPos(float4::LEFT);
-//		}
-//	}
-//	if(CheckPos.Y<0)
-//	{
-//		while (GetPos().Y >= 0)
-//		{
-//			AddPos(float4::DOWN);
-//		}
-//	}
-//	if (CheckPos.Y > Boundery.Y)
-//	{
-//		while (GetPos().Y <= Boundery.Y)
-//		{
-//			AddPos(float4::UP);
-//		}
-//	}
-//}
 
 float4 PlayActor::ActorCameraPos()
 {

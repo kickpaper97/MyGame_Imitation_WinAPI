@@ -1,6 +1,6 @@
 
 #pragma once
-#include<GameEngineCore/GameEngineActor.h>
+#include"PlayActor.h"
 
 enum class BulletDir
 {
@@ -16,7 +16,7 @@ enum class BulletLook
 	Down,
 };
 
-class Bullet :public GameEngineActor
+class Bullet :public PlayActor
 {
 public:
 	Bullet();
@@ -28,7 +28,7 @@ public:
 	Bullet& operator=(const Bullet&& _Other) noexcept = delete;
 
 	
-	
+	void HitWallCheck();
 
 
 	template<typename EnumLook,typename EnumDir>
@@ -116,5 +116,8 @@ private:
 	void Start() override;
 	void Update(float _Delta) override;
 	
+
+	float4 WallCheck = float4::ZERO;
+
 };
 

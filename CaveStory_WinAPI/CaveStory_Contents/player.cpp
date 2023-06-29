@@ -182,6 +182,7 @@ void Player::Update(float _Delta)
 			NewBulletEffect->CreateAnimation("BulletEffect", "Bullet_Effect.Bmp", 0, 4, 0.05f, false);
 			NewBullet->SetPos(GetPos());
 			NewBullet->SetDamage(PlayerLevel);
+			NewBullet->SetGroundTexture(GetGroundTexture());
 			if (Dir == PlayerDir::Right&&Look==PlayerLook::Middle)
 			{
 				NewBullet->AddPos({ 40,-20 });

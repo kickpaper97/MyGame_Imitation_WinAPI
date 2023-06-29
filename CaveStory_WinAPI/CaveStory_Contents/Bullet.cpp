@@ -7,6 +7,8 @@
 #include <GameEngineCore/ResourcesManager.h>
 #include <GameEngineCore/GameEngineCollision.h>
 
+#define HitWallRenderPos 35.0f
+
 Bullet::Bullet()
 {
 }
@@ -15,6 +17,46 @@ Bullet::~Bullet()
 {
 
 	
+}
+
+void Bullet::HitWallCheck()
+{
+
+	
+	
+		unsigned int Color = GetGroundColor(RGB(255, 255, 255),WallCheck);
+		if (RGB(255, 255, 255) != Color)
+		{
+			Renderer->ChangeAnimation("BulletOnWall");
+			
+			BulletCollision->Off();
+			
+
+			if (float4::UP == Dir)
+			{
+				Renderer->SetRenderPos({ 0.0f,-HitWallRenderPos });
+			}
+			else if (float4::DOWN == Dir)
+			{
+				Renderer->SetRenderPos({ 0.0f,HitWallRenderPos });
+
+			}
+			else if (float4::LEFT == Dir)
+			{
+				Renderer->SetRenderPos({ -HitWallRenderPos,0.0f });
+
+			}
+			else if (float4::RIGHT == Dir)
+			{
+				Renderer->SetRenderPos({ HitWallRenderPos,0.0f });
+
+			}
+
+
+
+		}
+	
+
 }
 
 
@@ -82,7 +124,16 @@ void Bullet::Update(float _Delta)
 	// BulletÀÚÃ¼°¡ 
 
 
-	
+	if (Renderer->IsAnimation("BulletOnWall") )
+	{
+
+		if (false == Renderer->IsAnimationEnd())
+		{
+			return;
+		}
+
+		Death();
+	}
 
 
 
@@ -121,8 +172,13 @@ void Bullet::Update(float _Delta)
 		}
 	}
 
+	HitWallCheck();
+
 
 	AddPos(Dir * _Delta * Speed);
+
+
+
 }
 
 
@@ -153,26 +209,27 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 	{
 	case BulletLook::Up:
 		Dir = float4::UP;
+		WallCheck = { 0.0f,-30.0f };
 		switch (Level)
 		{
 		case 1:
 			Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 1, 1, 0.05f, false);
 
-			BulletCollision->SetCollisionScale({ 12, 60 });
-			BulletCollision->SetCollisionPos({0,-2 });
+			BulletCollision->SetCollisionScale({ 12.0f, 60.0f });
+			BulletCollision->SetCollisionPos({ 0.0f,-2.0f });
 			break;
 		case 2:
 			Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 3, 3, 0.05f, false);
 
-			BulletCollision->SetCollisionScale({ 18, 60 });
-			BulletCollision->SetCollisionPos({ 0,-2 });
+			BulletCollision->SetCollisionScale({ 18.0f, 60.0f});
+			BulletCollision->SetCollisionPos({ 0.0f,-2.0f });
 			
 			break;
 		case 3:
 			Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 5, 5, 0.05f, false);
 
-			BulletCollision->SetCollisionScale({ 32, 60 });
-			BulletCollision->SetCollisionPos({ 0,-2 });
+			BulletCollision->SetCollisionScale({ 32.0f, 60.0f });
+			BulletCollision->SetCollisionPos({ 0.0f,-2.0f});
 			break;
 		default:
 			break;
@@ -183,26 +240,27 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 		if (PDir == BulletDir::Right)
 		{
 			Dir = float4::RIGHT;
+			WallCheck = { 30.0f,0.0f };
 			switch (Level)
 			{
 			case 1:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 0, 0, 0.05f, false);
 
-				BulletCollision->SetCollisionScale({ 60, 12 });
-				BulletCollision->SetCollisionPos({ 2,0 });
+				BulletCollision->SetCollisionScale({ 60.0f, 12.0f });
+				BulletCollision->SetCollisionPos({ 2.0f,0.0f });
 				break;
 			case 2:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 2, 2, 0.05f, false);
 
-				BulletCollision->SetCollisionScale({ 60, 18 });
-				BulletCollision->SetCollisionPos({ 2,0 });
+				BulletCollision->SetCollisionScale({ 60.0f, 18.0f});
+				BulletCollision->SetCollisionPos({ 2.0f,0.0f });
 
 				break;
 			case 3:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 4, 4, 0.05f, false);
 
 				BulletCollision->SetCollisionScale({ 60, 32 });
-				BulletCollision->SetCollisionPos({ 2,0 });
+				BulletCollision->SetCollisionPos({ 2.0f,0.0f });
 				break;
 			default:
 				break;
@@ -212,25 +270,26 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 		if (PDir == BulletDir::Left)
 		{
 			Dir = float4::LEFT;
+			WallCheck = { -30.0f,0.0f };
 			switch (Level)
 			{
 			case 1:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 0, 0, 0.05f, false);
 
-				BulletCollision->SetCollisionScale({ 60, 12 });
-				BulletCollision->SetCollisionPos({ -2,0 });
+				BulletCollision->SetCollisionScale({ 60.0f, 12.0f });
+				BulletCollision->SetCollisionPos({ -2.0f,0.0f });
 				break;
 			case 2:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 2, 2, 0.05f, false);
 
-				BulletCollision->SetCollisionScale({ 60, 18 });
-				BulletCollision->SetCollisionPos({ -2,0 });
+				BulletCollision->SetCollisionScale({ 60.0f, 18.0f });
+				BulletCollision->SetCollisionPos({ -2.0f,0.0f });
 				break;
 			case 3:
 				Renderer->CreateAnimation("Bullet", "Bullet_Morning.Bmp", 4, 4, 0.05f, false);
 
-				BulletCollision->SetCollisionScale({ 60, 32 });
-				BulletCollision->SetCollisionPos({ -2,0 });
+				BulletCollision->SetCollisionScale({ 60.0f, 32.0f});
+				BulletCollision->SetCollisionPos({ -2.0f,0.0f });
 				break;
 			default:
 				break;
@@ -241,6 +300,7 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 		break;
 	case BulletLook::Down:
 		Dir = float4::DOWN;
+		WallCheck = { 0.0f,30.0f };
 		switch (Level)
 		{
 		case 1:

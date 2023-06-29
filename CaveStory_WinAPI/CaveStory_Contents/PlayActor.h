@@ -2,6 +2,7 @@
 #pragma once
 #include <GameEngineCore/GameEngineActor.h>
 
+class GameEngineWindowTexture;
 class PlayActor : public GameEngineActor
 {
 public:
@@ -30,6 +31,14 @@ public:
 	}
 
 	void SetGroundTexture(const std::string& _GroundTextureName);
+	void SetGroundTexture(GameEngineWindowTexture* _GroundTexture);
+
+	GameEngineWindowTexture* GetGroundTexture() const
+	{
+		
+		return GroundTexture;
+	}
+	
 
 	
 	int GetGroundColor(unsigned int _DefaultColor, float4 _Pos = float4::ZERO);
@@ -81,8 +90,8 @@ protected:
 	
 
 private:
-	class GameEngineWindowTexture* GroundTexture = nullptr;
-	class GameEngineWindowTexture* BounderyTexture = nullptr;
+	GameEngineWindowTexture* GroundTexture = nullptr;
+	GameEngineWindowTexture* BounderyTexture = nullptr;
 
 	float4 Boundery = float4::ZERO;
 	
