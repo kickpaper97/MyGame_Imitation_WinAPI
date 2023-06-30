@@ -2,6 +2,13 @@
 #pragma once
 #include "PlayActor.h"
 
+enum class MonsterSize
+{
+	Min,
+	Mid,
+	Max,
+	None,
+};
 
 class Monster :public PlayActor
 {
@@ -38,6 +45,18 @@ public:
 		return PlayerPos;
 	}
 
+	void SetMonsterSize(MonsterSize _Size)
+	{
+		MonSize = _Size;
+	}
+	void SetMonsterSize(int _Size)
+	{
+		MonSize = static_cast<MonsterSize>(_Size);
+	}
+
+
+	void Drop();
+
 
 protected:
 	void Update(float _Delta) override;
@@ -50,9 +69,10 @@ protected:
 	
 private:
 
-	float4 PlayerPos;
+	float4 PlayerPos = {};
+	MonsterSize MonSize = MonsterSize::None;
 
-	int Hp ;
+	int Hp =0;
 
 	static std::list<Monster*> AllMonster;
 

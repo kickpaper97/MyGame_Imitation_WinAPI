@@ -1,12 +1,15 @@
 #include "Monster.h"
+#include "ContentsEnum.h"
 
 #include <GameEngineCore/GameEngineRenderer.h>
 #include <GameEngineCore/GameEngineCollision.h>
-#include "ContentsEnum.h"
 #include <GameEngineCore/ResourcesManager.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
+#include<GameEngineCore/GameEngineLevel.h>
+
 #include "Player.h"
 #include"Bullet.h"
+#include "ExpBall.h"
 
 std::list<Monster*> Monster::AllMonster;
 
@@ -18,6 +21,10 @@ Monster::Monster()
 
 Monster::~Monster()
 {
+
+	Drop();
+
+
 	Release();
 }
 
@@ -34,6 +41,23 @@ void Monster::AllMonsterDeath()
 	AllMonster.clear();
 }
 
+
+void Monster::Drop()
+{
+	{
+		ExpBall* NewExpball = GetLevel()->CreateActor<ExpBall>(RenderOrder::MiddlePlay);
+		NewExpball->SetBallType(MonSize);
+		NewExpball->SetPos(GetPos());
+	}
+
+	{
+
+	}
+
+	{
+
+	}
+}
 
 void Monster::Update(float _Delta)
 {
@@ -53,6 +77,11 @@ void Monster::Update(float _Delta)
 		return;
 	}
 
+	if (MonsterSize::None == MonSize)
+	{
+		MsgBoxAssert("몬스터의 크기가 정해지지 않았습니다.");
+		return;
+	}
 
 	
 	 if (0 >= Hp)

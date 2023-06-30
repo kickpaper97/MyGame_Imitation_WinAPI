@@ -76,7 +76,10 @@ void ExpBall::Start()
 
 void ExpBall::Update(float _Delta)
 {
-	
+	if (false == Renderer->IsAnimation("ExpBall"))
+	{
+		MsgBoxAssert("Expball의 크기가 설정되지 않았습니다");
+	}
 
 	if (2.0f < GetLiveTime())
 	{

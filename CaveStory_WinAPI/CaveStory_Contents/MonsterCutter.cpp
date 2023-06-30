@@ -57,6 +57,7 @@ void MonsterCutter::Start()
 	 BodyCollision->SetCollisionType(CollisionType::CirCle);
 
 	 SetHp(5);
+	 SetMonsterSize(MonsterSize::Min);
 
 }
 
