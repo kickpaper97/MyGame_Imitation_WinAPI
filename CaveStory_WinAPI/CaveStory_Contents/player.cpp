@@ -622,48 +622,8 @@ void Player::Render(float _Delta)
 
 	if(true==DebugMode)
 	{
-		/*{
-		deltacheck += _Delta;
-		std::string Text = "";
-		Text += "플레이어 테스트 값 : ";
-		Text += std::to_string(GetLevel()->GetMainCamera()->GetPos().Y);
+	
 
-		TextOutA(dc, 2, 3, Text.c_str(), static_cast<int>(Text.size()));
-
-		}
-
-		{
-			deltacheck += _Delta;
-			std::string Text = "";
-			Text += "GrivityVector 값 : ";
-			Text += CurState;
-
-			TextOutA(dc, 2, 20, Text.c_str(), static_cast<int>(Text.size()));
-
-		}*/
-
-
-		{
-			deltacheck += _Delta;
-			std::string Text = "";
-			Text += "Pos 값 : ";
-			Text += std::to_string(GetPos().X);
-			Text += " / ";
-			Text += std::to_string(GetPos().Y);
-
-			TextOutA(dc, 2, 60, Text.c_str(), static_cast<int>(Text.size()));
-
-		}
-
-		{
-			deltacheck += _Delta;
-			std::string Text = "";
-			Text += "LOOK 값 : ";
-			Text += std::to_string((int)Look);
-
-			TextOutA(dc, 2,200, Text.c_str(), static_cast<int>(Text.size()));
-
-		}
 
 		CollisionData Data;
 

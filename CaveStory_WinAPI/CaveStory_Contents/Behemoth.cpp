@@ -82,19 +82,6 @@ void Behemoth::Update(float _Delta)
 void Behemoth::Render(float _Delta)
 {
 
-	HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
-
-	CollisionData Data;
-
-	Data.Pos = ActorCameraPos();
-	Data.Scale = { 5,5 };
-	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
-
-	Data.Pos = ActorCameraPos() + LeftBodyCheck;
-	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
-
-	Data.Pos = ActorCameraPos() + RightBodyCheck;
-	Rectangle(dc, Data.iLeft(), Data.iTop(), Data.iRight(), Data.iBot());
 }
 
 void Behemoth::ChanageState(BehemothState _State)
