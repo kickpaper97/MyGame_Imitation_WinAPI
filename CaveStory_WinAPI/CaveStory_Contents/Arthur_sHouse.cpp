@@ -1,6 +1,7 @@
 #include "Arthur_sHouse.h"
 #include "ContentsEnum.h"
 #include"CureMachine.h"
+#include"TelePorter.h"
 #include"PlayUIManager.h"
 #include"Player.h"
 #include "BackGround.h"
@@ -36,6 +37,20 @@ void Arthur_sHouse::Start()
 
 		FilePath.MoveChild("Resources\\Texture\\Map");
 		ResourcesManager::GetInst().TextureLoad(FilePath.PlusFilePath("MimigaVillage-Arthur'sHouse.Bmp"));
+		ResourcesManager::GetInst().TextureLoad(FilePath.PlusFilePath("MimigaVillage-Arthur'sHouse-Col.Bmp"));
+
+	}
+
+	if (nullptr == GameEngineSound::FindSound("Safety.mp3"))
+	{
+		GameEnginePath FilePath;
+		FilePath.SetCurrentPath();
+		FilePath.MoveParentToExistsChild("Resources");
+		FilePath.MoveChild("Resources\\Sound\\");
+
+		GameEngineSound::SoundLoad(FilePath.PlusFilePath("Safety.mp3"));
+
+
 	}
 
 
@@ -47,12 +62,12 @@ void Arthur_sHouse::Start()
 
 
 	Ptr = CreateActor<BackGround>(RenderOrder::BackGround);
-	Ptr->Init("MimigaVillage-Arthur'sHouse.Bmp", "MimigaVillage-Arthur'sHouse_Col.Bmp");
+	Ptr->Init("MimigaVillage-Arthur'sHouse.Bmp", "MimigaVillage-Arthur'sHouse-Col.Bmp");
 
 	LevelPlayer = CreateActor<Player>(RenderOrder::MiddlePlay);
 
 	LevelPlayer->SetGroundTexture("MimigaVillage-Arthur'sHouse.Bmp");
-	LevelPlayer->SetActorBoundery("MimigaVillage-Arthur'sHouse_Col.Bmp");
+	LevelPlayer->SetActorBoundery("MimigaVillage-Arthur'sHouse-Col.Bmp");
 	LevelPlayer->SetPos(float4{ 925 ,500 });
 
 
@@ -73,10 +88,24 @@ void Arthur_sHouse::LevelStart(GameEngineLevel* _PrevLevel)
 	}
 
 
-	LevelPlayer->SetGroundTexture("EggCorridor_Ground.Bmp");
-	LevelPlayer->SetActorBoundery("EggCorridor_Middle.Bmp");
+	LevelPlayer->SetGroundTexture("MimigaVillage-Arthur'sHouse-Col.Bmp");
+	LevelPlayer->SetActorBoundery("MimigaVillage-Arthur'sHouse.Bmp");
+
+	BGMPlayer = GameEngineSound::SoundPlay("Safety.mp3");
+	BGMPlayer.SetLoop(10000);
+
+
+	{
+		TelePorter* NewTeleporter = CreateActor<TelePorter>();
+		NewTeleporter->SetPos({ 480 ,505 });
+		NewTeleporter->SetDestination("EggCorridor");
+		
+		
+	}
+	
 }
 
 void Arthur_sHouse::LevelEnd(GameEngineLevel* _NextLevel)
 {
+	BGMPlayer.Stop();
 }

@@ -13,8 +13,8 @@ public:
 	QuestionMark& operator=(const QuestionMark& _Other) = delete;
 	QuestionMark& operator=(const QuestionMark&& _Other) noexcept = delete;
 
-	void Start();
-	void Update(float _Delta);
+	void Start()override;
+	void Update(float _Delta)override;
 protected:
 
 private:

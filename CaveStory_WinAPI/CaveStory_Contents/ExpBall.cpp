@@ -1,8 +1,10 @@
 #include "ExpBall.h"
+#include "player.h"
 #include "ContentsEnum.h"
 #include <GameEngineCore/ResourcesManager.h>
 #include<GameEngineCore/GameEngineRenderer.h>
 #include <GameEngineCore/GameEngineCollision.h>
+#include<GameEngineBase/GameEngineRandom.h>
 
 ExpBall::ExpBall()
 {
@@ -20,16 +22,18 @@ void ExpBall::SetBallType(const int _Type)
 	{
 	case BallType::Min:
 		Renderer->CreateAnimation("ExpBall", "ExpBall.Bmp", 0, 5, 0.05f, true);
-		
-		Collision->SetCollisionScale({ 8,8 });
+		Collision->SetCollisionScale({ 35,35 });
+		ExpValue = 1;
 		break;
 	case BallType::Mid:
 		Renderer->CreateAnimation("ExpBall", "ExpBall.Bmp", 6, 11, 0.05f, true);
-		Collision->SetCollisionScale({ 12,12 });
+		Collision->SetCollisionScale({ 50,50 });
+		ExpValue = 2;
 		break;
 	case BallType::Max:
 		Renderer->CreateAnimation("ExpBall", "ExpBall.Bmp", 12, 17, 0.05f, true);
-		Collision->SetCollisionScale({ 16,16 });
+		Collision->SetCollisionScale({ 60,60 });
+		ExpValue = 4;
 		break;
 	case BallType::None:
 		
@@ -69,7 +73,12 @@ void ExpBall::Start()
 	}
 
 	
+	{
+		
+		float Rand = GameEngineRandom::MainRandom.RandomFloat(0, 360);
 
+
+	}
 
 
 }
@@ -81,7 +90,7 @@ void ExpBall::Update(float _Delta)
 		MsgBoxAssert("Expball의 크기가 설정되지 않았습니다");
 	}
 
-	if (2.0f < GetLiveTime())
+	if (5.0f < GetLiveTime())
 	{
 		if (nullptr != Renderer)
 		{
@@ -92,7 +101,7 @@ void ExpBall::Update(float _Delta)
 		}
 	}
 
-	if (1.5f < GetLiveTime())
+	if (3.5f < GetLiveTime())
 	{
 		if (true == IsUpdate())
 		{
@@ -103,4 +112,55 @@ void ExpBall::Update(float _Delta)
 			Renderer->On();
 		}
 	}
+
+
+	{
+		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
+		if (RGB(255, 255, 255) == Color)
+		{
+			Gravity(_Delta);
+		}
+		else
+		{
+			unsigned int CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
+
+			while (CheckColor != RGB(255, 255, 255))
+			{
+				CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
+				AddPos(float4::UP);
+			}
+
+
+			SetGravityVector(float4::UP);
+			AddPos(float4::UP);
+		}
+	}
+
+
+
+
+	if (this->Collision != nullptr)
+
+	{
+		std::vector<GameEngineCollision*> _Col;
+		if (true == Collision->Collision(CollisionOrder::PlayerBody, _Col, CollisionType::CirCle, CollisionType::Rect))
+		{
+			for (size_t i = 0; i < _Col.size(); i++)
+			{
+				GameEngineCollision* Collison = _Col[i];
+
+				Player* MyPlayer = dynamic_cast<Player*>(Collison->GetActor());
+
+				MyPlayer->SetExp(MyPlayer->GetExp() + ExpValue);
+
+				
+				Death();
+
+			}
+		}
+
+	}
+
+	
+
 }

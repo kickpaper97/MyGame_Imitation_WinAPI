@@ -1,6 +1,7 @@
 
 #pragma once
 #include<GameEngineCore/GameEngineLevel.h>
+#include<GameEnginePlatform/GameEngineSound.h>
 
 class Arthur_sHouse : public GameEngineLevel
 {
@@ -22,7 +23,7 @@ private:
 	void Start() override;
 	void Update(float _Delta) override;
 
-	void Release() override;
+	GameEngineSoundPlayer BGMPlayer;
 
 	class BackGround* Ptr;
 

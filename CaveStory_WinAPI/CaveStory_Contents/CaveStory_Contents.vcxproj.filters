@@ -71,6 +71,18 @@
     <ClInclude Include="ExpBall.h">
       <Filter>Global\FieldEffect</Filter>
     </ClInclude>
+    <ClInclude Include="Behemoth.h">
+      <Filter>Global\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="TelePorter.h">
+      <Filter>Global\Interect</Filter>
+    </ClInclude>
+    <ClInclude Include="Door.h">
+      <Filter>Global\Interect</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelUp.h">
+      <Filter>Global\FieldEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentsCore.cpp" />
@@ -141,6 +153,18 @@
       <Filter>Level</Filter>
     </ClCompile>
     <ClCompile Include="ExpBall.cpp">
+      <Filter>Global\FieldEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Behemoth.cpp">
+      <Filter>Global\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="TelePorter.cpp">
+      <Filter>Global\Interect</Filter>
+    </ClCompile>
+    <ClCompile Include="Door.cpp">
+      <Filter>Global\Interect</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelUp.cpp">
       <Filter>Global\FieldEffect</Filter>
     </ClCompile>
   </ItemGroup>

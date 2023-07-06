@@ -71,11 +71,11 @@ void MonsterCutter::Update(float _Delta)
 	 
 	if (0.0f <= PlayerDistance.X)
 	{
-		Dir = CutterDir::Right;
+		Dir = MonsterDir::Right;
 	}
 	else
 	{
-		Dir = CutterDir::Left;
+		Dir = MonsterDir::Left;
 	}
 
 	StateUpdate(_Delta);
@@ -128,11 +128,11 @@ void MonsterCutter::ChangeAnimationState(const std::string& _StateName)
 
 	switch (Dir)
 	{
-	case CutterDir::Right:
+	case MonsterDir::Right:
 		AnimationName += "Right_";
 
 		break;
-	case CutterDir::Left:
+	case MonsterDir::Left:
 		AnimationName += "Left_";
 		break;
 	default:
@@ -217,12 +217,12 @@ void MonsterCutter::IdleUpdate(float _Delta)
 
 			if (0.0f <= PlayerDistance.X)
 			{
-				Dir = CutterDir::Right;
+				Dir = MonsterDir::Right;
 				
 			}
 			else
 			{
-				Dir = CutterDir::Left;
+				Dir = MonsterDir::Left;
 			}
 			ChangeAnimationState("Idle");
 
@@ -244,7 +244,7 @@ void MonsterCutter::IdleUpdate(float _Delta)
 
 void MonsterCutter::IdleStart()
 {
-	if (Dir == CutterDir::Right)
+	if (Dir == MonsterDir::Right)
 	{
 		BodyCheckPos = RightBodyCheck;
 	}
@@ -330,7 +330,7 @@ void MonsterCutter::JumpStart()
 	}
 
 
-	if (Dir == CutterDir::Right)
+	if (Dir == MonsterDir::Right)
 	{
 		float4 JumpVector = float4::RIGHT.GetUnitVectorFromDeg(290);;
 
@@ -385,11 +385,11 @@ void MonsterCutter::ActiveUpdate(float _Delta)
 
 			if (0.0f <= PlayerDistance.X)
 			{
-				Dir = CutterDir::Right;
+				Dir = MonsterDir::Right;
 			}
 			else
 			{
-				Dir = CutterDir::Left;
+				Dir = MonsterDir::Left;
 			}
 				ChangeAnimationState("Active");
 

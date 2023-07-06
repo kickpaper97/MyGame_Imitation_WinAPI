@@ -2,6 +2,7 @@
 #pragma once
 
 #include <GameEngineCore/GameEngineLevel.h>
+#include <GameEnginePlatform/GameEngineSound.h>
 
 
 class EggCorridor :public GameEngineLevel
@@ -24,6 +25,8 @@ private:
 	void Update(float _Delta) override;
 
 	void Release() override;
+
+	GameEngineSoundPlayer BGMPlayer;
 
 	class BackGround* MiddlePtr;
 

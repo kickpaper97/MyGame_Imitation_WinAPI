@@ -1,7 +1,10 @@
 
 #pragma once
 #include "PlayActor.h"
+#include<GameEnginePlatform/GameEngineSound.h>
 
+#define MaxEXP 16
+#define MaxHp 16
 
 enum class PlayerState
 {
@@ -36,6 +39,10 @@ enum class Weapon
 
 class Player : public PlayActor
 { 
+
+	friend class ExpBall;
+	friend class PlayUIManager;
+	
 public:
 	Player();
 	~Player();
@@ -84,25 +91,49 @@ protected:
 
 	void ChangeAnimationState(const std::string& _StateName);
 
+	void SetExp(int _Exp)
+	{
+		Exp = _Exp;
+	}
+
+	int GetExp() const
+	{
+		return Exp;
+	}
+
+	void SetPlayerLV(int _LV)
+	{
+		PlayerLevel = _LV;
+	}
+
+	int GetPlayerLV() const
+	{
+		return PlayerLevel;
+	}
 
 private:
 	
-	int HP = 100;
-	int Exp = 0;
+	
+	int Exp = 5;
 	int PlayerLevel = 1;
 
 	bool CanHover = true;
 	bool CanSearch = true;
+	bool isDamage = false;
 	float4 MovePos = float4::ZERO;
 	float4 BodyCheckPos = LeftHeadCheck;
 	float4 HeadCheckPos = UpCheck;
 
 	float deltacheck = 0.0f;
+	
 
 	GameEngineCollision* BodyCollision = nullptr;
 
 	bool DebugMode = false;
+	bool GodMode = false;
 
+	GameEngineSoundPlayer ShootSound;
+	GameEngineSoundPlayer PlayerSound;
 
 	void Start() override;
 	void Update(float _Delta) override;

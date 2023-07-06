@@ -24,6 +24,12 @@ public:
 
 	void SwitchRender();
 
+	GameEngineRenderer* GetRenderer()
+	{
+		return Renderer;
+	}
+
+
 protected:
 
 	

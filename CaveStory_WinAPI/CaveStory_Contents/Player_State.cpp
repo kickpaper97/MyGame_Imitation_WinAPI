@@ -1,6 +1,9 @@
 #include "Player.h"
 #include "HoverEffect.h"
 #include"QuestionMark.h"
+#include "CureMachine.h"
+#include"TelePorter.h"
+#include "Door.h"
 #include "ContentsEnum.h"
 
 #include <GameEngineCore/GameEngineRenderer.h>
@@ -9,6 +12,7 @@
 #include <GameEngineCore/GameEngineCamera.h>
 #include <GameEngineBase/GameEngineString.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
+#include <GameEngineCore/GameEngineCollision.h>
 
 #define SpeedLimit 300.0f
 #define JumpTimeLimit 0.6f
@@ -85,8 +89,10 @@ void Player::IdleUpdate(float _Delta)
 		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
 		if (RGB(255, 255, 255) == Color)
 		{
+			
 			Gravity(_Delta);
 		}
+		
 		else
 		{
 			unsigned int CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
@@ -181,13 +187,15 @@ void Player::RunUpdate(float _Delta)
 		unsigned int Color = GetGroundColor(RGB(255, 255, 255));
 		if (RGB(255, 255, 255) == Color)
 		{
+			
 			Gravity(_Delta);
 		}
+		
 		else
 		{
 			unsigned int CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
 
-			while (CheckColor != RGB(255, 255, 255))
+			while (CheckColor != RGB(255,255, 255))
 			{
 				CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
 				AddPos(float4::UP);
@@ -205,21 +213,20 @@ void Player::RunUpdate(float _Delta)
 	if (true == GameEngineInput::IsPress(VK_LEFT)&&Dir==PlayerDir::Left)
 		{
 			//PlayerSpeed +=_Delta*100;
-
 		
 			BodyCheckPos = LeftBodyCheck;
 			UpCheck.X = LeftHeadCheck.X; 
-if (SpeedLimit < abs(MovePos.X))
-			{
+			if (SpeedLimit < abs(MovePos.X))
+				{
 
-				MovePos = { -SpeedLimit ,  0.0f };
+					MovePos = { -SpeedLimit ,  0.0f };
 
-			}
+				}
 			else
-			{
-				MovePos = MovePos.LerpClimp(MovePos, { -SpeedLimit ,  0.0f }, 0.04f) ;
-			}
-
+				{
+					MovePos = MovePos.LerpClimp(MovePos, { -SpeedLimit ,  0.0f }, 0.04f) ;
+				}
+			
 
 		}
 	else if (true == GameEngineInput::IsPress(VK_RIGHT) && Dir == PlayerDir::Right)
@@ -229,22 +236,25 @@ if (SpeedLimit < abs(MovePos.X))
 		BodyCheckPos = RightBodyCheck;
 		UpCheck.X = RightHeadCheck.X;
 		if (SpeedLimit < abs(MovePos.X))
-		{
+			{
 
- 			MovePos = { SpeedLimit ,  0.0f };
+ 				MovePos = { SpeedLimit ,  0.0f };
+			}
+		else
+			{
+				MovePos = MovePos.LerpClimp(MovePos, {   SpeedLimit ,  0.0f }, 0.04f) ;
+			}
+		
 		}
 		else
-		{
-			MovePos = MovePos.LerpClimp(MovePos, {   SpeedLimit ,  0.0f }, 0.04f) ;
-		}
+			 {
 		
-		}
-	else
-	 {
+				MovePos	=MovePos.LerpClimp( MovePos, float4::ZERO, 0.04f) ;
 		
-		MovePos	=MovePos.LerpClimp( MovePos, float4::ZERO, 0.04f) ;
-		
-	 }
+			 }
+
+	
+
 	}
 
 	if (true == GameEngineInput::IsDown(VK_DOWN)&&float4::ZERO==GetGravityVector())
@@ -275,12 +285,8 @@ if (SpeedLimit < abs(MovePos.X))
 		Look = PlayerLook::Middle;
 		ChangeAnimationState(CurState);
 	}
-	if (GetGravityVector() == float4::ZERO)
-	{
-
-		Look = PlayerLook::Middle;
-	}
-
+	
+	
 
 
 	if (true == GameEngineInput::IsDown('Z'))
@@ -317,7 +323,36 @@ if (SpeedLimit < abs(MovePos.X))
 		
 	}
 	DirCheck();
+
+	
+	{
+		static float TimeCheck = 0.0f;
+		
+		if (0.2f <= TimeCheck)
+		{
+
+
+			PlayerSound = GameEngineSound::SoundPlay("PlayerWalk.Wav");
+			TimeCheck = 0.0f;
+
+		}
+			
+			
+			
+		TimeCheck += _Delta;
+			
+	}
+	
+	
+	
+
+
 }
+	
+	
+
+
+
 
 void Player::JumpUpdate(float _Delta) 
 {
@@ -445,6 +480,11 @@ void Player::JumpUpdate(float _Delta)
 			}
 
 		}
+		else if (RGB(0, 255, 0) == Color)
+		{
+			
+			Gravity(_Delta);
+		}
 		else
 		{
 			unsigned int CheckColor = GetGroundColor(RGB(255, 255, 255), float4::UP);
@@ -478,6 +518,7 @@ void Player::JumpUpdate(float _Delta)
 				}
 
 				GravityReset();
+				PlayerSound = GameEngineSound::SoundPlay("Playerbonkhead.Wav");
 				DeltaCheck = 10.0f;
 
 			}
@@ -625,8 +666,8 @@ void Player::HoverUpdate(float _Delta)
 				HoverTime = 0.0f;
 
 			}
-
 			GravityReset();
+			PlayerSound = GameEngineSound::SoundPlay("Playerbonkhead.Wav");
 
 
 		}
@@ -651,6 +692,62 @@ void Player::HoverUpdate(float _Delta)
 
 void Player::SearchUpdate(float _Delta)
 {
+
+
+	{
+		
+	
+		std::vector<GameEngineCollision*> _Col;
+		
+		if (true == BodyCollision->Collision(CollisionOrder::CureMachine, _Col, CollisionType::Rect, CollisionType::Rect))
+		{
+
+			SetHp(MaxHp);
+			GameEngineCollision* colli = _Col[0];
+			CureMachine* colMachine = dynamic_cast<CureMachine*>(colli->GetActor());
+			colMachine->GetSound();
+			CanSearch = true;
+			ChanageState(PlayerState::Idle);
+			return;
+		}
+
+
+	}
+
+	{
+		std::vector<GameEngineCollision*> _Col;
+
+		if (true == BodyCollision->Collision(CollisionOrder::Potal, _Col, CollisionType::Rect, CollisionType::Rect))
+		{
+
+		
+			GameEngineCollision* colli = _Col[0];
+			TelePorter* colMachine = dynamic_cast<TelePorter*>(colli->GetActor());
+			colMachine->Teleport();
+			CanSearch = true;
+			ChanageState(PlayerState::Idle);
+			return;
+		}
+
+	}
+
+	{
+		std::vector<GameEngineCollision*> _Col;
+
+		if (true == BodyCollision->Collision(CollisionOrder::Door, _Col, CollisionType::Rect, CollisionType::Rect))
+		{
+
+
+			GameEngineCollision* colli = _Col[0];
+			Door* colDoor = dynamic_cast<Door*>(colli->GetActor());
+			colDoor->Open();
+			CanSearch = true;
+			ChanageState(PlayerState::Idle);
+			return;
+		}
+	}
+
+
 
 	if (true == CanSearch)
 	{

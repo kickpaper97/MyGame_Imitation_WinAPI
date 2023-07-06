@@ -2,6 +2,12 @@
 #pragma once
 #include "Monster.h"
 
+enum class BeetleState
+{
+	Idle,
+	Move
+};
+
 class BeetleWall :public Monster
 {
 public:
@@ -13,6 +19,22 @@ public:
 	BeetleWall& operator=(const BeetleWall& _Other) = delete;
 	BeetleWall& operator=(const BeetleWall&& _Other) noexcept = delete;
 
+	void ChanageState(BeetleState _State);
+	void StateUpdate(float _Delta);
+
+	void IdleStart();
+	void MoveStart();
+
+	void IdleUpdate(float _Delta);
+	void MoveUpdate(float _Delta);
+
+	std::string CurState = "";
+	BeetleState State = BeetleState::Idle;
+	MonsterDir Dir = MonsterDir::Left;
+
+	void ChangeAnimationState(const std::string& _StateName);
+
+
 
 protected:
 
@@ -22,21 +44,17 @@ private:
 
 	void Update(float _Delta) override;
 	void Render(float _Delta) override;
+	
 
-	class GameEngineRenderer* Renderer = nullptr;
+	float4 MovePos = float4::ZERO;
+
+	float Waiting = 0.0f;
+
+	float4 BodyCheckPos = LeftBodyCheck;
+	
 
 
-
-
-
-	float4 BodyCheckPos = LeftHeadCheck;
-	float4 HeadCheckPos = UpCheck;
-
-
-	float4 LeftBodyCheck = { -30.0f, -10.0f };
-	float4 RightBodyCheck = { 30.0f, -10.0f };
-	float4 LeftHeadCheck;
-	float4 RightHeadCheck;
-	float4 UpCheck = { 0.0f,-55.f };
+	float4 LeftBodyCheck = { -22.0f, 0.0f };
+	float4 RightBodyCheck = { 22.0f, 0.0f };
 };
 

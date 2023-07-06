@@ -19,7 +19,7 @@ Bullet::~Bullet()
 	
 }
 
-void Bullet::HitWallCheck()
+bool Bullet::HitWallCheck()
 {
 
 	
@@ -34,29 +34,29 @@ void Bullet::HitWallCheck()
 
 			if (float4::UP == Dir)
 			{
-				Renderer->SetRenderPos({ 0.0f,-HitWallRenderPos });
+				Renderer->AddRenderPos({ 0.0f,-HitWallRenderPos });
 			}
 			else if (float4::DOWN == Dir)
 			{
-				Renderer->SetRenderPos({ 0.0f,HitWallRenderPos });
+				Renderer->AddRenderPos({ 0.0f,HitWallRenderPos });
 
 			}
 			else if (float4::LEFT == Dir)
 			{
-				Renderer->SetRenderPos({ -HitWallRenderPos,0.0f });
+				Renderer->AddRenderPos({ -HitWallRenderPos,0.0f });
 
 			}
 			else if (float4::RIGHT == Dir)
 			{
-				Renderer->SetRenderPos({ HitWallRenderPos,0.0f });
+				Renderer->AddRenderPos({ HitWallRenderPos,0.0f });
 
 			}
 
 
-
+			return true;
 		}
 	
-
+		return false;
 }
 
 
@@ -172,10 +172,13 @@ void Bullet::Update(float _Delta)
 		}
 	}
 
-	HitWallCheck();
-
-
+	if (false==HitWallCheck())
+	{
 	AddPos(Dir * _Delta * Speed);
+
+	}
+
+
 
 
 
@@ -209,7 +212,7 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 	{
 	case BulletLook::Up:
 		Dir = float4::UP;
-		WallCheck = { 0.0f,-30.0f };
+		WallCheck = { 0.0f,-35.0f };
 		switch (Level)
 		{
 		case 1:
@@ -240,7 +243,7 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 		if (PDir == BulletDir::Right)
 		{
 			Dir = float4::RIGHT;
-			WallCheck = { 30.0f,0.0f };
+			WallCheck = { 35.0f,0.0f };
 			switch (Level)
 			{
 			case 1:
@@ -270,7 +273,7 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 		if (PDir == BulletDir::Left)
 		{
 			Dir = float4::LEFT;
-			WallCheck = { -30.0f,0.0f };
+			WallCheck = { -35.0f,0.0f };
 			switch (Level)
 			{
 			case 1:
@@ -300,7 +303,7 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 		break;
 	case BulletLook::Down:
 		Dir = float4::DOWN;
-		WallCheck = { 0.0f,30.0f };
+		WallCheck = { 0.0f,35.0f };
 		switch (Level)
 		{
 		case 1:
@@ -333,8 +336,8 @@ void Bullet:: SetDir(const int _Look, const int _Dir)
 	BulletCollision->SetCollisionType(CollisionType::Rect);
 
 	Renderer->ChangeAnimation("Bullet");
+	
 	Renderer->SetScaleRatio(2.0f);
-
 	
 
 }

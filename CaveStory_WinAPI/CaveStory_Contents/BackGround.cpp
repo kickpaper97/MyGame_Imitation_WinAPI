@@ -18,7 +18,7 @@ BackGround::~BackGround()
 
 void BackGround::Start()
 {
-	SetPos({ 640,360 });
+	
 	Renderer = CreateRenderer(GetOrder());
 
 	DebugRenderer = CreateRenderer(RenderOrder::BackGround);

@@ -29,7 +29,17 @@ public:
 
 	void SetBallType(const int _Type);
 
-	
+	int GetExpValue() const
+	{
+		if (ExpValue == 0)
+		{
+			MsgBoxAssert("EXPball의 경험치 설정값이 0입니다");
+			
+		}
+
+		return ExpValue;
+
+	}
 	
 
 protected:
@@ -39,5 +49,12 @@ protected:
 private:
 	class GameEngineRenderer* Renderer = nullptr;
 	class GameEngineCollision* Collision = nullptr;
+
+	float4 MovePos = float4::ZERO;
+	
+	
+
+	int ExpValue = 0;
+	
 };
 

@@ -14,6 +14,9 @@ enum class RenderOrder
 	FrontPlay,
 	Bullet,
 	FrontGround,
+	UIBack,
+	UIFront,
+
 	
 };
 
@@ -21,9 +24,11 @@ enum class CollisionOrder
 {
 	Map,
 	Potal,
-	Interct,
+	Door,
 	PlayerBody,
 	MonsterBody,
 	Bullet,
 	ExpBall,
+	CureMachine,
+	Heart,
 };

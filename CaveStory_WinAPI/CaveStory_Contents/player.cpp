@@ -1,6 +1,8 @@
 #include "Player.h"
 #include"ContentsEnum.h"
 #include "PlayUIManager.h"
+#include "LevelUp.h"
+#include "Monster.h"
 
 #include <Windows.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
@@ -11,8 +13,10 @@
 #include <GameEngineCore/GameEngineCamera.h>
 #include <CaveStory_Contents/Bullet.h>
 #include<GameEngineCore/GameEngineCollision.h>
+#include <GameEnginePlatform/GameEngineSound.h>
 
-#define MaxEXP 100
+
+
 #define BulletIntervalTime 0.05f
 
 
@@ -134,7 +138,41 @@ void Player::Start()
 	}
 
 	{
-		
+
+		if (nullptr == GameEngineSound::FindSound("Playerwalk.Wav"))
+		{
+			GameEnginePath FilePath;
+			FilePath.SetCurrentPath();
+			FilePath.MoveParentToExistsChild("Resources");
+			FilePath.MoveChild("Resources\\Sound\\");
+
+			GameEngineSound::SoundLoad(FilePath.PlusFilePath("Playerbonkhead.wav"));
+			GameEngineSound::SoundLoad(FilePath.PlusFilePath("Playerwalk.wav"));
+			GameEngineSound::SoundLoad(FilePath.PlusFilePath("Playerjump.wav"));
+			GameEngineSound::SoundLoad(FilePath.PlusFilePath("Playerdie.wav"));
+			GameEngineSound::SoundLoad(FilePath.PlusFilePath("Playerhurt.wav"));
+			GameEngineSound::SoundLoad(FilePath.PlusFilePath("level_up.wav"));
+
+
+
+		}
+
+		if (nullptr == GameEngineSound::FindSound("Polarstar_l1_2.Wav"))
+		{
+			GameEnginePath FilePath;
+			FilePath.SetCurrentPath();
+			FilePath.MoveParentToExistsChild("Resources");
+			FilePath.MoveChild("Resources\\Sound\\");
+
+			GameEngineSound::SoundLoad(FilePath.PlusFilePath("Polarstar_l1_2.wav"));
+			GameEngineSound::SoundLoad(FilePath.PlusFilePath("Polarstar_l3.wav"));
+
+		}
+
+	}
+
+	{
+		SetHp(10);
 	}
 
 	
@@ -157,6 +195,102 @@ void Player::Update(float _Delta)
 	}
 
 	
+
+
+
+	{
+		if (MaxEXP <= Exp)
+		{
+			if (3!=PlayerLevel )
+			{
+				++PlayerLevel;
+				LevelUp* NewLevelUpMark = GetLevel()->CreateActor<LevelUp>();
+
+				NewLevelUpMark->SetPos(GetPos());
+				NewLevelUpMark->AddPos({ 0,-40 });
+
+				PlayerSound = GameEngineSound::SoundPlay("level_up.wav");
+				Exp = 0;
+			}
+			
+		}
+	}
+
+	if (true == GameEngineInput::IsDown('G'))
+	{
+		if (GodMode == true)
+		{
+			GodMode = false;
+		}
+		else
+		{
+			GodMode = true;
+		}
+	}
+
+
+	{
+		if (true == GodMode)
+		{
+			SetHp(MaxHp);
+		}
+		if (MaxHp < GetHp())
+		{
+			SetHp(MaxHp);
+		}
+		else if (0 > GetHp())
+		{
+			SetHp(0);
+		}
+	}
+
+
+
+
+
+	{
+		std::vector<GameEngineCollision*> _Col;
+
+		if (true == BodyCollision->Collision(CollisionOrder::MonsterBody, _Col, CollisionType::Rect, CollisionType::Rect)||
+			true == BodyCollision->Collision(CollisionOrder::MonsterBody, _Col, CollisionType::Rect, CollisionType::CirCle))
+		{
+			int GetDamage = 0;
+			isDamage = true;
+			for (size_t i = 0; i < _Col.size(); i++)
+			{
+				GameEngineCollision* Collison = _Col[i];
+
+				Monster* Toched = dynamic_cast<Monster*>(Collison->GetActor());
+
+
+
+				GetDamage= Toched->GetDamageValue();
+				
+				if (Dir == PlayerDir::Left)
+				{
+
+					AddPos({ float4::RIGHT.X,-1.0f});
+				}
+				else
+				{
+					AddPos({ float4::LEFT.X ,-1.0f  });
+				}
+				
+				
+				
+			}
+			if (isDamage == true)
+			{
+				SetHp(GetHp() - GetDamage);
+				isDamage = false;
+			}
+		}
+
+	}
+
+
+
+
 	{
 		 static GameEngineRenderer* CheckBulletEffect = nullptr;
 
@@ -180,35 +314,37 @@ void Player::Update(float _Delta)
 			Bullet* NewBullet = GetLevel()->CreateActor<Bullet>(RenderOrder::Bullet);
 			GameEngineRenderer* NewBulletEffect =CreateRenderer(RenderOrder::Bullet);
 			NewBulletEffect->CreateAnimation("BulletEffect", "Bullet_Effect.Bmp", 0, 4, 0.05f, false);
-			NewBullet->SetPos(GetPos());
+			NewBulletEffect->SetRenderPos(ArmRenderer->GetRenderPos());
+			NewBullet->SetPos(GetPos() + ArmRenderer->GetRenderPos());
 			NewBullet->SetDamage(PlayerLevel);
 			NewBullet->SetGroundTexture(GetGroundTexture());
+			
 			if (Dir == PlayerDir::Right&&Look==PlayerLook::Middle)
 			{
-				NewBullet->AddPos({ 40,-20 });
-				NewBulletEffect->SetRenderPos({ 40,-20 });
-
+				NewBullet->AddPos(float4{ 10,-6 });
+				NewBulletEffect->AddRenderPos(float4{20,-6});
 
 			}
 			else if (Dir == PlayerDir::Left && Look == PlayerLook::Middle)
 			{
-				NewBullet->AddPos({ -40,-20 });
-				NewBulletEffect->SetRenderPos({ -40,-20 });
+				NewBullet->AddPos(float4{ -10,-6 });
+				NewBulletEffect->AddRenderPos(float4{ -20,-6 });
+				
 
 			}
 			if (Look == PlayerLook::Up)
 			{
 				if (Dir == PlayerDir::Right)
 				{
-					NewBullet->AddPos({ 40,-20 });
-					NewBulletEffect->SetRenderPos({ 40,-20 });
+					NewBullet->AddPos(float4{ 2,-6 });
+					NewBulletEffect->AddRenderPos(float4{-2,-10 });
 
 
 				}
 				else if (Dir == PlayerDir::Left )
 				{
-					NewBullet->AddPos({ -40,-20 });
-					NewBulletEffect->SetRenderPos({ -40,-20 });
+					NewBullet->AddPos(float4{ -2,-6 });
+					NewBulletEffect->AddRenderPos(float4{ 2,-10 });
 
 				}
 			}
@@ -216,16 +352,17 @@ void Player::Update(float _Delta)
 			{
 				if (Dir == PlayerDir::Right)
 				{
-					NewBullet->AddPos({ 40,-20 });
-					NewBulletEffect->SetRenderPos({ 40,-20 });
+					NewBullet->AddPos(float4{ 6,4 });
+
+					NewBulletEffect->AddRenderPos(float4{4,0 });
 
 
 				}
 				else if (Dir == PlayerDir::Left )
 				{
-					NewBullet->AddPos({ -40,-20 });
-					NewBulletEffect->SetRenderPos({ -40,-20 });
+					NewBullet->AddPos(float4{-4,4});
 
+					NewBulletEffect->AddRenderPos(float4{ -2,0 });
 				}
 			}
 			NewBullet->SetDir(Look,Dir);
@@ -235,12 +372,29 @@ void Player::Update(float _Delta)
 	
 			CheckBulletEffect = NewBulletEffect;
 			
+
+
+			if (3 != PlayerLevel)
+			{
+				ShootSound = GameEngineSound::SoundPlay("Polarstar_l1_2.Wav");
+
+			}
+			else
+			{
+				ShootSound = GameEngineSound::SoundPlay("Polarstar_l3.Wav");
+
+			}
+
+
 		}
 
 	
 	}
 
-
+	if (true == GameEngineInput::IsDown(VK_NUMPAD9))
+	{
+		SetPos({ 8090.0f,700.0f });
+	}
 
 
 	if (true == GameEngineInput::IsDown(VK_NUMPAD1))
@@ -324,6 +478,7 @@ void Player::DirCheck()
 	
 
 	bool ChangeDir = false;
+
 	if (true == GameEngineInput::IsFree(VK_LEFT) && true == GameEngineInput::IsFree(VK_RIGHT))
 	{
 		return;
@@ -341,7 +496,7 @@ void Player::DirCheck()
 		ChangeAnimationState(CurState);
 		return;
 
-	}/*
+	}
 	if (true == GameEngineInput::IsPress(VK_UP))
 	{
 		Look = PlayerLook::Up;
@@ -354,7 +509,7 @@ void Player::DirCheck()
 		Look = PlayerLook::Down;
 
 		ChangeAnimationState(CurState);
-	}*/
+	}
 
 	
 
@@ -401,11 +556,11 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 
 		if (Dir == PlayerDir::Left)
 		{
-			ArmRenderer->SetRenderPos({ 30,-4 });
+			ArmRenderer->SetRenderPos({-16,-55 });
 		}
 		else if (Dir == PlayerDir::Right)
 		{
-			ArmRenderer->SetRenderPos({ 30,4 });
+			ArmRenderer->SetRenderPos({ 16,-55 });
 		}
 		ArmRenderer->ChangeAnimation(AnimationName + "Arm");
 		break;
@@ -429,11 +584,11 @@ void Player::ChangeAnimationState(const std::string& _StateName)
 		ArmRenderer->SetOrder(static_cast<int>(RenderOrder::BackPlay));
 		if (Dir == PlayerDir::Left)
 		{
-			ArmRenderer->SetRenderPos({ -34,-4 });
+			ArmRenderer->SetRenderPos({ -8,-2 });
 		}
 		else if (Dir == PlayerDir::Right)
 		{
-			ArmRenderer->SetRenderPos({ 30,-4 });
+			ArmRenderer->SetRenderPos({0 ,-2});
 		}
 		ArmRenderer->ChangeAnimation(AnimationName + "Arm");
 		break;
@@ -455,9 +610,19 @@ void Player::LevelStart()
 void Player::Render(float _Delta) 
 {
 	HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
+
+	if (true == GodMode)
+	{
+		std::string Text = "";
+		Text += "GODMODE ";
+		
+
+		TextOutA(dc, GameEngineWindow::MainWindow.GetScale().hX(), 10, Text.c_str(), static_cast<int>(Text.size()));
+	}
+
 	if(true==DebugMode)
 	{
-		{
+		/*{
 		deltacheck += _Delta;
 		std::string Text = "";
 		Text += "플레이어 테스트 값 : ";
@@ -475,16 +640,16 @@ void Player::Render(float _Delta)
 
 			TextOutA(dc, 2, 20, Text.c_str(), static_cast<int>(Text.size()));
 
-		}
+		}*/
 
 
 		{
 			deltacheck += _Delta;
 			std::string Text = "";
-			Text += "MovePos 값 : ";
-			Text += std::to_string(MovePos.X);
+			Text += "Pos 값 : ";
+			Text += std::to_string(GetPos().X);
 			Text += " / ";
-			Text += std::to_string(MovePos.Y);
+			Text += std::to_string(GetPos().Y);
 
 			TextOutA(dc, 2, 60, Text.c_str(), static_cast<int>(Text.size()));
 
@@ -496,7 +661,7 @@ void Player::Render(float _Delta)
 			Text += "LOOK 값 : ";
 			Text += std::to_string((int)Look);
 
-			TextOutA(dc, 2,80, Text.c_str(), static_cast<int>(Text.size()));
+			TextOutA(dc, 2,200, Text.c_str(), static_cast<int>(Text.size()));
 
 		}
 

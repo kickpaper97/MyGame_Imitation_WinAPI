@@ -28,7 +28,7 @@ public:
 	Bullet& operator=(const Bullet&& _Other) noexcept = delete;
 
 	
-	void HitWallCheck();
+	bool HitWallCheck();
 
 
 	template<typename EnumLook,typename EnumDir>

@@ -3,6 +3,7 @@
 #include"FirstCave_StartPointLevel.h"
 #include "EndingLevel.h"
 #include"EggCorridor.h"
+#include"Arthur_sHouse.h"
 #include <GameEnginePlatform/GameEngineWindow.h>
 
 ContentsCore::ContentsCore()
@@ -22,6 +23,9 @@ void ContentsCore::Start()
 
 	GameEngineCore::CreateLevel<EggCorridor>("EggCorridor");
 	//GameEngineCore::CreateLevel<EndingLevel>("EndingLevel");
+
+	GameEngineCore::CreateLevel<Arthur_sHouse>("Arthur_sHouse");
+	GameEngineCore::CreateLevel<EndingLevel>("Ending");
 
 
 	GameEngineCore::ChangeLevel("TitleLevel");

@@ -2,6 +2,8 @@
 #pragma once
 #include <GameEngineCore/GameEngineActor.h>
 
+#define NomalGravityPower 1.8f
+
 class GameEngineWindowTexture;
 class PlayActor : public GameEngineActor
 {
@@ -85,6 +87,20 @@ public:
 			return true;
 	}
 
+	void SetHp(const int _HP)
+	{
+		HP = _HP;
+	}
+	int GetHp()
+	{
+		return HP;
+	}
+
+	void SetGravityPower(float _GravityPower)
+	{
+		GravityPower = _GravityPower;
+	}
+
 	
 protected:
 	
@@ -94,6 +110,8 @@ private:
 	GameEngineWindowTexture* BounderyTexture = nullptr;
 
 	float4 Boundery = float4::ZERO;
+
+	int HP = 0;
 	
 	bool IsGravity = true;
 

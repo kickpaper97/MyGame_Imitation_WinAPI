@@ -10,12 +10,6 @@ enum class CutterState
 	
 };
 
-enum class CutterDir
-{
-	Right,
-	Left,
-	
-};
 
 class MonsterCutter : public Monster
 {
@@ -41,7 +35,7 @@ public:
 
 	std::string CurState = "";
 	CutterState State = CutterState::Idle;
-	CutterDir Dir = CutterDir::Left;
+	MonsterDir Dir = MonsterDir::Left;
 
 	void ChangeAnimationState(const std::string& _StateName);
 

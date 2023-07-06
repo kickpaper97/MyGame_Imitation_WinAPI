@@ -1,6 +1,7 @@
 
 #pragma once
 #include "PlayActor.h"
+#include <GameEnginePlatform/GameEngineSound.h>
 
 enum class MonsterSize
 {
@@ -10,11 +11,20 @@ enum class MonsterSize
 	None,
 };
 
+enum class MonsterDir
+{
+	Left,
+	Right,
+};
+
 class Monster :public PlayActor
 {
 
 	friend class GameEngineLevel;
 public:
+
+	
+
 	Monster();
 	~Monster();
 
@@ -26,13 +36,16 @@ public:
 	static void AllMonsterDeath();
 	static void MonsterBoundaryCheck();
 
-	void SetHp(const int _HP)
+	
+
+	void SetDamageValue(int _DamageValue)
 	{
-		Hp = _HP;
+		DamageValue = _DamageValue;
 	}
-	int GetHp()
+
+	int GetDamageValue() const
 	{
-		return Hp;
+		return DamageValue;
 	}
 
 	void SetPlayerPos(float4 _Pos)
@@ -54,25 +67,36 @@ public:
 		MonSize = static_cast<MonsterSize>(_Size);
 	}
 
+	int GetMonsterSize() const
+	{
+		return static_cast<int>(MonSize);
+	}
+
+
+	
+
+	bool IsDamaged = false;
 
 	void Drop();
-
+	virtual void Damaged(float _Deltta);
 
 protected:
 	void Update(float _Delta) override;
 
 	void Start() override;
-	void Release() override;
+
 
 	class GameEngineRenderer* Renderer = nullptr;
 	class GameEngineCollision* BodyCollision = nullptr;
+
+	GameEngineSoundPlayer HurtSound;
 	
 private:
 
 	float4 PlayerPos = {};
 	MonsterSize MonSize = MonsterSize::None;
 
-	int Hp =0;
+	int DamageValue = 2;
 
 	static std::list<Monster*> AllMonster;
 

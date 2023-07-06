@@ -1,10 +1,14 @@
 
 #pragma once
 #include <GameEngineCore/GameEngineActor.h>
+#include<vector>
 
 class GameEngineRenderer;
 class PlayUIManager : public GameEngineActor
 {
+	
+	friend class Player;
+
 public:
 	static PlayUIManager* UI;
 
@@ -34,8 +38,24 @@ protected:
 	void Start() override;
 	void Update(float _Delta) override;
 private:
+	bool isUIChange = false;
+	int PlayerLV = 0;
 
-	GameEngineRenderer* HPBar = nullptr;
+	std::vector<GameEngineRenderer*> PlayUI;
+	
+
+	GameEngineRenderer* CurHp = nullptr;
+	GameEngineRenderer* CurLV = nullptr;
+	GameEngineRenderer* CurExp = nullptr;
+
+
+	float4 ExpBarScale;
+	float4 ExpBarStartPos;
+
+	float4 HPBarScale;
+	float4 HPBarStartPos;
+
+
 	GameEngineRenderer* TextBackGround = nullptr;
 	GameEngineRenderer* ChoiceBoard = nullptr;
 };

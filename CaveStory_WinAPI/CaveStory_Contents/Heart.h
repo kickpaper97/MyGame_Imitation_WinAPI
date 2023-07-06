@@ -17,10 +17,11 @@ public:
 protected:
 
 	GameEngineRenderer* Renderer = nullptr;
+	GameEngineCollision* Collision = nullptr;
 
 	void Start() override;
 	void Update(float _Delta) override;
 private:
-
+	int HpValue = 2;
 };
 
