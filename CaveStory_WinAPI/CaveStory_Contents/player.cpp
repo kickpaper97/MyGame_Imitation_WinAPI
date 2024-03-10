@@ -639,7 +639,7 @@ void Player::Render(float _Delta)
 		Text += "GODMODE ";
 		
 
-		TextOutA(dc, GameEngineWindow::MainWindow.GetScale().hX(), 10, Text.c_str(), static_cast<int>(Text.size()));
+		TextOutA(dc, GameEngineWindow::MainWindow.GetScale().ihX(), 10, Text.c_str(), static_cast<int>(Text.size()));
 	}
 
 	if(true==DebugMode)
