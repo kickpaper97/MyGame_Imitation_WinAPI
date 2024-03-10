@@ -10,7 +10,7 @@
 #include "Player.h"
 
 
-#define SpeedLimit 1.1f
+#define SpeedLimit 300.0f
 #define HSpeedLimit 0.6f
  
 BeetleFree::BeetleFree()
@@ -158,7 +158,7 @@ void BeetleFree::Update(float _Delta)
 
 		float4 MovePos = MovePosX + MovePosY;
 
-		AddPos(MovePos);
+		AddPos(MovePos*_Delta);
 
 	}
 }

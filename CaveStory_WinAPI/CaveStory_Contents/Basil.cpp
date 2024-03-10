@@ -71,11 +71,11 @@ void Basil::Update(float _Delta)
 
 	if (MonsterDir::Left == Dir)
 	{
-		MovePos.X -= _Delta;
+		MovePos.X -= 1.0*_Delta;
 	}
 	else if (MonsterDir::Right == Dir)
 	{
-		MovePos.X += _Delta;
+		MovePos.X +=1.00 * _Delta;
 	}
 
 	if (SpeedLimit <= MovePos.X)

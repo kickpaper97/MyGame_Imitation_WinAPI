@@ -245,7 +245,26 @@ void Player::Update(float _Delta)
 	}
 
 
+	if (isDamage == true)
+	{
+		if (BodyCollision->IsUpdate() == true)
+		{
+			MsgBoxAssert("플레이어가 데미지 상태에서도 콜리전이 살아있음");
 
+		}
+
+		deltacheck += _Delta;
+		
+		if (deltacheck >= 3.0f)
+		{
+			isDamage = false;
+			BodyCollision->On();
+			
+			
+			deltacheck = 0.0f;
+
+			}
+	}
 
 
 	{
@@ -265,6 +284,8 @@ void Player::Update(float _Delta)
 
 
 				GetDamage= Toched->GetDamageValue();
+				SetHp(GetHp() - GetDamage);
+				BodyCollision->Off();
 				
 				if (Dir == PlayerDir::Left)
 				{
@@ -279,11 +300,12 @@ void Player::Update(float _Delta)
 				
 				
 			}
-			if (isDamage == true)
-			{
-				SetHp(GetHp() - GetDamage);
-				isDamage = false;
-			}
+			
+				
+
+				
+				
+			
 		}
 
 	}
