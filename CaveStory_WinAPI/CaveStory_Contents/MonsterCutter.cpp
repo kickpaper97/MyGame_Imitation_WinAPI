@@ -84,8 +84,8 @@ void MonsterCutter::Update(float _Delta)
 
 void MonsterCutter::Render(float _Delta)
 {
-
-	HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
+	
+	/*HDC dc = GameEngineWindow::MainWindow.GetBackBuffer()->GetImageDC();
 	{
 
 		std::string Text = "";
@@ -116,7 +116,7 @@ void MonsterCutter::Render(float _Delta)
 
 		TextOutA(dc, 2, 360, Text.c_str(), static_cast<int>(Text.size()));
 
-	}
+	}*/
 
 
 }
